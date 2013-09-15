@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://sunilkumarn.github.io/technical/atom.xml" rel="self"/>
   <link href="http://sunilkumarn.github.io/technical/"/>
-  <updated>2013-09-15T16:45:20+05:30</updated>
+  <updated>2013-09-15T16:48:22+05:30</updated>
   <id>http://sunilkumarn.github.io/technical/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -1206,164 +1206,6 @@ and paste in the following code</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Git -> A brief on Reverts, Resets, Merges and conflicts.]]></title>
-    <link href="http://sunilkumarn.github.io/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts-2"/>
-    <updated>2011-12-18T14:12:41+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts-2</id>
-    <content type="html"><![CDATA[<p>Git, as we know is a fast, open source, distributed version control system that is quickly replacing subversion in open source and corporate programming communities. As a developer, many a times i have been amazed by the power of git and how it takes care of our code repo. It track files in the project, we periodically commit the state of the project when we want a saved point. The history of our project is shared with other developers for collaboration, merge between their work and ours, and compare or revert to previous versions of the project or individual files.</p>
-
-<p>As mentioned earlier, Git, at a fast pace, is replacing subversion in open source and corporate programming communities. Hence most open source developers would have had a taste of git and its power. We all would have done a git init, push, pull, rebase and stuff in our day to day programming activity and those would be quite trivial to most developers.</p>
-
-<p>However they are certain facets of git(merges, conflicts, reverts and such) which does create some kind of trouble to developers, atleast when they use it for the first time. What made me write down this post is an incident that happened to my collegue while he was on work. Will get into that shortly.</p>
-
-<p>First, let me just put in a bit on <strong>Reverts and Resets</strong> done in git.</p>
-
-<p>Git provides us multiple methods for fixing up mistakes while in development mode. This is important, because it saves not just our work but the others who are involved in the same project.</p>
-
-<p>If you have actually done a mess with your working directory, but actually haven&rsquo;t commited the changes, the best way is to perhaps do a hard reset.</p>
-
-<p>$ git reset &mdash;hard HEAD</p>
-
-<p>This would just wipe off the changes that you have made in your git index and also any outstanding changes that you have made in your repo.</p>
-
-<p>Now suppose you have commited your changes, but haven&rsquo;t pushed it into master,  and then suddenly you feel like you shoudn&rsquo;t have made the previous commit(or a sequence of your previous commits), you could again reset hard. This is as simple as doing</p>
-
-<p>$ git reset &mdash;hard HEAD~n.</p>
-
-<p>This would set the HEAD of the git index to &lsquo;n&rsquo; commits prior to your current head.</p>
-
-<p>The problem with doing a git reset &mdash;hard is very obvious now.</p>
-
-<p>o &ndash;> o &ndash;> o &ndash;> D &ndash;> C &ndash;> B &ndash;> A.  This is what your commit log looks like with at A its head. Suppose you do</p>
-
-<p>$git reset &mdash;hard HEAD~3 .</p>
-
-<p>Now your commit log would be.</p>
-
-<p>o &ndash;> o &ndash;> o &ndash;> D</p>
-
-<p>This means that the changes that you made right from A to C have been vanished and you are not going to get it back. <br/>
-The bottom line is simple. You are not able to change the effects made by a single commit(ofcourse, the exception is your last commit as we have already seen).</p>
-
-<p>git-revert is just for that.</p>
-
-<p>Commit log: o &ndash;> o &ndash;> o &ndash;> D &ndash;> C &ndash;> B &ndash;> A</p>
-
-<p>At any point of time, you realize that &lsquo;C&rsquo; is bound to break your code(hopefully it still hasn&rsquo;t), you may well want to undo the changes made by C. This could be done by</p>
-
-<p>$git revert (commit id of C).</p>
-
-<p>This would create a new commit that undoes the commit C. You will be given a chance to enter a new commit message, but the default message that indicates its &lsquo;the reverse of the commit C&rsquo; would be the most indicative commit message to have.</p>
-
-<p>o &ndash;> o &ndash;> o &ndash;> D &ndash;> C &ndash;> B &ndash;> A &ndash;> rC<br/>
-where rC is the reverse of C.</p>
-
-<p>This revert is a straightforward revert(i.e. it just undoes the data made by the commit reverted). Since all thats being talked about is a single branch, there aren&rsquo;t any complications that would arise here.</p>
-
-<p>Now let me talk about the incident that i had mentioned ealier.<br/>
-What had happened what this.</p>
-
-<p>My friend did this:<br/>
-$ git pull origin experimental</p>
-
-<p>while he was still sitting in his master branch. The master branch and the experimental branch have now merged. This was totally unintentional(he never planned to do a merge). There were no merge conflicts however. The mainline code broke. We had to revert this faulty merge.</p>
-
-<p>Master &ndash; >          P  &ndash;>  x &ndash;>  M <br/>
-                                        /<br/>
-                                       /<br/>
-Experimental &ndash;>        A &ndash;> B    </p>
-
-<p>This would give you a picture. P is the point of branching. x is some commit made in the mainline branch totally unrelated to the side line branch. <br/>
-The side line branch itself has got two commits of its own, A and B. M is the merge commit (experimental has been merged with master). <br/>
-The code broke.</p>
-
-<p>We need to revert M(the merge commit).</p>
-
-<p>Master &ndash; >          P  &ndash;> x &ndash;>  M &ndash;> W<br/>
-                                        /<br/>
-                                       /<br/>
-Experimental &ndash;>        A &ndash;> B</p>
-
-<p>Now as seen, the merge has been reverted(W is the reverse of M). This was done with <br/>
-$git revert -m 1 (Commit id of M).</p>
-
-<p>This adds W to the commit log as well.</p>
-
-<p>Now the faulty code in the experimental branch was worked upon and fixed and its been made ready for the merge. The experimental branch is now merged with the master branch. <br/>
-What was weird(for us, at that point of time) and noticeable was that the code changes that were made after the &lsquo;merge revert&rsquo; appeared in the master branch whereas the ones made before the revert didn&rsquo;t appear. i.e.</p>
-
-<p>Master &ndash; >          P &ndash;> x &ndash;> M &ndash;> W &ndash;> x &ndash;> x &ndash;> M2<br/>
-                     <br/>
-Experimental &ndash;>        A &ndash;> B &mdash;&mdash;&mdash;&ndash; C &ndash;> D</p>
-
-<p>Again, x are the commits unrelated to the experimental branch. M2 is the second merge. Commits in the experimental branch,C and D, fixes the faulty code in A and B. Whats to be noticed is that, after the updated experimental branch has been merged, none of the changes made by A and B would appear in the master branch, whereas the changes made in C and D would.</p>
-
-<p>The reason was found out soon.</p>
-
-<p>Linus Torvalds explains the situation:</p>
-
-<p>    <em>Reverting a regular commit just effectively undoes what that commit </em><br/>
-<em>    did, and is fairly straightforward. But reverting a merge commit also</em><br/>
-<em>    undoes the </em>data<em> that the commit changed, but it does absolutely</em><br/>
-<em>    nothing to the effects on </em>history<em> that the merge had.</em></p>
-
-<p><em>    So the merge will still exist, and it will still be seen as joining</em><br/>
-<em>    the two branches together, and future merges will see that merge as</em><br/>
-<em>    the last shared state &ndash; and the revert that reverted the merge brought</em><br/>
-<em>    in will not affect that at all.</em></p>
-
-<p>Thats what just happened here. W(merge revert) undoes the data made by M(merge) but does nothing to the commit history brought in by M. <br/>
-There fore when the second merge,M2, is made, the commit history is checked and M is found to be &lsquo;last shared state&rsquo;. Hence, only those changes that has been made after the &lsquo;last shared state&rsquo;, M, will be merged into the master branch now(i.e. commits C and D). None of the data created in A and B would merge, because as per the commit history, they are already merged.</p>
-
-<p>Solution to this problem is also explained by Linus himself. The fix is to &lsquo;revert the revert that brought in W&rsquo;, i.e, revert W before you do in the next merge,M2.</p>
-
-<p>Thus the main line commit log would be <br/>
-P &ndash;> x &ndash;> M &ndash;> W &ndash;> x &ndash;> x &ndash;> Y &ndash;> M2.</p>
-
-<p>where Y is the reverse of W and M2 is the merge made after that.</p>
-
-<p>$ git revert W</p>
-
-<p>adds Y to the commit log.</p>
-
-<p>The above commit log would be equivalent to P &ndash;> x &ndash;> M &ndash;> x &ndash;> x &ndash;> M2. (where there is no W nor a Y and then the second merge has been performed, M2). Now this would be fine, and all the changes made in the experimental branch should be seen in the master branch(ignoring merge conflicts). If there are any merge conflicts arising, git leaves the index and the working tree in a special state that gives us all the information needed to resolve the merge.</p>
-
-<p>A merge conflict would throw in the following message: <br/>
-CONFLICT (content): Merge conflict in sample_script.rb <br/>
-Automatic merge failed; fix conflicts and then commit the result</p>
-
-<p>Trying to switch to the experimental branch would give you this<br/>
-error: you need to resolve your current index first</p>
-
-<p>The files with conflicts will have markers upon them.</p>
-
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD:sample_script.rb</p>
-
-<h1>&ldquo;We would be starting off now&rdquo;  </h1>
-
-<p>&ldquo;This would be the end&rdquo;</p>
-
-<blockquote><blockquote><blockquote><blockquote><blockquote><blockquote><blockquote><p>d31f96832d54c2702914d4f605c1d641511fef13:sample_script.rb</p></blockquote></blockquote></blockquote></blockquote></blockquote></blockquote></blockquote>
-
-<p>Now we need to resolve these conflicts manually followed by adding the file and commiting.</p>
-
-<p>$ git add sample_script.rb<br/>
-$ git commit -a</p>
-
-<p>The commit message would already be filled in indicating that its a conflict resolving commit. I always prefer not to add in anything extra on that.</p>
-
-<p>It would also be helpful to have the &lsquo;gitk&rsquo; tool when you are analyzing your commit logs, specially when you have more than once branch. You would be given a neat graphchical representation of your working directory.</p>
-
-<p>$ sudo apt-get install gitk <br/>
-if you already don&rsquo;t have one.</p>
-
-<p><a href="http://sunilkumarn.files.wordpress.com/2011/12/screenshot-2.png"><img src="http://sunilkumarn.files.wordpress.com/2011/12/screenshot-2.png?w=443" alt="Image" /></a></p>
-
-<p>This definitely would be helpful in getting the bigger picture.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Solution to 'Wireless disabled by Hardware switch']]></title>
     <link href="http://sunilkumarn.github.io/technical/2011/07/12/solution-to-wireless-disabled-by-hardware-switch"/>
     <updated>2011-07-12T19:05:52+05:30</updated>
@@ -1956,6 +1798,192 @@ You would have the idea cleared up</p>
 <p>The final value that you obtain after finding the square of 10 ( i.e 100 ) is has been moved into the stack , but where is the call to the function &lsquo;sqr&rsquo; ?</p>
 
 <p>You have just seen &lsquo; <em><strong>function inlining</strong></em> &rsquo;. The function body had been inserted at the point where the function was used and the value &lsquo;100 &rsquo; calculated at compile time instead of performing the calculation at run time .This saves a lot of time that would have been required to calculate the value of &lsquo;100&rsquo; by making a call to the function at run time .Performing function inlining avoids this .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Python DB-API]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/10/18/python-db-api"/>
+    <updated>2010-10-18T23:53:31+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/10/18/python-db-api</id>
+    <content type="html"><![CDATA[<p>Python is one of the more popular Open Source programming languages, owing largely to its own native expressiveness as well as to the variety of support modules that are available to extend its capabilities. One of these modules is DB-API, which, as the name implies, provides a database application programming interface. We will have a discussion about how to connect and use a General purpose database system like Mysql with Python. The DB API provides a minimal standard for working with databases, using Python structures and syntax wherever possible .</p>
+
+<p>4 Steps of the Python DB-API includes the following:</p>
+
+<p>1) Importing the API module.</p>
+
+<p>2) Acquiring a connection with the database.</p>
+
+<p>3) Issuing SQL statements and stored procedures.</p>
+
+<p>4) Closing the connection
+There are lots of database systems that are available .Here we use Mysql as our database system .You could also use database systems like PostgreSQL, SQL Server etc. Python&rsquo;s DB-API uses a two-level architecture in which the top level provides an abstract interface that is similar for all supported database engines, and a lower level consisting of drivers for specific engines that handle engine-dependent details. This means, of course, that to use DB-API for writing Python scripts, you must have a driver for your particular database system. Since we have  fixed our database system as MySQL, DB-API provides database access by means of the MySQLdb driver . Therefore we need a module <strong>MySQLdb</strong> in Python &lsquo;&rsquo; .</p>
+
+<p>At first , we need to get Mysql installed in our system.</p>
+
+<p><strong>$: apt-get install mysql-server-5.0</strong></p>
+
+<p>Just try and enter into the interactive prompt of mysql .</p>
+
+<p><strong> $: mysql -u &lsquo;user&rsquo; -p</strong></p>
+
+<p>You will get your mysql interactive prompt where you could just brush up your sql knowledge.</p>
+
+<p><em><strong>Step 1) Importing the API module.</strong></em></p>
+
+<p>You need to make sure that you that have MySQLdb installed on your machine.</p>
+
+<p>Do this:</p>
+
+<p><strong>$: python</strong></p>
+
+<p><strong>>>>import MySQLdb</strong></p>
+
+<p>Obviously if you dont have it installed , you would be getting this :</p>
+
+<p><strong>Traceback (most recent call last):</strong></p>
+
+<p><strong>File &ldquo;<stdin>&rdquo;, line 1, in <module></strong></p>
+
+<p><strong>ImportError: No module named MySQLdb</strong></p>
+
+<p>To install MySQLdb module, download it from <a href="http://sourceforge.net/projects/mysql-python">MySQLdb Download</a> page and proceed as follows:</p>
+
+<pre><code>$ gunzip MySQL-python-1.2.2.tar.gz
+$ tar -xvf MySQL-python-1.2.2.tar
+$ cd MySQL-python-1.2.2
+$ python setup.py build
+$ python setup.py install
+</code></pre>
+
+<p>Now do</p>
+
+<p><strong>$ : python</strong></p>
+
+<p><strong>>>>import MySQLdb</strong></p>
+
+<p><strong>>>></strong></p>
+
+<p>We have done with Step 1) out of the 4 steps of the Python DB-API .</p>
+
+<p>Now we move into step 2). The prerequisite for performing step 2) of the DB-API is that you need to create a database ( &lsquo;Persons&rsquo; in our examples to follow ) in mysql .</p>
+
+<p>You could do this by :</p>
+
+<p><strong>$: mysql -u &lsquo;user&rsquo; -p</strong></p>
+
+<p>Enter  mysql .</p>
+
+<p>Do :</p>
+
+<p><strong>mysql>CREATE DATABASE Persons;</strong></p>
+
+<p><strong>mysql>Query OK, 1 row affected (0.03 sec)</strong></p>
+
+<p>Once you have done with this</p>
+
+<p><em><strong>Step 2 ) Acquiring a connection with the database.</strong></em></p>
+
+<p><em>conn = MySQLdb.connect (host = &ldquo;localhost&rdquo;,</em></p>
+
+<p><em>user = &ldquo;user&rdquo;,</em></p>
+
+<p><em>passwd = &ldquo;asdfgh&rdquo;,</em></p>
+
+<p><em>db = &ldquo;Persons&rdquo;)</em></p>
+
+<p>Here we open a database connection using the &lsquo;connect&rsquo; function of the MySQLdb module.</p>
+
+<p>The four parameters that are passed to the function &lsquo;connect&rsquo;  are :</p>
+
+<p><strong>host</strong> &mdash;       the system in which the database is created</p>
+
+<p><strong>user</strong> &mdash;       the user who is trying to acquire a connection with the database ( the user must be authenticated with mysql if the attempt to create a connection needs to be successful.</p>
+
+<p><strong>passwd</strong> &mdash;      the password of the mysql database system .</p>
+
+<p><strong>db</strong> &mdash;      the name of the database created using mysql  .</p>
+
+<p>If the &lsquo;connect()&rsquo; call succeeds, it returns a connection object that serves as the basis for further interaction with MySQL( here &lsquo;conn&rsquo;). If the call fails, it raises an exception .Therefore you better perform exception handling so that you get to know more about the root cause of the error.</p>
+
+<p><em>try:</em></p>
+
+<p><em>conn = MySQLdb.connect (host = &ldquo;localhost&rdquo;,</em></p>
+
+<p><em>user = &ldquo;root&rdquo;,</em></p>
+
+<p><em>passwd = &ldquo;asdfgh&rdquo;,</em></p>
+
+<p><em>db = &ldquo;Persons&rdquo;)</em></p>
+
+<p><em>except MySQLdb.Error,e:</em></p>
+
+<p><em>print &ldquo;Error occured &rdquo;,e.args[0],e.args[1]</em></p>
+
+<p><em>sys.exit (1)</em></p>
+
+<p>_
+_</p>
+
+<p>Here on an unsuccessful attempt to make a connection , an exception is raised ( MySQLdb.Error ) , the information about the error is stored in e.args[1] .</p>
+
+<p><em><strong>Step 3) Issuing SQL statements and stored procedures.</strong></em></p>
+
+<p>Now we need to create a cursor object for the connection between Python and mysql so that all the functions performed by sql are performed within from Python now . We create a cursor object using the &lsquo; cursor()&rsquo; method .</p>
+
+<p>We are all set to execute sql statements in an Object oriented environment , and thats using the &lsquo;execute()&rsquo; function . Any sql statement can be called in from Python using the &lsquo;execute()&rsquo; function.</p>
+
+<p>Consider you want to create a new table in our database &lsquo;Persons&rsquo; .</p>
+
+<p><em>cursor.execute(&ldquo;&rdquo;&ldquo;</em></p>
+
+<p><em>CREATE TABLE PERSON</em></p>
+
+<p><em>(</em></p>
+
+<p><em>ID               int,</em></p>
+
+<p><em>lastname     CHAR(40),</em></p>
+
+<p><em>firstname    CHAR(40),</em></p>
+
+<p><em>City      CHAR(40)</em></p>
+
+<p><em>)</em></p>
+
+<p><em>&ldquo;&rdquo;&ldquo;)</em></p>
+
+<p>You have created a table named &lsquo;PERSON &rsquo; with fields as mentioned above .</p>
+
+<p>As you would imagine , any other statements could be performed as such , for eg.</p>
+
+<p><em>cursor.execute (&ldquo;&rdquo;&ldquo;</em></p>
+
+<p><em>INSERT INTO PERSON (ID, lastname,firstname,City)</em></p>
+
+<p><em>VALUES</em></p>
+
+<p><em>(1,&lsquo;KUMAR&rsquo;,&lsquo;SUNIL&rsquo;,&lsquo;KANNUR&rsquo;),</em></p>
+
+<p><em>(2,&lsquo;JOHN&rsquo;,&lsquo;HARI&rsquo;,&lsquo;KOTTAYAM&rsquo;)</em></p>
+
+<p><em>&ldquo;&rdquo;&ldquo;)</em></p>
+
+<p>or</p>
+
+<p><em>cursor.execute (&ldquo;SELECT * FROM PERSON WHERE City like &lsquo;K%&rsquo;&rdquo;)</em></p>
+
+<p>and any of the sql statements .</p>
+
+<p><em><strong> Step 4) Closing the connection</strong></em></p>
+
+<p><em>conn.close()</em></p>
+
+<p>Here we have terminated the connection after all our need with the DB-API has been done with . The DB-API allows us to update , insert , retrieve and modify within a database in a simple and elegant way .</p>
+
+<p>We have tried and demonstrated a simple example of how to use the Python DB-API .</p>
+
+<p>Using Python with Sql,we have found an object-relational mapping where the object-oriented programming paradigm of Python meets the relational paradigm of Sql. An object-relational mapping is a bridge between the two worlds. As we saw , it lets us define classes that correspond to the tables of a database. Later , we use methods on those classes and their instances to interact with the database .</p>
 ]]></content>
   </entry>
   

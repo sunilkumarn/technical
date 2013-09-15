@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Python is one of the more popular Open Source programming languages, owing largely to its own native expressiveness as well as to the variety of &hellip;">
+  <meta name="description" content="AVL Tree is a self-balancing binary search tree and it was the first such structure to be invented. The tree is said to be balanced because the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,13 +19,13 @@
 
   
   <link rel="canonical" href="http://sunilkumarn.github.io/technical/blog/page/3">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/technical/favicon.png" rel="icon">
+  <link href="/technical/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/technical/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="/technical/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -36,9 +36,9 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Scribblings</a></h1>
+  <h1><a href="/technical/">Scribblings</a></h1>
   
-    <h2>Scribbling down experinces</h2>
+    <h2>Scribbling down experiences.</h2>
   
 </hgroup>
 
@@ -56,8 +56,8 @@
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/technical/">Blog</a></li>
+  <li><a href="/technical/blog/archives">Archives</a></li>
 </ul>
 
 </nav>
@@ -71,220 +71,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/10/18/python-db-api">Python DB-API</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-10-18T23:53:31+05:30" pubdate data-updated="true">Oct 18<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Python is one of the more popular Open Source programming languages, owing largely to its own native expressiveness as well as to the variety of support modules that are available to extend its capabilities. One of these modules is DB-API, which, as the name implies, provides a database application programming interface. We will have a discussion about how to connect and use a General purpose database system like Mysql with Python. The DB API provides a minimal standard for working with databases, using Python structures and syntax wherever possible .</p>
-
-<p>4 Steps of the Python DB-API includes the following:</p>
-
-<p>1) Importing the API module.</p>
-
-<p>2) Acquiring a connection with the database.</p>
-
-<p>3) Issuing SQL statements and stored procedures.</p>
-
-<p>4) Closing the connection
-There are lots of database systems that are available .Here we use Mysql as our database system .You could also use database systems like PostgreSQL, SQL Server etc. Python&rsquo;s DB-API uses a two-level architecture in which the top level provides an abstract interface that is similar for all supported database engines, and a lower level consisting of drivers for specific engines that handle engine-dependent details. This means, of course, that to use DB-API for writing Python scripts, you must have a driver for your particular database system. Since we have  fixed our database system as MySQL, DB-API provides database access by means of the MySQLdb driver . Therefore we need a module <strong>MySQLdb</strong> in Python &lsquo;&rsquo; .</p>
-
-<p>At first , we need to get Mysql installed in our system.</p>
-
-<p><strong>$: apt-get install mysql-server-5.0</strong></p>
-
-<p>Just try and enter into the interactive prompt of mysql .</p>
-
-<p><strong> $: mysql -u &lsquo;user&rsquo; -p</strong></p>
-
-<p>You will get your mysql interactive prompt where you could just brush up your sql knowledge.</p>
-
-<p><em><strong>Step 1) Importing the API module.</strong></em></p>
-
-<p>You need to make sure that you that have MySQLdb installed on your machine.</p>
-
-<p>Do this:</p>
-
-<p><strong>$: python</strong></p>
-
-<p><strong>>>>import MySQLdb</strong></p>
-
-<p>Obviously if you dont have it installed , you would be getting this :</p>
-
-<p><strong>Traceback (most recent call last):</strong></p>
-
-<p><strong>File &ldquo;<stdin>&rdquo;, line 1, in <module></strong></p>
-
-<p><strong>ImportError: No module named MySQLdb</strong></p>
-
-<p>To install MySQLdb module, download it from <a href="http://sourceforge.net/projects/mysql-python">MySQLdb Download</a> page and proceed as follows:</p>
-
-<pre><code>$ gunzip MySQL-python-1.2.2.tar.gz
-$ tar -xvf MySQL-python-1.2.2.tar
-$ cd MySQL-python-1.2.2
-$ python setup.py build
-$ python setup.py install
-</code></pre>
-
-<p>Now do</p>
-
-<p><strong>$ : python</strong></p>
-
-<p><strong>>>>import MySQLdb</strong></p>
-
-<p><strong>>>></strong></p>
-
-<p>We have done with Step 1) out of the 4 steps of the Python DB-API .</p>
-
-<p>Now we move into step 2). The prerequisite for performing step 2) of the DB-API is that you need to create a database ( &lsquo;Persons&rsquo; in our examples to follow ) in mysql .</p>
-
-<p>You could do this by :</p>
-
-<p><strong>$: mysql -u &lsquo;user&rsquo; -p</strong></p>
-
-<p>Enter  mysql .</p>
-
-<p>Do :</p>
-
-<p><strong>mysql>CREATE DATABASE Persons;</strong></p>
-
-<p><strong>mysql>Query OK, 1 row affected (0.03 sec)</strong></p>
-
-<p>Once you have done with this</p>
-
-<p><em><strong>Step 2 ) Acquiring a connection with the database.</strong></em></p>
-
-<p><em>conn = MySQLdb.connect (host = &ldquo;localhost&rdquo;,</em></p>
-
-<p><em>user = &ldquo;user&rdquo;,</em></p>
-
-<p><em>passwd = &ldquo;asdfgh&rdquo;,</em></p>
-
-<p><em>db = &ldquo;Persons&rdquo;)</em></p>
-
-<p>Here we open a database connection using the &lsquo;connect&rsquo; function of the MySQLdb module.</p>
-
-<p>The four parameters that are passed to the function &lsquo;connect&rsquo;  are :</p>
-
-<p><strong>host</strong> &mdash;       the system in which the database is created</p>
-
-<p><strong>user</strong> &mdash;       the user who is trying to acquire a connection with the database ( the user must be authenticated with mysql if the attempt to create a connection needs to be successful.</p>
-
-<p><strong>passwd</strong> &mdash;      the password of the mysql database system .</p>
-
-<p><strong>db</strong> &mdash;      the name of the database created using mysql  .</p>
-
-<p>If the &lsquo;connect()&rsquo; call succeeds, it returns a connection object that serves as the basis for further interaction with MySQL( here &lsquo;conn&rsquo;). If the call fails, it raises an exception .Therefore you better perform exception handling so that you get to know more about the root cause of the error.</p>
-
-<p><em>try:</em></p>
-
-<p><em>conn = MySQLdb.connect (host = &ldquo;localhost&rdquo;,</em></p>
-
-<p><em>user = &ldquo;root&rdquo;,</em></p>
-
-<p><em>passwd = &ldquo;asdfgh&rdquo;,</em></p>
-
-<p><em>db = &ldquo;Persons&rdquo;)</em></p>
-
-<p><em>except MySQLdb.Error,e:</em></p>
-
-<p><em>print &ldquo;Error occured &rdquo;,e.args[0],e.args[1]</em></p>
-
-<p><em>sys.exit (1)</em></p>
-
-<p>_
-_</p>
-
-<p>Here on an unsuccessful attempt to make a connection , an exception is raised ( MySQLdb.Error ) , the information about the error is stored in e.args[1] .</p>
-
-<p><em><strong>Step 3) Issuing SQL statements and stored procedures.</strong></em></p>
-
-<p>Now we need to create a cursor object for the connection between Python and mysql so that all the functions performed by sql are performed within from Python now . We create a cursor object using the &lsquo; cursor()&rsquo; method .</p>
-
-<p>We are all set to execute sql statements in an Object oriented environment , and thats using the &lsquo;execute()&rsquo; function . Any sql statement can be called in from Python using the &lsquo;execute()&rsquo; function.</p>
-
-<p>Consider you want to create a new table in our database &lsquo;Persons&rsquo; .</p>
-
-<p><em>cursor.execute(&ldquo;&rdquo;&ldquo;</em></p>
-
-<p><em>CREATE TABLE PERSON</em></p>
-
-<p><em>(</em></p>
-
-<p><em>ID               int,</em></p>
-
-<p><em>lastname     CHAR(40),</em></p>
-
-<p><em>firstname    CHAR(40),</em></p>
-
-<p><em>City      CHAR(40)</em></p>
-
-<p><em>)</em></p>
-
-<p><em>&ldquo;&rdquo;&ldquo;)</em></p>
-
-<p>You have created a table named &lsquo;PERSON &rsquo; with fields as mentioned above .</p>
-
-<p>As you would imagine , any other statements could be performed as such , for eg.</p>
-
-<p><em>cursor.execute (&ldquo;&rdquo;&ldquo;</em></p>
-
-<p><em>INSERT INTO PERSON (ID, lastname,firstname,City)</em></p>
-
-<p><em>VALUES</em></p>
-
-<p><em>(1,&lsquo;KUMAR&rsquo;,&lsquo;SUNIL&rsquo;,&lsquo;KANNUR&rsquo;),</em></p>
-
-<p><em>(2,&lsquo;JOHN&rsquo;,&lsquo;HARI&rsquo;,&lsquo;KOTTAYAM&rsquo;)</em></p>
-
-<p><em>&ldquo;&rdquo;&ldquo;)</em></p>
-
-<p>or</p>
-
-<p><em>cursor.execute (&ldquo;SELECT * FROM PERSON WHERE City like &lsquo;K%&rsquo;&rdquo;)</em></p>
-
-<p>and any of the sql statements .</p>
-
-<p><em><strong> Step 4) Closing the connection</strong></em></p>
-
-<p><em>conn.close()</em></p>
-
-<p>Here we have terminated the connection after all our need with the DB-API has been done with . The DB-API allows us to update , insert , retrieve and modify within a database in a simple and elegant way .</p>
-
-<p>We have tried and demonstrated a simple example of how to use the Python DB-API .</p>
-
-<p>Using Python with Sql,we have found an object-relational mapping where the object-oriented programming paradigm of Python meets the relational paradigm of Sql. An object-relational mapping is a bridge between the two worlds. As we saw , it lets us define classes that correspond to the tables of a database. Later , we use methods on those classes and their instances to interact with the database .</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/10/16/implementing-the-avl-tree">Implementing the Avl Tree</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/10/16/implementing-the-avl-tree">Implementing the Avl Tree</a></h1>
     
     
       <p class="meta">
@@ -301,6 +88,8 @@ _</p>
 
 
 <time datetime="2010-10-16T09:51:58+05:30" pubdate data-updated="true">Oct 16<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/10/16/implementing-the-avl-tree#disqus_thread">Comments</a>
         
       </p>
     
@@ -541,7 +330,7 @@ Insertion is the usual process. There is nothing special in inserting a node int
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/10/04/280">GNU Make</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/10/04/280">GNU Make</a></h1>
     
     
       <p class="meta">
@@ -558,6 +347,8 @@ Insertion is the usual process. There is nothing special in inserting a node int
 
 
 <time datetime="2010-10-04T00:05:22+05:30" pubdate data-updated="true">Oct 4<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/10/04/280#disqus_thread">Comments</a>
         
       </p>
     
@@ -658,7 +449,7 @@ This again shows the recursive nature of the make process. The Makefile is read 
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/10/03/swigsimplified-wrapper-and-interface-generator">SWIG(Simplified Wrapper and Interface Generator).</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/10/03/swigsimplified-wrapper-and-interface-generator">SWIG(Simplified Wrapper and Interface Generator).</a></h1>
     
     
       <p class="meta">
@@ -675,6 +466,8 @@ This again shows the recursive nature of the make process. The Makefile is read 
 
 
 <time datetime="2010-10-03T21:02:07+05:30" pubdate data-updated="true">Oct 3<span>rd</span>, 2010</time>
+        
+         | <a href="/technical/2010/10/03/swigsimplified-wrapper-and-interface-generator#disqus_thread">Comments</a>
         
       </p>
     
@@ -766,7 +559,7 @@ avl.traverse(1)</p></blockquote></blockquote></blockquote>
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/09/25/evaluation-of-scheme-in-python">Evaluation of Scheme in Python</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/09/25/evaluation-of-scheme-in-python">Evaluation of Scheme in Python</a></h1>
     
     
       <p class="meta">
@@ -783,6 +576,8 @@ avl.traverse(1)</p></blockquote></blockquote></blockquote>
 
 
 <time datetime="2010-09-25T19:13:22+05:30" pubdate data-updated="true">Sep 25<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/25/evaluation-of-scheme-in-python#disqus_thread">Comments</a>
         
       </p>
     
@@ -874,7 +669,7 @@ You would see a module named &lsquo; ops&rsquo; being imported. This module cons
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/09/25/concept-and-creation-of-environment">Concept and Creation of Environment</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/09/25/concept-and-creation-of-environment">Concept and Creation of Environment</a></h1>
     
     
       <p class="meta">
@@ -891,6 +686,8 @@ You would see a module named &lsquo; ops&rsquo; being imported. This module cons
 
 
 <time datetime="2010-09-25T19:07:05+05:30" pubdate data-updated="true">Sep 25<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/25/concept-and-creation-of-environment#disqus_thread">Comments</a>
         
       </p>
     
@@ -937,7 +734,7 @@ scheme>>>( sq 4 )                       &mdash;&mdash;&ndash;>     statement 2</
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/09/24/analyzing-the-tinypy-virtual-machine">Analyzing the Tinypy Virtual Machine</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/09/24/analyzing-the-tinypy-virtual-machine">Analyzing the Tinypy Virtual Machine</a></h1>
     
     
       <p class="meta">
@@ -954,6 +751,8 @@ scheme>>>( sq 4 )                       &mdash;&mdash;&ndash;>     statement 2</
 
 
 <time datetime="2010-09-24T02:22:00+05:30" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/24/analyzing-the-tinypy-virtual-machine#disqus_thread">Comments</a>
         
       </p>
     
@@ -1053,7 +852,7 @@ would give you the union that stores the next element of the list . The size of 
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/09/24/an-overview-of-tinypy">An Overview of TinyPy</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/09/24/an-overview-of-tinypy">An Overview of TinyPy</a></h1>
     
     
       <p class="meta">
@@ -1070,6 +869,8 @@ would give you the union that stores the next element of the list . The size of 
 
 
 <time datetime="2010-09-24T02:19:32+05:30" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/24/an-overview-of-tinypy#disqus_thread">Comments</a>
         
       </p>
     
@@ -1143,7 +944,7 @@ Or logically,
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/09/23/find-the-endianity-of-your-processor">Find the Endianity of Your Processor:</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/09/23/find-the-endianity-of-your-processor">Find the Endianity of Your Processor:</a></h1>
     
     
       <p class="meta">
@@ -1160,6 +961,8 @@ Or logically,
 
 
 <time datetime="2010-09-23T03:23:24+05:30" pubdate data-updated="true">Sep 23<span>rd</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/23/find-the-endianity-of-your-processor#disqus_thread">Comments</a>
         
       </p>
     
@@ -1217,7 +1020,7 @@ The result you obtain would show you the endianity of your processor.
       
   <header>
     
-      <h1 class="entry-title"><a href="/2010/09/15/crash-your-python-virtual-machine">Crash Your Python Virtual Machine!!!</a></h1>
+      <h1 class="entry-title"><a href="/technical/2010/09/15/crash-your-python-virtual-machine">Crash Your Python Virtual Machine!!!</a></h1>
     
     
       <p class="meta">
@@ -1234,6 +1037,8 @@ The result you obtain would show you the endianity of your processor.
 
 
 <time datetime="2010-09-15T09:02:22+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/15/crash-your-python-virtual-machine#disqus_thread">Comments</a>
         
       </p>
     
@@ -1262,13 +1067,100 @@ Lets try and find out the reason behind that:</p>
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/technical/2010/09/15/memoizationrun-your-programs-faster">Memoization:Run Your Programs Faster.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-15T09:00:50+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/15/memoizationrun-your-programs-faster#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Memoization is an optimization technique to speed up programs</strong> . Here the function calls are not required to make repetitive calculations of previously calculated results. The processing time of the program is reduced and the memory consumed is increased. <strong>Memoized functions become optimized for speed while they use a higher memory .</strong></p>
+
+<p>Lets go through an analysis of memoization: Consider the code segment for finding out the term of  a fibonacci series:</p>
+
+<p>_def fib(n):</p>
+
+<pre><code>if n==0:
+
+        return 0
+
+if n==1:
+
+    return 1
+
+else:
+
+    n=fib(n-1)+fib(n-2)
+
+    return n
+</code></pre>
+
+<p>_</p>
+
+<p>You could find out the time taken to run the code :
+<strong>$ time python filename.py
+</strong></p>
+
+<p>You would find out then that the time complexity of your program is O(exp(n)) . Try and find out the 40th term of the fibonacci series . This code segment will make you wait for a considerable amount of time before you view your result in the terminal. Trying to find out the 50th term would cause you to manually interrupt the process because you can not wait any longer. Therefore we need a method whereby we could find out the higher terms of the series in much faster time.</p>
+
+<p>Heres exactly where memoization comes in. Memoization is not any kind of magic. What it does is that is caches the results that have been calculated earlier and stores them in a lookup table so that these don&rsquo;t have to be calculated again. We make use of an associative array as a lookup table here.  The following code segment shows the memoized version.</p>
+
+<p>_table={0:0,1:1}</p>
+
+<p>def fib1(n):</p>
+
+<pre><code>if not n in table:
+
+    table[n]=fib1(n-1)+fib1(n-2)
+
+return table[n]
+</code></pre>
+
+<p>_</p>
+
+<p>Here we create an associative array with the first two numbers of the fibonacci series as its keys. Now
+upon the call of each function , the lookup table (&lsquo;table&rsquo;) is checked for the existence of the term . If the term is not present in the associative array , the term is calculated and stored in the associative array. In both cases the resulting term is returned. Now see for yourself , the pace of the results being processed.
+Try find out the 100th term of the series:
+Do
+<strong>$ time python myfilename.py</strong>
+You would see the 100th term of the fibonacci series in 12/1000th of a second.Try them for the 1000th,10000th terms&hellip;(provided that you have a higher recursion limit). Did you ever think  that it could be this faster.???</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
-      <a class="prev" href="/blog/page/4/">&larr; Older</a>
+      <a class="prev" href="/technical/blog/page/4/">&larr; Older</a>
     
-    <a href="/blog/archives">Blog Archives</a>
+    <a href="/technical/blog/archives">Blog Archives</a>
     
-    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    <a class="next" href="/technical/blog/page/2/">Newer &rarr;</a>
     
   </div>
 </div>
@@ -1279,26 +1171,75 @@ Lets try and find out the reason behind that:</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+        <a href="/technical/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
       </li>
     
       <li class="post">
-        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+        <a href="/technical/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
       </li>
     
       <li class="post">
-        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+        <a href="/technical/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
       </li>
     
       <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+        <a href="/technical/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
       <li class="post">
-        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+        <a href="/technical/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2011/07/04/ruby-conf-india-2011">RubyconfIndia 2011</a>
       </li>
     
   </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sunilkumarn">@sunilkumarn</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sunilkumarn',
+            count: ,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/technical/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
 
@@ -1317,6 +1258,19 @@ Lets try and find out the reason behind that:</p>
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'techscribblings';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
