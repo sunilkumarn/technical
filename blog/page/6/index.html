@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="GNU debugger(GDB) allows you to view the step by step execution of the program code. This proves of great help in executing complex programs( &hellip;">
+  <meta name="description" content="The static declaration can be applied to both external and internal variables. The static declaration if applied to external variables limits the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,13 +19,13 @@
 
   
   <link rel="canonical" href="http://sunilkumarn.github.io/technical/blog/page/6">
-  <link href="/technical/favicon.png" rel="icon">
-  <link href="/technical/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
-  <script src="/technical/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/technical/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -36,9 +36,9 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/technical/">Scribblings</a></h1>
+  <h1><a href="/">Scribblings</a></h1>
   
-    <h2>Scribbling down experiences :)</h2>
+    <h2>Scribbling down experinces</h2>
   
 </hgroup>
 
@@ -56,8 +56,8 @@
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/technical/">Blog</a></li>
-  <li><a href="/technical/blog/archives">Archives</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
 </ul>
 
 </nav>
@@ -71,7 +71,81 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/08/debugging-with-the-gdb">Debugging With the GDB</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/11/static-variables-and-declarations">Static Variables and Declarations&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-11T01:11:32+05:30" pubdate data-updated="true">Aug 11<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The static declaration can be applied to both external and internal variables. The static declaration if applied to external variables limits the scope of that particular variable to the rest of the source file being compiled. Static declaration if applied to the internal variables ensures that the variables returns its previous value after the control has been transferred out and in of the particular function&hellip;i.e it provides permanent storage for the variable rather than temporary storage which is the case with normal internal variables.</p>
+
+<p>Lets see how static works with internal variables&hellip;
+Consider the program code&hellip;</p>
+
+<p>char yes(void)
+{</p>
+
+<pre><code>static int lastc=0;
+lastc=lastc+1;
+return lastc;
+</code></pre>
+
+<p>}
+The variable lastc has been declared static:
+Hence the value of lastc remains intact even after the function &lsquo;yes()&rsquo; has terminted&hellip;lastc will get back its older value when the next call to the function &lsquo;yes()&#8217;arrives.
+Therefore if the return values where to be printed&hellip;it would be as following:
+1
+2
+3
+&hellip;
+&hellip;</p>
+
+<p>This obviously wouldn&rsquo;t have been the case if the static declaration was not provided.
+Now consider the case:</p>
+
+<p>char yes(void)
+{</p>
+
+<pre><code>static int lastc;
+lastc=0;
+lastc=lastc+1;
+return lastc;
+</code></pre>
+
+<p>}</p>
+
+<p>Here the initial value of the variable has been assigned after the static declaration is performed.
+This would result in a normal execution. Obviously the variable would be static and has permanent storage but its that just the assignment operation after the static declaration takes its effect. Therefore its highly important to initialize the value of the variable declared &lsquo;static&rsquo; along with declaration.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/08/debugging-with-the-gdb">Debugging With the GDB</a></h1>
     
     
       <p class="meta">
@@ -88,8 +162,6 @@
 
 
 <time datetime="2010-08-08T22:35:48+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/08/debugging-with-the-gdb#disqus_thread">Comments</a>
         
       </p>
     
@@ -145,7 +217,7 @@ Quits from the debugger</p>
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/08/recursion-in-c">Recursion in C..</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/08/recursion-in-c">Recursion in C..</a></h1>
     
     
       <p class="meta">
@@ -162,8 +234,6 @@ Quits from the debugger</p>
 
 
 <time datetime="2010-08-08T22:17:39+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/08/recursion-in-c#disqus_thread">Comments</a>
         
       </p>
     
@@ -229,7 +299,7 @@ Now the call to completed function(printd(123)) came from the main() and the con
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/08/a-bit-about-bitwise-operators">A Bit About Bitwise Operators&#8230;.</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/08/a-bit-about-bitwise-operators">A Bit About Bitwise Operators&#8230;.</a></h1>
     
     
       <p class="meta">
@@ -246,8 +316,6 @@ Now the call to completed function(printd(123)) came from the main() and the con
 
 
 <time datetime="2010-08-08T00:09:59+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/08/a-bit-about-bitwise-operators#disqus_thread">Comments</a>
         
       </p>
     
@@ -299,7 +367,7 @@ The other bitwise operators work on the bits as follows….</p>
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/07/the-lm-command">The &#8216;Lm&#8217; Option.</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/07/the-lm-command">The &#8216;Lm&#8217; Option.</a></h1>
     
     
       <p class="meta">
@@ -316,8 +384,6 @@ The other bitwise operators work on the bits as follows….</p>
 
 
 <time datetime="2010-08-07T23:14:16+05:30" pubdate data-updated="true">Aug 7<span>th</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/07/the-lm-command#disqus_thread">Comments</a>
         
       </p>
     
@@ -340,7 +406,7 @@ The syntax would be as follows&hellip;.
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/04/files-in-the-unix-file-system-and-their-permissions">Files in the Unix File System and Their Permissions&#8230;</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/04/files-in-the-unix-file-system-and-their-permissions">Files in the Unix File System and Their Permissions&#8230;</a></h1>
     
     
       <p class="meta">
@@ -357,8 +423,6 @@ The syntax would be as follows&hellip;.
 
 
 <time datetime="2010-08-04T12:05:42+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/04/files-in-the-unix-file-system-and-their-permissions#disqus_thread">Comments</a>
         
       </p>
     
@@ -420,7 +484,7 @@ The command &lsquo;mv filename1 filenname2&hellip;&hellip; destination directory
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/04/characters-integers-and-arrays">Characters , Integers and Arrays.</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/04/characters-integers-and-arrays">Characters , Integers and Arrays.</a></h1>
     
     
       <p class="meta">
@@ -437,8 +501,6 @@ The command &lsquo;mv filename1 filenname2&hellip;&hellip; destination directory
 
 
 <time datetime="2010-08-04T12:01:03+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/04/characters-integers-and-arrays#disqus_thread">Comments</a>
         
       </p>
     
@@ -479,7 +541,7 @@ The result would be an error as such:
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/04/ensuring-the-correct-data-types-while-using-functions">Ensuring the Correct Data Types While Using Functions</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/04/ensuring-the-correct-data-types-while-using-functions">Ensuring the Correct Data Types While Using Functions</a></h1>
     
     
       <p class="meta">
@@ -496,8 +558,6 @@ The result would be an error as such:
 
 
 <time datetime="2010-08-04T11:48:52+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/04/ensuring-the-correct-data-types-while-using-functions#disqus_thread">Comments</a>
         
       </p>
     
@@ -552,7 +612,7 @@ The type is converted from double into int. Now since pop returns a double value
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/04/errorswarnings-and-unexpected-results">Errors,warnings and Unexpected Results&#8230;</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/04/errorswarnings-and-unexpected-results">Errors,warnings and Unexpected Results&#8230;</a></h1>
     
     
       <p class="meta">
@@ -569,8 +629,6 @@ The type is converted from double into int. Now since pop returns a double value
 
 
 <time datetime="2010-08-04T08:45:14+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/04/errorswarnings-and-unexpected-results#disqus_thread">Comments</a>
         
       </p>
     
@@ -611,7 +669,7 @@ In case you find that the output you obtain has got some definite value but is m
       
   <header>
     
-      <h1 class="entry-title"><a href="/technical/2010/08/01/local-and-external-variables">Local and External Variables</a></h1>
+      <h1 class="entry-title"><a href="/2010/08/01/local-and-external-variables">Local and External Variables</a></h1>
     
     
       <p class="meta">
@@ -628,8 +686,6 @@ In case you find that the output you obtain has got some definite value but is m
 
 
 <time datetime="2010-08-01T19:55:02+05:30" pubdate data-updated="true">Aug 1<span>st</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/01/local-and-external-variables#disqus_thread">Comments</a>
         
       </p>
     
@@ -669,62 +725,13 @@ The modified values of the variables would be available to all the functions.</p
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/technical/2010/08/01/functions-in-c">Functions in C</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-01T19:47:57+05:30" pubdate data-updated="true">Aug 1<span>st</span>, 2010</time>
-        
-         | <a href="/technical/2010/08/01/functions-in-c#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>C provides a lot of built in functions. Apart from that users define their own functions knows as user-defines functions. The function has got three parts
-The declaration,the call and the definition.
-Consider a function<strong> &lsquo;getline&rsquo;</strong> which is used to obtain each line from the input.
-The three parts of the function would be as follows:
-Declaration:<strong>returntype getline(parameters);</strong>
-call:<strong>getline(arguments);</strong>
-definition:<strong>returntype getline(parameters)
-{
-declarations;
-statements;
-}</strong>
-The function definition may well contain a &lsquo;return&rsquo; statement to transfer the control back to the caller function. In such cases the return type of the function must not be &lsquo;void&rsquo;.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
-      <a class="prev" href="/technical/blog/page/7/">&larr; Older</a>
+      <a class="prev" href="/blog/page/7/">&larr; Older</a>
     
-    <a href="/technical/blog/archives">Blog Archives</a>
+    <a href="/blog/archives">Blog Archives</a>
     
-    <a class="next" href="/technical/blog/page/5/">Newer &rarr;</a>
+    <a class="next" href="/blog/page/5/">Newer &rarr;</a>
     
   </div>
 </div>
@@ -735,73 +742,26 @@ The function definition may well contain a &lsquo;return&rsquo; statement to tra
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/technical/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
       </li>
     
       <li class="post">
-        <a href="/technical/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
       </li>
     
       <li class="post">
-        <a href="/technical/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
       </li>
     
       <li class="post">
-        <a href="/technical/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
       <li class="post">
-        <a href="/technical/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
-      </li>
-    
-      <li class="post">
-        <a href="/technical/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
-      </li>
-    
-      <li class="post">
-        <a href="/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
-      </li>
-    
-      <li class="post">
-        <a href="/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
-      </li>
-    
-      <li class="post">
-        <a href="/technical/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a>
-      </li>
-    
-      <li class="post">
-        <a href="/technical/2011/07/04/ruby-conf-india-2011">RubyconfIndia 2011</a>
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
       </li>
     
   </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
-  </ul>
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'sunilkumarn',
-            count: ,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/technical/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
 
@@ -820,19 +780,6 @@ The function definition may well contain a &lsquo;return&rsquo; statement to tra
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'techscribblings';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

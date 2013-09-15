@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Git -> A brief on Reverts, Resets, Merges and conflicts. - Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="Git, as we know is a fast, open source, distributed version control system that is quickly replacing subversion in open source and corporate &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experinces</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/github/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Git -> a Brief on Reverts, Resets, Merges and Conflicts.</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-18T14:12:41+05:30" pubdate data-updated="true">Dec 18<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Git, as we know is a fast, open source, distributed version control system that is quickly replacing subversion in open source and corporate programming communities. As a developer, many a times i have been amazed by the power of git and how it takes care of our code repo. It track files in the project, we periodically commit the state of the project when we want a saved point. The history of our project is shared with other developers for collaboration, merge between their work and ours, and compare or revert to previous versions of the project or individual files.</p>
+
+<p>As mentioned earlier, Git, at a fast pace, is replacing subversion in open source and corporate programming communities. Hence most open source developers would have had a taste of git and its power. We all would have done a git init, push, pull, rebase and stuff in our day to day programming activity and those would be quite trivial to most developers.</p>
+
+<p>However they are certain facets of git(merges, conflicts, reverts and such) which does create some kind of trouble to developers, atleast when they use it for the first time. What made me write down this post is an incident that happened to my collegue while he was on work. Will get into that shortly.</p>
+
+<p>First, let me just put in a bit on <strong>Reverts and Resets</strong> done in git.</p>
+
+<p>Git provides us multiple methods for fixing up mistakes while in development mode. This is important, because it saves not just our work but the others who are involved in the same project.</p>
+
+<p>If you have actually done a mess with your working directory, but actually haven&rsquo;t commited the changes, the best way is to perhaps do a hard reset.</p>
+
+<p>$ git reset &mdash;hard HEAD</p>
+
+<p>This would just wipe off the changes that you have made in your git index and also any outstanding changes that you have made in your repo.</p>
+
+<p>Now suppose you have commited your changes, but haven&rsquo;t pushed it into master,  and then suddenly you feel like you shoudn&rsquo;t have made the previous commit(or a sequence of your previous commits), you could again reset hard. This is as simple as doing</p>
+
+<p>$ git reset &mdash;hard HEAD~n.</p>
+
+<p>This would set the HEAD of the git index to &lsquo;n&rsquo; commits prior to your current head.</p>
+
+<p>The problem with doing a git reset &mdash;hard is very obvious now.</p>
+
+<p>o &ndash;> o &ndash;> o &ndash;> D &ndash;> C &ndash;> B &ndash;> A.  This is what your commit log looks like with at A its head. Suppose you do</p>
+
+<p>$git reset &mdash;hard HEAD~3 .</p>
+
+<p>Now your commit log would be.</p>
+
+<p>o &ndash;> o &ndash;> o &ndash;> D</p>
+
+<p>This means that the changes that you made right from A to C have been vanished and you are not going to get it back. <br/>
+The bottom line is simple. You are not able to change the effects made by a single commit(ofcourse, the exception is your last commit as we have already seen).</p>
+
+<p>git-revert is just for that.</p>
+
+<p>Commit log: o &ndash;> o &ndash;> o &ndash;> D &ndash;> C &ndash;> B &ndash;> A</p>
+
+<p>At any point of time, you realize that &lsquo;C&rsquo; is bound to break your code(hopefully it still hasn&rsquo;t), you may well want to undo the changes made by C. This could be done by</p>
+
+<p>$git revert (commit id of C).</p>
+
+<p>This would create a new commit that undoes the commit C. You will be given a chance to enter a new commit message, but the default message that indicates its &lsquo;the reverse of the commit C&rsquo; would be the most indicative commit message to have.</p>
+
+<p>o &ndash;> o &ndash;> o &ndash;> D &ndash;> C &ndash;> B &ndash;> A &ndash;> rC<br/>
+where rC is the reverse of C.</p>
+
+<p>This revert is a straightforward revert(i.e. it just undoes the data made by the commit reverted). Since all thats being talked about is a single branch, there aren&rsquo;t any complications that would arise here.</p>
+
+<p>Now let me talk about the incident that i had mentioned ealier.<br/>
+What had happened what this.</p>
+
+<p>My friend did this:<br/>
+$ git pull origin experimental</p>
+
+<p>while he was still sitting in his master branch. The master branch and the experimental branch have now merged. This was totally unintentional(he never planned to do a merge). There were no merge conflicts however. The mainline code broke. We had to revert this faulty merge.</p>
+
+<p>Master &ndash; >          P  &ndash;>  x &ndash;>  M <br/>
+                                        /<br/>
+                                       /<br/>
+Experimental &ndash;>        A &ndash;> B    </p>
+
+<p>This would give you a picture. P is the point of branching. x is some commit made in the mainline branch totally unrelated to the side line branch. <br/>
+The side line branch itself has got two commits of its own, A and B. M is the merge commit (experimental has been merged with master). <br/>
+The code broke.</p>
+
+<p>We need to revert M(the merge commit).</p>
+
+<p>Master &ndash; >          P  &ndash;> x &ndash;>  M &ndash;> W<br/>
+                                        /<br/>
+                                       /<br/>
+Experimental &ndash;>        A &ndash;> B</p>
+
+<p>Now as seen, the merge has been reverted(W is the reverse of M). This was done with <br/>
+$git revert -m 1 (Commit id of M).</p>
+
+<p>This adds W to the commit log as well.</p>
+
+<p>Now the faulty code in the experimental branch was worked upon and fixed and its been made ready for the merge. The experimental branch is now merged with the master branch. <br/>
+What was weird(for us, at that point of time) and noticeable was that the code changes that were made after the &lsquo;merge revert&rsquo; appeared in the master branch whereas the ones made before the revert didn&rsquo;t appear. i.e.</p>
+
+<p>Master &ndash; >          P &ndash;> x &ndash;> M &ndash;> W &ndash;> x &ndash;> x &ndash;> M2<br/>
+                     <br/>
+Experimental &ndash;>        A &ndash;> B &mdash;&mdash;&mdash;&ndash; C &ndash;> D</p>
+
+<p>Again, x are the commits unrelated to the experimental branch. M2 is the second merge. Commits in the experimental branch,C and D, fixes the faulty code in A and B. Whats to be noticed is that, after the updated experimental branch has been merged, none of the changes made by A and B would appear in the master branch, whereas the changes made in C and D would.</p>
+
+<p>The reason was found out soon.</p>
+
+<p>Linus Torvalds explains the situation:</p>
+
+<p>    <em>Reverting a regular commit just effectively undoes what that commit </em><br/>
+<em>    did, and is fairly straightforward. But reverting a merge commit also</em><br/>
+<em>    undoes the </em>data<em> that the commit changed, but it does absolutely</em><br/>
+<em>    nothing to the effects on </em>history<em> that the merge had.</em></p>
+
+<p><em>    So the merge will still exist, and it will still be seen as joining</em><br/>
+<em>    the two branches together, and future merges will see that merge as</em><br/>
+<em>    the last shared state &ndash; and the revert that reverted the merge brought</em><br/>
+<em>    in will not affect that at all.</em></p>
+
+<p>Thats what just happened here. W(merge revert) undoes the data made by M(merge) but does nothing to the commit history brought in by M. <br/>
+There fore when the second merge,M2, is made, the commit history is checked and M is found to be &lsquo;last shared state&rsquo;. Hence, only those changes that has been made after the &lsquo;last shared state&rsquo;, M, will be merged into the master branch now(i.e. commits C and D). None of the data created in A and B would merge, because as per the commit history, they are already merged.</p>
+
+<p>Solution to this problem is also explained by Linus himself. The fix is to &lsquo;revert the revert that brought in W&rsquo;, i.e, revert W before you do in the next merge,M2.</p>
+
+<p>Thus the main line commit log would be <br/>
+P &ndash;> x &ndash;> M &ndash;> W &ndash;> x &ndash;> x &ndash;> Y &ndash;> M2.</p>
+
+<p>where Y is the reverse of W and M2 is the merge made after that.</p>
+
+<p>$ git revert W</p>
+
+<p>adds Y to the commit log.</p>
+
+<p>The above commit log would be equivalent to P &ndash;> x &ndash;> M &ndash;> x &ndash;> x &ndash;> M2. (where there is no W nor a Y and then the second merge has been performed, M2). Now this would be fine, and all the changes made in the experimental branch should be seen in the master branch(ignoring merge conflicts). If there are any merge conflicts arising, git leaves the index and the working tree in a special state that gives us all the information needed to resolve the merge.</p>
+
+<p>A merge conflict would throw in the following message: <br/>
+CONFLICT (content): Merge conflict in sample_script.rb <br/>
+Automatic merge failed; fix conflicts and then commit the result</p>
+
+<p>Trying to switch to the experimental branch would give you this<br/>
+error: you need to resolve your current index first</p>
+
+<p>The files with conflicts will have markers upon them.</p>
+
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD:sample_script.rb</p>
+
+<h1>&ldquo;We would be starting off now&rdquo;  </h1>
+
+<p>&ldquo;This would be the end&rdquo;</p>
+
+<blockquote><blockquote><blockquote><blockquote><blockquote><blockquote><blockquote><p>d31f96832d54c2702914d4f605c1d641511fef13:sample_script.rb</p></blockquote></blockquote></blockquote></blockquote></blockquote></blockquote></blockquote>
+
+<p>Now we need to resolve these conflicts manually followed by adding the file and commiting.</p>
+
+<p>$ git add sample_script.rb<br/>
+$ git commit -a</p>
+
+<p>The commit message would already be filled in indicating that its a conflict resolving commit. I always prefer not to add in anything extra on that.</p>
+
+<p>It would also be helpful to have the &lsquo;gitk&rsquo; tool when you are analyzing your commit logs, specially when you have more than once branch. You would be given a neat graphchical representation of your working directory.</p>
+
+<p>$ sudo apt-get install gitk <br/>
+if you already don&rsquo;t have one.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/12/screenshot-2.png"><img src="http://sunilkumarn.files.wordpress.com/2011/12/screenshot-2.png?w=443" alt="Image" /></a></p>
+
+<p>This definitely would be helpful in getting the bigger picture.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-18T14:12:41+05:30" pubdate data-updated="true">Dec 18<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sunilkumarn.github.io/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts-2" data-via="" data-counturl="http://sunilkumarn.github.io/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts-2" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch" title="Previous Post: Solution to 'Wireless disabled by Hardware switch'">&laquo; Solution to 'Wireless disabled by Hardware switch'</a>
+      
+      
+        <a class="basic-alignment right" href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts" title="Next Post: Git Reset, Revert, Merge Conflicts and the Faulty Merge">Git Reset, Revert, Merge Conflicts and the Faulty Merge &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
