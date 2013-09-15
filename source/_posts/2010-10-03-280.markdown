@@ -1,0 +1,94 @@
+---
+author: sunilkumarn
+comments: true
+date: 2010-10-03 18:35:22+00:00
+layout: post
+slug: '280'
+title: GNU make
+wordpress_id: 280
+categories:
+- Tools
+---
+
+The make utility determines which pieces of the program needs to be recompiled and issues instructions to recompile them.GNU make is the most popular make available. Lets get into the working of make with a simple example but please do read [THIS](http://sunilkumarn.wordpress.com/2010/10/03/swigsimplified-wrapper-and-interface-generator/) before moving into further details.
+
+By reading that, you would have understood that our ultimate aim is to produce a file '_avl.so' so that the C module 'avl.c' could be extended into Python.
+Lets check what exactly do we need to do here.
+
+We begin with 2 files namely 'avl.c' and 'avl.i'. We need to create a wrapper file at first . This is done by:
+
+**$: swig -python avl.i**
+
+Next what we need to do is that we need to create 2 object files for the respective C files- i.e we need to produce 'avl.o' and 'avl_wrap.o' from 'avl.c' and 'avl_wrap.c' respectively.
+We do this by:
+
+**$: gcc -c avl.c avl_wrap.c -I /usr/include/python2.5/**
+
+The last and final step is to create '_avl.so' from the 2 object files.
+
+**$: ld -shared avl.o avl_wrap.o -o _avl.so **
+
+The dependencies and actions are quite clear now.
+[![](http://sunilkumarn.files.wordpress.com/2010/10/make.png)](http://sunilkumarn.files.wordpress.com/2010/10/make.png)
+
+Typing in these commands time and again would be a tedious and ineffective job for anyone. We could automate the whole process by writing a file called Makefile and use the 'make' utility.
+
+The Makefile for performing the above steps would be as follows:
+
+[![](http://sunilkumarn.files.wordpress.com/2010/10/makefile3.png?w=300)](http://sunilkumarn.files.wordpress.com/2010/10/makefile3.png)
+
+A Makefile has the following format.
+
+[![](http://sunilkumarn.files.wordpress.com/2010/10/new3.png?w=300)](http://sunilkumarn.files.wordpress.com/2010/10/new3.png)
+
+Its important to note that the 'ACTIONS' line begins with a TAB as it is a part of the syntax of a Makefile. Anything other than TAB would be harmful.
+
+Lets check out how things work out.
+
+**$: make**
+
+This would cause GNU make to start executing the commands in Makefile.GNU make starts from the very beginning of the Makefile. The first set of 'TARGET-DEPENDENCIES-ACTIONS are checked in.
+
+The TARGET is '_avl.so' : The DEPENDENCIES are 'avl.o and avl_wrap.o' and the ACTION that needs to be performed is
+
+**ld -shared avl.o avl_wrap.o -o _avl.so**
+
+But at present 'avl.o' and 'avl_wrap.o' are not available. To Generate them the next set of the Makefile is to be checked. The same problem exists there as well . Hence the 3rd set in the Makefile is reached where the DEPENDENCY is 'avl.i' which exists at present. Hence the action
+
+**swig -python avl.i
+**
+is executed , the target 'avl_wrap.c' is generated .
+Now the second set in the Makefile can be compiled followed by the compilation of the first set. The procedure that takes place here is recursive .All the three actions are executed , the TARGETS are generated from the ACTIONS and DEPENDENCIES and finally we obtain '_avl.so'.
+
+You could see another line in the Makefile that has not been mentioned upto now.
+**make remove**
+make remove is the TARGET and the ACTION that needs to be performed is
+**rm avl.o avl_wrap.o avl.py _avl.so avl_wrap.c avl.pyc**
+
+**$: make remove**
+
+will remove all the unnecessary files in the directory when you are planning to start from the beginning.
+
+If you would like to have a test on the intelligence of 'make' , you would be pretty surprised.
+
+Lets deal that case with an example as well.
+
+DO:
+
+****$:  swig -python avl.i****
+
+We have executed the first command manually.
+Now do:
+
+**$: make**
+
+and you will find that make executes only the other two commands that is included in the Makefile.
+This again shows the recursive nature of the make process. The Makefile is read from the top. On reaching the second set , GNU make realizes that both the dependencies 'avl.c' and 'avl_wrap.c' are available and executes the ACTION to produce the TARGET 'avl.o' and 'avl_wrap.o'.
+
+Now once again do
+**$: make**
+
+You would get a message as follows:
+**make: `_avl.so' is up to date.**
+
+This again brings to the fort-light the power of make. The final target '_avl.so' has been found to be 'up to date' and hence there is no question of having to execute the commands in the Makefile . GNU make, **Richard Stallman and Rolland Mcgrath's creation**, has recognized this.

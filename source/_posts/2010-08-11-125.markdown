@@ -1,0 +1,18 @@
+---
+author: sunilkumarn
+comments: true
+date: 2010-08-11 19:05:56+00:00
+layout: post
+slug: '125'
+title: Setting up the vim configuration.
+wordpress_id: 125
+---
+
+While writing C programs using the 'vi' editor ,you might find a frustrating task of handling with line numbers ,setting up the indentation properly and of course you might never mind if some indications are given about the keywords using colors. There fore we set up the vim configuration and automate the above said tasks by doing the following.
+Create a file .exrc in your home directory..
+vi .exrc   ....filename ending with rc indicates that you can configure them the way you want it to be.
+Now type the following:
+**set nu**             /*to set up line numbers properly*/
+**set cindent **     /*to set up the indentation(for the better clarity of the program)*/
+**syntax on**        /*this sets the coloring 'on' for the program according to the C syntax */
+Now save the file and start writing your programs more comfortably.
