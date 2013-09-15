@@ -24,7 +24,7 @@ var github = (function(){
             repos.push(data.data[i]);
           }
           console.log("Count", options.count)
-          if (options.count) { repos.splice(options.count); }
+          if (options.count != undefined) { repos.splice(options.count); }
           render(options.target, repos);
         }
       });
