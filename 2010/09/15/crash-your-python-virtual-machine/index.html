@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Crash  your python Virtual machine!!! - Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="Causing a python virtual machine to crash is not what I intended but it just happened so. But since this happened , I would just like to give an &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/2010/09/15/crash-your-python-virtual-machine">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experinces</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/github/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Crash Your Python Virtual Machine!!!</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-15T09:02:22+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Causing a python virtual machine to crash is not what I intended but it just happened so. But since this happened , I would just like to give an explanation about what happened and the reason for it.</p>
+
+<p>While trying out <a href="http://sunilkumarn.wordpress.com/2010/09/15/memoizationrun-your-programs-faster/">memoization</a> , I tried to increase the maximum recursion limit which was set to 1000 in my system.
+To change your maximum recursion limit , what you need to do is :
+<em>import sys
+sys.setrecursionlimit( MY LIMIT )</em></p>
+
+<p>This would change the maximum number of times that you could recurse your code segment.
+Everything worked fine until I did this:
+<em>sys.setrecursionlimit(46765)</em></p>
+
+<p>Now my recursion limit is set to 46765. I tried to run my python code which displayed a segmentation fault that you wouldn&rsquo;t normally associate with your python code. This tells you that your python virtual machine has crashed.
+Lets try and find out the reason behind that:</p>
+
+<p>Recursion consumes the stack size in the system . Setting the recursion limit to 46765 means that now the amount of stacksize that will be consumed is much greater .We know the fact the python virtual machine is written in C . As you increase your recursion limit , a point reaches where there is not enough memory for the C back end to execute our python code and this results in a segmentation fault in C that is back propagated to python and displayed in our terminal.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-15T09:02:22+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sunilkumarn.github.io/technical/2010/09/15/crash-your-python-virtual-machine" data-via="" data-counturl="http://sunilkumarn.github.io/technical/2010/09/15/crash-your-python-virtual-machine" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/09/15/memoizationrun-your-programs-faster" title="Previous Post: Memoization:Run your programs faster.">&laquo; Memoization:Run your programs faster.</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/09/23/find-the-endianity-of-your-processor" title="Next Post: Find the Endianity of your Processor:">Find the Endianity of your Processor: &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

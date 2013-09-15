@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Analyzing the Tinypy Virtual Machine  - Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="The major task in tinypy is to analyze the working of the virtual machine. Analyzing and understanding its source code is, obviously, the major &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/2010/09/24/analyzing-the-tinypy-virtual-machine">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experinces</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/github/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Analyzing the Tinypy Virtual Machine</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-24T02:22:00+05:30" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The major task in tinypy is to analyze the working of the virtual machine. Analyzing and understanding its source code is, obviously, the major challenge that is faced. The code itself is not well arranged and the lack of proper documentation makes the challenge even bigger. Proper use of the GNU debugger, &lsquo;gdb&rsquo;, and the indexing tool, Ctags makes the process of analysis of the VM a lot simpler. Perhaps the best way to understand the working of the VM is to use the VM to execute the byte code of a simple python program and see and understand the actual flow of control. Here a sample program &lsquo;sample.py&rsquo; is used:</p>
+
+<p><code>def add(a,b):
+c = a + b
+return(c)
+print(add(1,9))</code></p>
+
+<p>Note that the use of the parentheses for built-in functions too is a part of the syntax in TinyPy. Obtaining sample.tpc is explained <a href="http://sunilkumarn.wordpress.com/2010/09/23/an-overview-of-tinypy/">here.</a></p>
+
+<p>**cc vmmain.c -1m</p>
+
+<pre><code>        ./a.out sample.tpc   **
+</code></pre>
+
+<p>gives you the output:
+<em>10</em></p>
+
+<p>Understanding the flow of control for this program would give an idea of the working of a segment of the virtual machine.
+Each time the VM is invoked, a new instance of the VM is created .
+<strong>tp_vm *tp =tp_init(argc,argv);</strong></p>
+
+<p>The key point to be understood in the analysis of VM is that each object in tinypy is stored as a union in the C API.
+Lets get into the details:<strong> tp_obj</strong> is the tinypy&rsquo;s object representation.</p>
+
+<p><code>typedef union tp_obj  {
+int type;
+tp_number_ number;
+struct{int type;int *data;}gci;
+tp_string_ string;
+tp_dict_ dict;
+tp_list_ list;
+tp_fnc_ fnc;
+tp_data_ data;
+} tp_obj;
+</code>
+The union tp_obj with its fields are shown. The field <strong>&lsquo;type&rsquo;</strong> of the union indicates the type of the object. A type value of 1 indicates that a number is being used, type = 2 indicates object is a string and type = 4 indicates a list. In our sample program, our objective is to add two numbers &lsquo;a&rsquo; and &lsquo;b&rsquo; and print their output. A function in the virtual machine <strong>&lsquo;tp_add&rsquo;</strong> does the job of adding two arguments that is passed to the function as input. The arguments could be numbers, strings or lists. Lets analyze the function &lsquo;tp_add&rsquo;.</p>
+
+<p><strong>tp_obj tp_add(TP,tp_obj a,tp_obj b)
+</strong>
+The Function definition of &lsquo;tp_add&rsquo; contains three arguments:
+• <em>TP &ndash;> the VM instance
+• tp_obj a &ndash;> the union variable representing the object &lsquo;a&rsquo; in the sample program
+• tp_obj b &ndash;> the union variable representing the object &lsquo;b&rsquo; in the sample program
+_
+Within the function<strong> tp_add</strong>, the type of the two objects are checked and the appropriate function is performed. In our example, two numbers are to be added. As we mentioned above, &lsquo;a&rsquo; and &lsquo;b&rsquo; are stored as unions and the union contains fields for types such as number, strings, lists etc. We access the field **tp_number</em><strong> in the union &lsquo;a&rsquo; as &lsquo;</strong>a.number&rsquo;<strong>. </strong>&lsquo;number&rsquo;<strong> is a variable of the structure </strong>tp_number<em><strong> which contains a variable </strong>&lsquo;val<strong>&rsquo; that stores the exact value of the number . Therefore </strong>a.number.val<strong> would give you the actual object . Analyzing the addition of strings would be interesting as well. &lsquo;</strong>a.string&rsquo;<strong> would give you the union which represents the string object. The union</strong> tp_obj<strong> contains a field </strong>tp_string</em>** which is a structure and includes the pointer that points to the address where the string &lsquo;a&rsquo; is stored. The structure of tp_string_:</p>
+
+<p><code>typedef struct tp_string_ {
+int type;
+struct tp_string_ info*;
+char const *val;
+int len;
+}  tp_string_;</code></p>
+
+<p>An idea about the manipulation of lists would do no harm to our primary objective, the study of the working of the VM. Consider two simple lists in python :
+a = [1,2,3] , b = [4,5,6]</p>
+
+<p>Again we start from tp_add which needs us to go back to our function. The VM uses a function <strong>&lsquo;tp_extend</strong>&rsquo; which returns a union that contains the new (extended) list. You would see that the value of the field &lsquo;type&rsquo; of the union that is returned would be 4 which indicates a list. Access the field &lsquo;list&rsquo; as <strong>&lsquo;a.list&rsquo;</strong>. <strong>&lsquo;list</strong>&rsquo; is a structure variable that includes a pointer <strong>*val </strong>that points to another structure &lsquo;<strong>_tp_list&rsquo;:</strong></p>
+
+<p><code>typedef struct _tp_list {
+int gci;
+tp_obj *items;
+int len;
+int alloc;
+} _tp_list;</code></p>
+
+<p>The pointer <strong>*items</strong> as you could see is of type tp_obj and de-referencing it would give you the union tp_obj. This union contains a single element of the list. Starting from the function tp_add:</p>
+
+<p><strong>*r.list.val &ndash;> items
+</strong>
+would give you the union mentioned above. Accessing the field &lsquo;<strong>val</strong>&rsquo; of the field<strong> &lsquo;number</strong>&rsquo; (variable of the structure tp_list_) of the union would give you the element of the list. Now , the obvious question is how do we obtain the next element of the list. For this you need to have some idea about the storage of unions.</p>
+
+<p><strong>r.list.val &ndash;> items</strong></p>
+
+<p>would give you the address of the union. Suppose the address be &lsquo;<strong>0x96ca048&rsquo;</strong> . Now to obtain the union which contains the next element of the list, you need to add the address of the current union with the size taken by each union (sizeof(union)).
+<em>Union containing the next element of the list = Address of the current union + size of each union</em>. For example :
+<strong>r.list.val &ndash;> items = 0x96ca048 + 10</strong>
+would give you the union that stores the next element of the list . The size of the union is 10, in hexadecimal = 16 bytes.
+<a href="http://sunilkumarn.files.wordpress.com/2010/09/image-1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-1.png?w=300" alt="" /></a></p>
+
+<p>The path of <strong>tp_add</strong> can be traced using the &lsquo;bt&rsquo; option in gdb. The path of the function tp_add is as follows:
+<a href="http://sunilkumarn.files.wordpress.com/2010/09/image-2.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-2.png?w=245" alt="" /></a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-24T02:22:00+05:30" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/tinypy/'>Tinypy</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sunilkumarn.github.io/technical/2010/09/24/analyzing-the-tinypy-virtual-machine" data-via="" data-counturl="http://sunilkumarn.github.io/technical/2010/09/24/analyzing-the-tinypy-virtual-machine" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/09/24/an-overview-of-tinypy" title="Previous Post: An Overview of TinyPy">&laquo; An Overview of TinyPy</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/09/25/concept-and-creation-of-environment" title="Next Post: Concept and creation of Environment ">Concept and creation of Environment  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

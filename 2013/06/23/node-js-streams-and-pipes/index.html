@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Node.js: Streams and pipes. - Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experinces</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/github/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Node.js: Streams and Pipes.</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-23T00:27:26+05:30" pubdate data-updated="true">Jun 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
+
+<p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
+
+<div>
+  <pre><code class='javascript'>var http = require('http'),
+  sys = require('sys'),
+  fs = require('fs');
+
+  var server = http.createServer();
+  console.log(&quot;Starting up the server&quot;);
+  server.listen(8000);
+
+  server.on('request', function(request, response) {
+    var file = fs.createWriteStream('copy.csv');
+    var fileSize = request.headers['content-length'];
+    var uploadedSize = 0;
+
+    request.on('data', function (chunk) {
+      uploadedSize += chunk.length;
+      uploadProgress = (uploadedSize/fileSize) * 100;
+      response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
+      var bufferStore = file.write(chunk);
+      if(bufferStore == false)
+        request.pause();
+    });
+
+    file.on('drain', function() {
+      request.resume();
+    })
+
+    request.on('end', function() {
+      response.write('Upload done!');
+      response.end();
+    })
+
+  });</code></pre>
+</div>
+
+
+<p>The basics: We create a node server that listens on port 8000. Upon receival of a request, we create a write stream ( the destination file path ). Each chunk of data received is written on to the destination path, the upload progress is calculated and responded back.</p>
+
+<p>Lets break up the above snippet into pieces and make an analysis of whats happening.</p>
+
+<p>A writeStream is created and &lsquo;copy.csv&rsquo; is the destination path to which the received data will be written.</p>
+
+<div>
+  <pre><code class='javascript'>var file = fs.createWriteStream('copy.csv');</code></pre>
+</div>
+
+
+<p>The following piece forms the core of the upload process.</p>
+
+<div>
+  <pre><code class='javascript'>request.on('data', function (chunk) {
+    var bufferStore = file.write(chunk);
+    if(bufferStore == false)
+      request.pause();
+    uploadedSize += chunk.length;
+    uploadProgress = (uploadedSize/fileSize) * 100;
+    response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
+  });
+
+  file.on('drain', function() {
+    request.resume();
+  })</code></pre>
+</div>
+
+
+<p>Looking at the code &ndash; on receiving each chunk of data ( via the read stream ), its written to the write stream as
+<code>file.write(chunk);</code></p>
+
+<p>Right now, we need to pause a bit to check whether there might be a cause of worry in this whole read-write streaming process. The answer is yes, and is very obvious. <strong>There exists a real possibility that the rate at which the data is written to the writeStream is less than the rate at which its read from the readStream</strong>. This is a genuine cause of concern and hence cannot be ignored. How we handle this forms our next two lines of code.</p>
+
+<p><code>file.write(chunk)</code> stores the data onto a buffer. It returns true if the write was performed and returns false if the write failed due to the buffer being full. So, we need to handle this by pausing the readStream if the buffer storage is full.</p>
+
+<div>
+  <pre><code class='javascript'>var bufferStore = file.write(chunk);
+  if(bufferStore == false)
+    request.pause();</code></pre>
+</div>
+
+
+<p>Also, we need to re-start streaming data from the read stream once the buffer is drained out. The following lines of code does just that.</p>
+
+<div>
+  <pre><code class='javascript'>file.on('drain', function() {
+    request.resume();
+  })</code></pre>
+</div>
+
+
+<p><strong>Pipes in node</strong>: Here, we have handled the logic of keeping the read &ndash; write rate to be in sync. Node.js provides us with pipes which has this logic already encapsulated in it.</p>
+
+<p>The following line,</p>
+
+<div>
+  <pre><code class='javascript'>request.pipe(file) // The notion is quite similar to UNIX pipes. Pipes the input into an output stream.</code></pre>
+</div>
+
+
+<p>would be equivalent to</p>
+
+<div>
+  <pre><code class='javascript'>request.on('data', function(chunk) {
+    var bufferStore = file.write(chunk);
+    if(bufferStore == false)
+      request.pause();
+  })
+
+  file.on('drain', function() {
+    request.resume();
+  })</code></pre>
+</div>
+
+
+<p>Pipe by itself maintains the read write rate to be in sync by pausing and resuming when necessary.</p>
+
+<p>Now since we have handled our cause of concern, all that is left is to calculate the upload percentage upon receiving each chunk of data and respond back with the calculated percentage.</p>
+
+<div>
+  <pre><code class='javascript'>uploadedSize += chunk.length;
+  uploadProgress = (uploadedSize/fileSize) * 100;
+  response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );</code></pre>
+</div>
+
+
+<p>Do note that the actual size of the upload file is calculated from the request headers.</p>
+
+<div>
+  <pre><code class='javascript'>var fileSize = request.headers['content-length'];</code></pre>
+</div>
+
+
+<p>Now, when the request ends ( i.e the &lsquo;end&rsquo; event is emitted by the request ), the final chunk of response is given back to the client indicating that our file upload has been done successfully.</p>
+
+<p>To test this, run the node server and try making a request, something like this:</p>
+
+<p><code>curl -v --upload-file "upload_file.csv" "http://localhost:8000"</code></p>
+
+<p>and the upload progress could be tracked.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-23T00:27:26+05:30" pubdate data-updated="true">Jun 23<span>rd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/node-dot-js/'>Node.js</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes" data-via="" data-counturl="http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2013/05/21/mercury-the-wysiwyg-html-editor" title="Previous Post: Mercury: The WYSIWYG html editor">&laquo; Mercury: The WYSIWYG html editor</a>
+      
+      
+        <a class="basic-alignment right" href="/2013/06/28/prototypal-inheritance-in-javascript" title="Next Post: Prototypal Inheritance in Javascript">Prototypal Inheritance in Javascript &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

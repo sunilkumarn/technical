@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Implementing the Avl Tree - Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="AVL Tree is a self-balancing binary search tree and it was the first such structure to be invented. The tree is said to be balanced because the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/2010/10/16/implementing-the-avl-tree">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experinces</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/github/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Implementing the Avl Tree</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-16T09:51:58+05:30" pubdate data-updated="true">Oct 16<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>AVL Tree is a <strong>self-balancing binary search tree</strong> and it was the first such structure to be invented. The  tree is said to be balanced because the difference in the heights of the child subtrees differ by atmost one. The operations Insertion, Deletion and Lookup on an Avl tree is of the order of  <em>Log n</em> because of this balancing act. Here we take a look into the implementation of an AVL tree .</p>
+
+<p>First we need to give a thought on the term &lsquo;balance Factor&rsquo; and on the major operations that are involved in the making of such a tree.</p>
+
+<p><strong>Balance Factor:</strong>Balance factor is associated with each node of the Avl tree. Its the difference between the heights of the left subtree and right subtree of that particular node.</p>
+
+<p><em>Balance factor = height of left    subtree – height of right subtree.</em></p>
+
+<p>A balance Factor of 0 , +1 or -1 for each and every node of the tree indicates that its balanced. Whenever the balance Factor of any of the nodes equals – or + 2 , the tree becomes unbalanced and needs to undergo balancing.</p>
+
+<p>Now lets just peep into the major operations that are involved in the build up of the tree.</p>
+
+<p>There are 3 of them</p>
+
+<p>1) Insertion:2) Deletion:3) Rotation:
+Insertion is the usual process. There is nothing special in inserting a node into an Avl tree than in inserting it to a normal binary search tree.</p>
+
+<p>Deletion is again the same with a minor difference which we will look in to as we continue.</p>
+
+<p>Rotation is the balancing act- The operation that distinguishes an Avl tree from the normal binary search tree. Rotation needs to be performed whenever the tree goes out of balance – this could happen as a result of the first two operations ( Insertion and Deletion ).  The Balance factor may go beyond 1 and hence the tree will have to be balanced so that it remains as an Avl tree. Each of the three operations , specially that of rotation will have to be given due care in building up an Avl tree.</p>
+
+<p>You could sum it up this way :</p>
+
+<p><strong>Each insertion in an Avl tree is a combination of normal insertion into a binary search tree added  with finding out whether the tree is unbalanced or not followed by rotation if necessary.</strong></p>
+
+<p><strong>Each deletion in an Avl tree is a combination of normal deletion into a binary search tree added with  finding out whether the tree is unbalanced or not followed by rotation if necessary.</strong></p>
+
+<p>Before we get into more details of each of them , we will have a look into the way each node is implemented in the Avl tree.</p>
+
+<p>Each and every node in the Avl tree is implemented as a structure .This is same as what is done in an ordinary BST , <strong>since Avl tree is itself a BST.</strong></p>
+
+<p><code>struct node{</code></p>
+
+<p><code>int data;
+</code>
+<code>struct node *parent,*left,*right;</code></p>
+
+<p><code>}*p,*root=0;</code></p>
+
+<p>The field &lsquo;data&rsquo; contains the actual data that is to be stored in the node .There are three pointers of the type &lsquo;struct node*&rsquo;.</p>
+
+<p><em>*left –>    points to the left child of the node</em></p>
+
+<p><em>*right –>   points to the right child.</em></p>
+
+<p><em>*parent –> points to the parent node .</em></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/node.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/node.png?w=231" alt="" /></a></p>
+
+<p>Now lets get into the details of the different operations performed on the Avl tree.</p>
+
+<p>Inserting into an Avl Tree can pictorially be represented as follows:</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/untitled-1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/untitled-1.png?w=300" alt="" /></a></p>
+
+<p>Obviously , there are other functions that are involved  in the process, but the ones shown in figure are the significant ones.</p>
+
+<p><strong>avl_insert :</strong> As discussed earlier insertion into an avl tree consists of the normal insertion followed by the checks for balancing and rotation if necessary. Normal insertion is performed first . Then the function self_bal() is called :</p>
+
+<p><strong>self_bal() </strong>:   The newly inserted node would obviously be balanced since it wont have any children. Therefore the balance factors of the nodes that come above the inserted node in the tree ( starting from the parent ,right upto the root ) is to be checked. The function &lsquo;self_bal&rsquo; invoked &lsquo;balance()&rsquo; which performs the further  tasks. Again, since a newly created tree is always balanced and since parent of the root points to NULL , the function &lsquo;balance()&rsquo; should not be called if the newly inserted node is the root itself.</p>
+
+<p><strong>balance() </strong>:   Invokes the function bal_fac() and checks if the balance factor is equal to +or- 2 . If yes , calls the appropriate rotate function.</p>
+
+<p><strong>bal_fac()   :</strong> Finds out the balance factor for each node.</p>
+
+<p><strong>rotate()     :</strong> Here rotate() is the just the cohesive name for the two types of rotate functions . According to the balance factor , the appropriate &lsquo;rotate&rsquo; functions are called. We will discuss them in detail later.</p>
+
+<p>The pictorial representation of &lsquo;delete()&rsquo; would be no different.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/delete.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/delete.png?w=300" alt="" /></a></p>
+
+<p>By now you would have understood that the central aspect in building up the whole Avl tree is the rotate() function, but before we get into implementing the &lsquo;rotate()&rsquo; function , its of prime importance that we give a little more thought into implementing the &lsquo;delete()&rsquo; function in the Avl tree. As mentioned above , there is just a minor change that needs to be made , due to the self balancing nature of the Avl tree.</p>
+
+<p>While performing a &lsquo;delete()&rsquo; function in a normal BST, we need to look into 5 different cases of how a particular node could be deleted and replaced with another one. Just peeping into them:</p>
+
+<p>1)The victim node being a leaf      node.</p>
+
+<p>2)The victim node having a right    child.</p>
+
+<p>2.1) The victim node having a right     child with a left subtree.</p>
+
+<p>2.2) The victim node having a right     child with no left subtree.</p>
+
+<p>3)The victim node not having a  right child.</p>
+
+<p>3.1) The victim node having a left  child with a right subtree.</p>
+
+<p>3.2) The victim node having a   left-child with no right subtree.</p>
+
+<p>Certainly , from what we have discussed until now, its clear that one of these conditions never happens. You might have guessed it by now.</p>
+
+<p>Case 3.1) would never happen in an Avl tree. This could be explained with the following figure.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/case3-11.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/case3-11.png?w=252" alt="" /></a></p>
+
+<p>Consider you want to delete the node &lsquo;10&rsquo; after adding &lsquo;9&rsquo; to the tree , but adding &lsquo;9&rsquo; to the tree would leave it unbalanced.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/case3.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/case3.png?w=250" alt="" /></a></p>
+
+<p>Hence the tree will be rotated so that it becomes balanced ( how?, we will come to know shortly) before you could delete &lsquo;10&rsquo; . Hence there will never be a case of a victim node have a &lsquo;left child with a right subtree&rsquo; and does not have a right child of its own.</p>
+
+<p>Now , its time that we move into the  in the creation of an Avl Tree, the &lsquo;rotate() &rsquo; function.</p>
+
+<p><strong>Rotation</strong> ,as mentioned ,<strong>follows up a deletion from or an insertion into an Avl tree</strong> in such a way that it destroys the balanced nature of the Tree.</p>
+
+<p>There are 4 kinds of rotation which are implemented using 2 different rotation functions.</p>
+
+<p>Its crucial at this stage that the following points are understood.</p>
+
+<p><em>Balance factor of a node = +2 implies that the node ( and ultimately the tree) is unbalanced because of  the left subtree of the node and there will be one right rotation for sure.</em></p>
+
+<p><em>Balance factor of a node = -2 implies that the node ( and ultimately the tree) is unbalanced because of the right subtree of the node and there will be one left rotation for sure.</em></p>
+
+<p><em>Whether a single rotation needs to be done or whether the tree needs to be rotated twice depends upon the balance factor of the child of the root of the subtree that is unbalanced. You needn&rsquo;t scratch your head on this , stuffs that follow would lighten up things.</em></p>
+
+<p>Let &lsquo;point&rsquo; be the root of the subtree which has made the tree go out of balance . The 4 kinds of rotation are:</p>
+
+<p>1)<strong>left  – left rotation:</strong> If balance factor(BF) of point is 2 and the BF of the left child is > 0 , then a single &lsquo;right&rsquo; rotation would do it for you.</p>
+
+<p>2)<strong>left  –  right rotation:</strong> If BF of point is 2 and the BF of the left child is &lt; 0 , then a    &lsquo;left&rsquo; rotation followed by a &lsquo;right&rsquo; rotation would do it for you.</p>
+
+<p>3<strong>)right – left rotation:</strong> If BF of point is -2 and the BF of the left child is > 0 , then a &lsquo;right&rsquo; rotation followed by a &lsquo;left&rsquo; rotation makes the tree balanced.</p>
+
+<p>4)<strong>right – right rotation:</strong> If BF of point is -2 and the BF of the left child is &lt; 0  , then a single &lsquo;left&rsquo; rotation would be enough.</p>
+
+<p>We will discuss rotation which happens as a result of the tree being unbalanced after an insertion or a deletion has been performed. The &lsquo;rotation&rsquo; function is independent of whether the previous function was a deletion or an insertion , it depends only on the current structure of the tree.</p>
+
+<p><em><strong>Left-Right Rotation  &amp;   Left-Left Rotation</strong></em></p>
+
+<p>Consider the figure :</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr1.png?w=231" alt="" /></a></p>
+
+<p><em>Here the point of imbalance is &lsquo;23&rsquo; and the reason for imbalance is the left subtree of &lsquo;23&rsquo;. </em>Hence performing a &lsquo;right&rsquo; rotation is essential . Now the left child of &lsquo;23&rsquo; has a BF of -1 ( &lt; 0 ) . Hence a left rotation also needs to be performed. This leads to a left-right rotation .</p>
+
+<p>left rotation : Left rotation is performed by invoking the rotate_left() function. The two parameters that are to passed to the function are &lsquo;root&rsquo; and &lsquo;pivot&rsquo; .</p>
+
+<p>Root &mdash;&ndash;> point of imbalance , I.e  &lsquo;17&rsquo;</p>
+
+<p>Pivot &mdash;&ndash;> right-child of the point of imbalance I.e &lsquo;19&rsquo;.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr2.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr2.png?w=231" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr3.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr3.png?w=278" alt="" /></a></p>
+
+<p>The left rotation has been performed.</p>
+
+<p>Now our problem has been reduced to performing a left-left rotation , you could see that from the figure .That is ,we need to perform a single &lsquo;right rotation&rsquo;:</p>
+
+<p>right rotation : The right rotation is performed by invoking the rotate_right() function. The two parameters would be :</p>
+
+<p>Root &mdash;&ndash;> point of imbalance : I.e 23</p>
+
+<p>Pivot &mdash;&ndash;> left-child of the point of imbalance I.e &lsquo;19&rsquo;.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr4.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr4.png?w=278" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/l11.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/l11.png?w=258" alt="" /></a></p>
+
+<p>The right rotation also has been performed. Now you may have a look at the tree and would find out that its balanced .</p>
+
+<p><em><strong>Right-Left Rotation &amp;  Right-Right Rotation.</strong></em></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lf11.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lf11.png?w=283" alt="" /></a></p>
+
+<p>Consider the figure above :</p>
+
+<p><em>Here the point of imbalance is &lsquo;17&rsquo; and the reason for imbalance is the right subtree of &lsquo;17&rsquo;. </em>Hence performing a &lsquo;left&rsquo; rotation is essential . Now the right child of &lsquo;17&rsquo; has a BF of 1( > 0 ) . Hence a &lsquo;right&rsquo; rotation also needs to be performed. This leads to a right-left rotation .</p>
+
+<p>right rotation : right rotation, as mentioned above is performed by invoking the rotate_right() function. The two parameters that are to passed to the function are &lsquo;root&rsquo; and &lsquo;pivot&rsquo; .</p>
+
+<p>Root &mdash;&ndash;> point of imbalance , I.e  &lsquo;23&rsquo;</p>
+
+<p>Pivot &mdash;&ndash;> left-child of the point of imbalance I.e &lsquo;19&rsquo;.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lf21.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lf21.png?w=283" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr31.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr31.png?w=300" alt="" /></a></p>
+
+<p>The right rotation has been performed.</p>
+
+<p>Now our problem has been reduced to performing a right-right rotation .That is ,we need to perform a single &lsquo;left rotation&rsquo;:</p>
+
+<p>left rotation : We have seen that left rotation is performed by invoking the rotate_left() function. The two parameters would be :</p>
+
+<p>Root &mdash;&ndash;> point of imbalance : I.e &lsquo;17&rsquo;</p>
+
+<p>Pivot &mdash;&ndash;> right-child of the point of imbalance I.e &lsquo;23&rsquo;.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr41.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr41.png?w=300" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/l12.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/l12.png?w=258" alt="" /></a></p>
+
+<p>The left rotation also has been performed. The tree has been balanced .We have found out how a tree could be balanced through rotation.</p>
+
+<p>There is another issue that we need to deal with while performing rotation. Two questions that we need to consider here are&hellip;</p>
+
+<p><strong>1)What happens to the left node of the pivot during a left rotation.?</strong></p>
+
+<p><strong>2)What happens to the right node of the pivot during the right rotation.?</strong></p>
+
+<p>Consider the following figure .</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/nw.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/nw.png?w=195" alt="" /></a></p>
+
+<p>The tree as you could see is unbalanced with the root (&lsquo;23&rsquo;) being the point of imbalance, the left subtree being the reason for the imbalance.. Since the BF of the left child of the root = -1 ( &lt; 0 ) , we need to perform a left – right rotation . I.e a left rotation followed by a right rotation . For performing the left rotation , the root is &lsquo;17&rsquo;  and the pivot is &lsquo;19&rsquo;. As you could see from the figure ,the left child of the pivot is marked &lsquo;L&rsquo; . Our question is what exactly happens to this &lsquo;L&rsquo; after the left rotation has been performed. ? The answer is right there in our next figure .</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/nw2.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/nw2.png?w=255" alt="" /></a></p>
+
+<p>L has become the right child of &lsquo;17 &rsquo; . To be more precise <strong>,after a left rotation, &lsquo;L&rsquo;( the left child of the pivot) has become the &lsquo;right child&rsquo; of the node which was the parent of the &lsquo;pivot&rsquo; before the rotation was performed.</strong></p>
+
+<p>As you could see, the tree still remains unbalanced as we have not performed the 2nd phase of our left-right rotation . We perform the right rotation and make the tree balanced .</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/nw3.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/nw3.png?w=255" alt="" /></a></p>
+
+<p>I think , by now you would be able to guess out the solution for the second question that we had asked .</p>
+
+<p>What happens to the right node of the pivot during the right rotation.?</p>
+
+<p>The answer is certain , this is exactly the complement of what happens after a left rotation that we have just seen . <strong>After performing a right rotation , the right child of the pivot becomes the left child of the node that was its parent before the rotation was performed</strong>.</p>
+
+<p>Here , I have tried and dealt with almost all issues that come up in the implementation of an Avl tree. You could download the complete source code<a href="http://github.com/sunilkumarn/Avl_Tree"> here</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-16T09:51:58+05:30" pubdate data-updated="true">Oct 16<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c/'>C</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sunilkumarn.github.io/technical/2010/10/16/implementing-the-avl-tree" data-via="" data-counturl="http://sunilkumarn.github.io/technical/2010/10/16/implementing-the-avl-tree" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/10/04/280" title="Previous Post: GNU make">&laquo; GNU make</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/10/18/python-db-api" title="Next Post: Python DB-API">Python DB-API &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

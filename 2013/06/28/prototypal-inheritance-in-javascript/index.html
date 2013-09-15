@@ -1,0 +1,498 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Prototypal Inheritance in Javascript - Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="When I decided to get my hands on Javascript, the biggest road block for me was to understand and follow the prototypal inheritance model in &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/2013/06/28/prototypal-inheritance-in-javascript">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experinces</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/github/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Prototypal Inheritance in Javascript</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-28T14:36:11+05:30" pubdate data-updated="true">Jun 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>When I decided to get my hands on Javascript, the biggest road block for me was to understand and follow the prototypal inheritance model in Javascript. Coming from a Ruby background, the inheritance model I learned and understood was the classical one. The prototypal model had fundamental differences and did run me nuts at times. Here I try to make some note of what its all about going along a few snippets.</p>
+
+<p><strong>What exactly is a prototype?</strong>
+As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object’s prototype is a reference to another object from which properties are inherited. Every JavaScript object has a second JavaScript object (or null, but this is rare) associated with it. This second object is known as a prototype, and the first object inherits properties from the prototype.</p>
+
+<p>In Javascript, an object can be created with object literals, with the new keyword, and (in ECMAScript 5) with the Object.create() function</p>
+
+<ol>
+<li><p> obj = { }                                                    //object literals, objects created will have Object.prototype as their prototype</p></li>
+<li><p> obj = Object.create(args, [args2])        //Object.create(), Objects created like this will have the first argument to the create method as their prototype</p></li>
+<li><p> obj = new Constructor invocation     //new Keyword, objects created this way will have the value of the prototype property of the constructor function as their prototype</p></li>
+</ol>
+
+
+<p><strong>Object.prototype</strong>: Its one of those rare objects which do not have a prototype, and hence is not associated with any other object.</p>
+
+<p>Lets try and study the prototype of objects created via each of these 3 ways.
+1) <strong>object literals</strong>, <strong>{ }</strong></p>
+
+<div>
+  <pre><code class='javascript'>obj = { }</code></pre>
+</div>
+
+
+<p>obj will have always Object.prototype as its prototype. Inspecting obj in your console, and you will find this.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2013/06/prototype11.png"><img src="http://sunilkumarn.files.wordpress.com/2013/06/prototype11.png?w=570" alt="Prototype1" /></a></p>
+
+<p><strong><strong>proto</strong></strong> is the prototype object ( Object.prototype) from which obj inherits the properties.</p>
+
+<p>You can always use Object.getPrototypeOf to check the prototype of an object. The below screenshot shows the prototype object of obj.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2013/06/prototype2.png"><img src="http://sunilkumarn.files.wordpress.com/2013/06/prototype2.png?w=570" alt="prototype2" /></a></p>
+
+<p>2)<strong> Object.create()</strong></p>
+
+<div>
+  <pre><code class='javascript'>obj = Object.create(Object.prototype)</code></pre>
+</div>
+
+
+<p>Doing this is exactly the same as creating an object with literals( obj = { }). This is because the first argument to the create method forms the prototype of the newly created object, obj. In our statement we have specified Object.prototype as the first argument to be used. Also note that Object.create also takes a second optional argument which defines the properties of the object.</p>
+
+<p>We could specify an object or null as the first argument to the create method. If we pass null as the first argument to create, then the newly created object won&rsquo;t inherit any property.</p>
+
+<div>
+  <pre><code class='javascript'>Mammal = Object.create(null, {knownTime: { value: 'infinity' }} )</code></pre>
+</div>
+
+
+<p>We have an object Mammal with no inherited properties. It has a property of its own, (knownTime with a value set to &lsquo;infinity&rsquo;).</p>
+
+<div>
+  <pre><code class='javascript'>Man = Object.create(Mammal)</code></pre>
+</div>
+
+
+<p>Object.getPrototypeOf(Man) will return an object with a single property, knownTime. Also,</p>
+
+<div>
+  <pre><code class='javascript'>Man.knownTime
+   -&gt; 'infinity'</code></pre>
+</div>
+
+
+<p>Now create another object inheriting from &lsquo;Man&rsquo;</p>
+
+<div>
+  <pre><code class='javascript'>John = Object.create(Man)
+John.knownTime
+   -&gt; 'infinity'</code></pre>
+</div>
+
+
+<p>Now, lets fiddle around these objects.
+Try adding new properties to these objects.</p>
+
+<p>Set a max height of Mammals.</p>
+
+<div>
+  <pre><code class='javascript'>Mammal.maxHeight = '200'</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='javascript'>Man.maxHeight
+   -&gt; '200'
+John.maxHeight
+   -&gt; '200'</code></pre>
+</div>
+
+
+<p>Set a nice rhythmic vocal for mammals.</p>
+
+<div>
+  <pre><code class='javascript'>Mammal.sound = function() { return( &quot;Wholaa!&quot; ) }</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='javascript'>Mammal.sound()
+  -&gt; &quot;Wholaa!&quot;
+Man.sound()
+  -&gt; &quot;Wholaa!&quot;
+John.sound()
+  -&gt; &quot;Wholaa!&quot;</code></pre>
+</div>
+
+
+<p>Sure, Man has a different kind of a pitch from the other mammals.</p>
+
+<div>
+  <pre><code class='javascript'>Man.sound = function() { return( &quot;Cheerpp!&quot; )}</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='javascript'>Man.sound()
+   -&gt; &quot;Cheerpp!&quot;
+John.sound()
+   -&gt; &quot;Cheerpp!&quot;</code></pre>
+</div>
+
+
+<p>Object.getPrototypeOf(John) returns an object(Man &ndash; with a property &lsquo;sound&rsquo;) which has another object(Mammal &ndash; with properties &lsquo;knownTime, maxHeight and sound&rsquo;) as its prototype.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2013/06/prototype3.png"><img src="http://sunilkumarn.files.wordpress.com/2013/06/prototype3.png" alt="prototype3" /></a></p>
+
+<p>The prototype chain looks as follows</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2013/06/prototype_chain4-new-page.png"><img src="http://sunilkumarn.files.wordpress.com/2013/06/prototype_chain4-new-page.png?w=570" alt="Prototype_Chain4 - New Page" /></a></p>
+
+<p>Object <strong>Mammal</strong> has properties &lsquo;knownTime&rsquo;, &lsquo;maxHeight&rsquo; and and the method &lsquo;sound&rsquo;.  <strong>Man</strong> has Mammal as its prototype object and hence inherits these properties from Mammal.  However, it overrides the &lsquo;sound&rsquo; method. <strong>John </strong>has Man as its prototype object and hence inherits properties from Man(which includes Man&rsquo;s own properties and properties inherited from Mammal).</p>
+
+<p>3) <strong>new keyword followed by a Constructor Invocation</strong></p>
+
+<p>Try this,</p>
+
+<div>
+  <pre><code class='javascript'>obj = new Object()</code></pre>
+</div>
+
+
+<p>Here again, this is exactly the same as Object.create(Object.prototype) and {}. The prototype of the object, obj is Object.prototype.</p>
+
+<p>Here, Object is the constructor which when invoked using the new keyword will return a new object which inherits properties from the prototype of the constructor (here, Object.prototype).</p>
+
+<p><strong>Constructor</strong>(as per the Definitive Guide): A constructor is a function designed for the initialization of newly created objects. Constructors are invoked using the new keyword. Constructor invocations using new automatically create the new object, so the constructor itself only needs to initialize the state of that new object. The critical feature of constructor invocations is that the prototype property of the constructor is used as the prototype of the new object.</p>
+
+<p>Also, note that every JavaScript function (except functions returned by the EC-MAScript 5 Function.bind() method) automatically has a prototype property. Hence, a constructor being merely a function also has the prototype property.
+To make this more sense, lets create a constructor and try and figure out what exactly happens.</p>
+
+<div>
+  <pre><code class='javascript'>function Startup(config) {
+   this.config = config ;
+   this.motto = function(verbiage) {
+      return(&quot;Our motto is&quot; + verbiage)
+    }
+ }</code></pre>
+</div>
+
+
+<p>Now, create a new instance</p>
+
+<div>
+  <pre><code class='javascript'>s1 = new Startup(true)</code></pre>
+</div>
+
+
+<p>s1 is an object with Startup.prototype as its prototype, and hence inherits properties from Startup.prototype</p>
+
+<div>
+  <pre><code class='javascript'>s1.config
+  -&gt; true
+s1.motto(&quot;we change&quot;)
+  -&gt; &quot;Our motto is we change&quot;</code></pre>
+</div>
+
+
+<p>Create another instance,</p>
+
+<div>
+  <pre><code class='javascript'>s2 = new Startup(false)</code></pre>
+</div>
+
+
+<p>s2 is an object with Startup.prototype as its prototype, and hence inherits properties from Startup.prototype</p>
+
+<div>
+  <pre><code class='javascript'>s2.config
+  -&gt; false
+s2.motto(&quot;we build&quot;)
+  -&gt; &quot;Our motto is we build!&quot;</code></pre>
+</div>
+
+
+<p>Now, we did like a bit more functionality to be achieved by all objects instantiated from Startup. For that to happen, we need to add more properties to Startup.prototype</p>
+
+<div>
+  <pre><code class='javascript'>Startup.prototype.space = function(people) { return(people/ 5) }
+Startup.prototype.stream = function() {
+   if(this.config == true)
+       return(&quot;service&quot;) ;
+   else
+       return(&quot;business&quot;);
+ }</code></pre>
+</div>
+
+
+<p>Now, you could use these properties on the instances,</p>
+
+<div>
+  <pre><code class='javascript'>s1.space(25)
+   -&gt; 5
+s1.stream()
+   -&gt; &quot;service&quot;
+
+s2.space(40)
+   -&gt; 8
+s2.stream()
+   -&gt; &quot;business&quot;</code></pre>
+</div>
+
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2013/06/prototoype_5-new-page-11.png"><img src="http://sunilkumarn.files.wordpress.com/2013/06/prototoype_5-new-page-11.png?w=570" alt="Prototoype_5 - New Page (1)" /></a></p>
+
+<p>As is clear from the image above, we have 4 objects here, the constructor object(Startup) with its property(prototype), the prototype object (Startup.prototype) with all its properties and the instances(s1 &amp; s2).<a href="http://sunilkumarn.files.wordpress.com/2013/06/prototoype_5-new-page.png">
+</a></p>
+
+<p>Now suppose we alter the prototype property of Startup</p>
+
+<div>
+  <pre><code class='javascript'>Startup.prototype = { stream : function() {return(&quot;No more a startup&quot;) }}</code></pre>
+</div>
+
+
+<p>As is quite evident,</p>
+
+<div>
+  <pre><code class='javascript'>s1.stream()
+   -&gt; &quot;No more a startup!&quot;
+s2.stream()
+   -&gt; &quot;No more a startup!&quot;</code></pre>
+</div>
+
+
+<p>On this account, it might be clear on how to add new methods to be used by arrays, dates and other such objects created via a Constructor Invocation. With <em>Array being the constructor function and Array.prototype being the prototype of all objects instantiated via the Array Constructor invocation</em>,</p>
+
+<p>A clone on all arrays,</p>
+
+<div>
+  <pre><code class='javascript'>Array.prototype.clone = function() {
+   return this.concat()
+   }
+
+[1,2,3].clone()
+   -&gt; [1,2,3]</code></pre>
+</div>
+
+
+<p>Clear off the array,</p>
+
+<div>
+  <pre><code class='javascript'>Array.prototype.clear = function() {
+    this.length = 0 ;
+    return this ;
+   }
+
+[1,2,3].clear()
+    -&gt; []</code></pre>
+</div>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-28T14:36:11+05:30" pubdate data-updated="true">Jun 28<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/javascript/'>Javascript</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sunilkumarn.github.io/technical/2013/06/28/prototypal-inheritance-in-javascript" data-via="" data-counturl="http://sunilkumarn.github.io/technical/2013/06/28/prototypal-inheritance-in-javascript" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2013/06/23/node-js-streams-and-pipes" title="Previous Post: Node.js: Streams and pipes.">&laquo; Node.js: Streams and pipes.</a>
+      
+      
+        <a class="basic-alignment right" href="/2013/07/06/rails-admin-with-authlogic" title="Next Post: Rails admin with authlogic">Rails admin with authlogic &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: C | Scribblings]]></title>
+  <link href="http://sunilkumarn.github.io/technical/blog/categories/c/atom.xml" rel="self"/>
+  <link href="http://sunilkumarn.github.io/technical/"/>
+  <updated>2013-09-15T15:38:02+05:30</updated>
+  <id>http://sunilkumarn.github.io/technical/</id>
+  <author>
+    <name><![CDATA[Sunil Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Semaphores and Synchronization Patterns]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/10/26/semaphores-and-synchronization-patterns"/>
+    <updated>2010-10-26T09:20:46+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/10/26/semaphores-and-synchronization-patterns</id>
+    <content type="html"><![CDATA[<p>Semaphores as we know is a mechanism that is used to solve the issue of synchronization . The concept and use of semaphores is a bit more than what you normally call &lsquo; tricky &rsquo; .Here we try and analyze a basic synchronization pattern and solve the issue with semaphores  .</p>
+
+<p>Have a look into the pattern given below .</p>
+
+<p>statements in THREAD A</p>
+
+<p>strcpy(a , &ldquo;Hello &rdquo;);   -  A1
+printf(&ldquo;%s\n&rdquo; ,b);      -    B2</p>
+
+<p>statements in THREAD B</p>
+
+<p>strcpy(b , &ldquo;World&rdquo;)  &ndash; B1
+printf(&ldquo;%s\n&rdquo; ,a);    -  A2</p>
+
+<p>Here we have two threads which consists of two statements each .
+<strong>Constraint :</strong>
+What we need to ensure is that the statements suffixed A1 &amp; B1 are executed before the statements suffixed A2 &amp; B2  execute. Here the two threads &lsquo;rendezvous &rsquo; at a point of execution and is not allowed to proceed until both have arrived .</p>
+
+<p>Without using a mechanism like semaphore , no way is it possible to ensure such a constraint due to the scheduling mechanism that cannot be predicted . Hence we use semaphores to solve this issue .</p>
+
+<p>To ensure that it works according to wish  , we do this  :</p>
+
+<p>THREAD A</p>
+
+<p>strcpy(a , &ldquo;Hello &rdquo;);  &ndash; A1
+up(sem1);
+down(sem2);
+printf(&ldquo;%s\n&rdquo; ,b);   &ndash; B2</p>
+
+<p>THREAD B</p>
+
+<p>strcpy(b , &ldquo;World&rdquo;);  &ndash; B1
+up(sem2);
+down(sem1);
+printf(&ldquo;%s\n&rdquo; ,a);   &ndash; A1</p>
+
+<p>Now we need to give a thought on how this works .
+Here we have two semaphores ,sem1 and sem2 as we have two critical sections</p>
+
+<p>Now , how is the synchronization issue solved  .?
+The &lsquo;<strong>down</strong> &rsquo; operation just before the two statements suffixed &lsquo;2&rsquo; ensures that the two statements are not executed until the &lsquo;<strong>up&rsquo;</strong> operation on the corresponding semaphore is not invoked . Hence whichever be the order of scheduling , both the threads rendezvous at a point  and will not proceed ( as a result of the &lsquo;down&rsquo; operation  )until the next thread arrives (and the corresponding &lsquo;up&rsquo; operation is performed ).</p>
+
+<p>This synchronization pattern as been solved using semaphores .</p>
+
+<p>You could find the solution to these and more such patterns from <a href="http://github.com/sunilkumarn/Synchroniation_patterns">here</a> .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Common Subexpression elimination by GCC]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/10/19/common-subexpression-elimination-cse"/>
+    <updated>2010-10-19T17:12:16+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/10/19/common-subexpression-elimination-cse</id>
+    <content type="html"><![CDATA[<p><strong>Common subexpression elimination</strong> (CSE) is a compiler optimization technique of finding redundant expression evaluations, and replacing them with a single computation . This saves the time overhead resulted by evaluating the expression for more than once . We will have a look into this phenomenon by considering a simple code and again taking a walk through its assembly code .</p>
+
+<p>Consider the code that we have written and saved in file &lsquo; pgm.c &rsquo;</p>
+
+<p><code>main(){
+int i, j, k, r;
+scanf("%d%d", &amp;i, &amp;j);
+k = i + j + 10;
+r = i + j + 30;
+printf("%d %d\n", k, r);
+}</code></p>
+
+<p>Do :</p>
+
+<p><strong>$ : cc -S pgm.c</strong></p>
+
+<p><strong>$ : less pgm.s</strong></p>
+
+<p>Read the assembly code &lsquo; pgm.s &rsquo;</p>
+
+<p>Scan the assembly code and find out the call to the function &lsquo;scanf()&rsquo; . This is where our area of interest begins . This is because its after calling &lsquo;scanf &rsquo; that we load the value of the input variables into the registers .</p>
+
+<p>Right after the call to &lsquo;scanf &rsquo; , i have this in my assembly code ,</p>
+
+<p><strong>movl    -16(%ebp), %edx
+movl    -20(%ebp), %eax</strong> .</p>
+
+<p>Here we move the values of the two variables &lsquo;i &rsquo; and &lsquo;j &rsquo; into registers &lsquo;edx &rsquo; and &lsquo;eax &rsquo; .</p>
+
+<p>Now just have a look into our C code and you will see the two expressions as follows :</p>
+
+<p><code>k = i + j + 10;
+r = i + j + 30;</code></p>
+
+<p>Looking at the two expressions , you would find out the redundant part in the two expressions .</p>
+
+<p>Its that &lsquo;i+j&rsquo; is calculated twice .</p>
+
+<p>Now lets find out what happens in the assembly code :</p>
+
+<p>I had these statements in your assembly code :</p>
+
+<p><strong>movl    -16(%ebp), %edx</strong></p>
+
+<p><strong>movl    -20(%ebp), %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;> We had mentioned these two statements  above .</p>
+
+<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;>  values in edx and eax are added and loaded into eax</p>
+
+<p><strong>addl    $10, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 10 is added with the value in eax</p>
+
+<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;&ndash;>   values in edx and eax are added and loaded into eax</p>
+
+<p><strong>addl    $30, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 30 is added with the value in eax</p>
+
+<p>You could see that there is redundancy in the assembly code .</p>
+
+<p>The statement<strong> &lsquo; leal(%edx,%eax), %eax</strong> &rsquo; performs the evaluation of the subexpression ( &lsquo; i + j &rsquo; ) which is done twice thereby throwing in redundancy and hence creating unnecessary overheads .</p>
+
+<p>Obviously our compiler when asked to perform optimization would avoid this redundancy .This is what is termed as <strong>Common Subexpression Elimination</strong> ,i.e , the subexpression that is common( &lsquo; i + j &rsquo; ) in the two expressions is evaluated only once , in essence the second evaluation is eliminated .  Lets have a look into CSE by again peeping into our assembly code  .</p>
+
+<p>Do</p>
+
+<p><strong>$ : cc &ndash; S &ndash; O3 pgm .c</strong></p>
+
+<p><strong>$ : less pgm.s</strong></p>
+
+<p>Take a look into your assembly code  .</p>
+
+<p>As mentioned above , our area of interest starts from the call to &lsquo;scanf ()&rsquo; .</p>
+
+<p>Instead of those 6 statements that were used to evaluate those two expressions ,</p>
+
+<p>i + j + 10 &amp; i + j + 30 ,</p>
+
+<p>you would find this ,</p>
+
+<p><strong>movl    -12(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  move the value of the variable &lsquo;i&rsquo; into eax</p>
+
+<p><strong>addl    -8(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> add the value of the variable &lsquo;j&rsquo; with &lsquo;i&rsquo; stored in eax .</p>
+
+<p><strong>leal    30(%eax), %edx</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 30 with eax ( contains the sum of i &amp; j ) and stores in edx</p>
+
+<p><strong>addl    $10, %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 10 with eax ( contains the sum of i &amp; j ) and stores in eax .</p>
+
+<p>Here the second statement performs the evaluation of the subexpression , &lsquo; i + j &rsquo; . You could get it quite clearly from the code segment that the redundancy that was found in the unoptimized assembly code has been eliminated by the compiler .</p>
+
+<p>The later 2 statements perform the evaluation of the expressions</p>
+
+<p>( i + j + 30 )   and    ( i + j + 10 ) respectively .</p>
+
+<p>We have just used a very simple case of CSE , but this optimization technique could be used in even more useful cases . Consider :</p>
+
+<p>k = f() + g() + 30</p>
+
+<p>r = f() + g() + 10</p>
+
+<p>where f() and g() are functions . In an unoptimized code , the technique of CSE wouldn&rsquo;t be used and hence there would be overhead due to the redundancy added with the more serious problem of having to call each function twice . The technique of <strong>Common Subexpression Elimination</strong> avoids this very redundancy  .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Function inlining]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/10/19/function-inlining"/>
+    <updated>2010-10-19T15:43:05+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/10/19/function-inlining</id>
+    <content type="html"><![CDATA[<p>Function inlining is performed when a request has been made to the compiler to perform optimization on the code . The compiler will try (its important to remember that ,it is a request made to the compiler, not an order) and insert the complete body of the function in every place in the code where that function is used so as to eliminate the time overhead when the function is called . We could get an idea of function inlining by peeping into the assembly code generated by the compiler .</p>
+
+<p>We do this with the help of a small program :</p>
+
+<p><code>int sqr(int x)
+{
+return x*x;
+}</code></p>
+
+<p><code>main()
+{
+printf("%d\n", sqr(10));
+}</code></p>
+
+<p>We have the program written in a file  &lsquo;pgm.c&rsquo;</p>
+
+<p>Do :</p>
+
+<p><strong>$: cc -S pgm.c
+</strong>
+We could now view the assembly code generated by the compiler</p>
+
+<p>Do:</p>
+
+<p><strong>$: less pgm.s</strong></p>
+
+<p>I found out the following lines in the &lsquo;main&rsquo; function of &lsquo; pgm.s &rsquo;</p>
+
+<p><code>movl    $10, (%esp)
+call    sqr
+</code>
+You would have the idea cleared up</p>
+
+<p>The constant &lsquo;10 '  is stored in the stack , and the call to the function 'sqr &rsquo; is made . The result of squaring up 10 is performed in the function &lsquo;sqr&rsquo; . This obviously would create overheads for invoking the function .</p>
+
+<p>Now consider the case where you have requested the compiler to perform all optimizations on your code .</p>
+
+<p><strong>$ :cc -S -O3 pgm.c</strong></p>
+
+<p>Now have a look into your assembly code .</p>
+
+<p><strong>$ :less pgm.s
+</strong></p>
+
+<p>Now just have a look into the your &lsquo;main&rsquo; function and find out what you see where you had seen the previous two lines that i did mention above .</p>
+
+<p>You would just find a singe line corresponding to those two lines which you had found in your assembly code that was not optimized .</p>
+
+<p>This is what i found ,</p>
+
+<p><code>movl    $100, 4(%esp)
+</code></p>
+
+<p>The final value that you obtain after finding the square of 10 ( i.e 100 ) is has been moved into the stack , but where is the call to the function &lsquo;sqr&rsquo; ?</p>
+
+<p>You have just seen &lsquo; <em><strong>function inlining</strong></em> &rsquo;. The function body had been inserted at the point where the function was used and the value &lsquo;100 &rsquo; calculated at compile time instead of performing the calculation at run time .This saves a lot of time that would have been required to calculate the value of &lsquo;100&rsquo; by making a call to the function at run time .Performing function inlining avoids this .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Implementing the Avl Tree]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/10/16/implementing-the-avl-tree"/>
+    <updated>2010-10-16T09:51:58+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/10/16/implementing-the-avl-tree</id>
+    <content type="html"><![CDATA[<p>AVL Tree is a <strong>self-balancing binary search tree</strong> and it was the first such structure to be invented. The  tree is said to be balanced because the difference in the heights of the child subtrees differ by atmost one. The operations Insertion, Deletion and Lookup on an Avl tree is of the order of  <em>Log n</em> because of this balancing act. Here we take a look into the implementation of an AVL tree .</p>
+
+<p>First we need to give a thought on the term &lsquo;balance Factor&rsquo; and on the major operations that are involved in the making of such a tree.</p>
+
+<p><strong>Balance Factor:</strong>Balance factor is associated with each node of the Avl tree. Its the difference between the heights of the left subtree and right subtree of that particular node.</p>
+
+<p><em>Balance factor = height of left    subtree – height of right subtree.</em></p>
+
+<p>A balance Factor of 0 , +1 or -1 for each and every node of the tree indicates that its balanced. Whenever the balance Factor of any of the nodes equals – or + 2 , the tree becomes unbalanced and needs to undergo balancing.</p>
+
+<p>Now lets just peep into the major operations that are involved in the build up of the tree.</p>
+
+<p>There are 3 of them</p>
+
+<p>1) Insertion:2) Deletion:3) Rotation:
+Insertion is the usual process. There is nothing special in inserting a node into an Avl tree than in inserting it to a normal binary search tree.</p>
+
+<p>Deletion is again the same with a minor difference which we will look in to as we continue.</p>
+
+<p>Rotation is the balancing act- The operation that distinguishes an Avl tree from the normal binary search tree. Rotation needs to be performed whenever the tree goes out of balance – this could happen as a result of the first two operations ( Insertion and Deletion ).  The Balance factor may go beyond 1 and hence the tree will have to be balanced so that it remains as an Avl tree. Each of the three operations , specially that of rotation will have to be given due care in building up an Avl tree.</p>
+
+<p>You could sum it up this way :</p>
+
+<p><strong>Each insertion in an Avl tree is a combination of normal insertion into a binary search tree added  with finding out whether the tree is unbalanced or not followed by rotation if necessary.</strong></p>
+
+<p><strong>Each deletion in an Avl tree is a combination of normal deletion into a binary search tree added with  finding out whether the tree is unbalanced or not followed by rotation if necessary.</strong></p>
+
+<p>Before we get into more details of each of them , we will have a look into the way each node is implemented in the Avl tree.</p>
+
+<p>Each and every node in the Avl tree is implemented as a structure .This is same as what is done in an ordinary BST , <strong>since Avl tree is itself a BST.</strong></p>
+
+<p><code>struct node{</code></p>
+
+<p><code>int data;
+</code>
+<code>struct node *parent,*left,*right;</code></p>
+
+<p><code>}*p,*root=0;</code></p>
+
+<p>The field &lsquo;data&rsquo; contains the actual data that is to be stored in the node .There are three pointers of the type &lsquo;struct node*&rsquo;.</p>
+
+<p><em>*left –>    points to the left child of the node</em></p>
+
+<p><em>*right –>   points to the right child.</em></p>
+
+<p><em>*parent –> points to the parent node .</em></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/node.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/node.png?w=231" alt="" /></a></p>
+
+<p>Now lets get into the details of the different operations performed on the Avl tree.</p>
+
+<p>Inserting into an Avl Tree can pictorially be represented as follows:</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/untitled-1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/untitled-1.png?w=300" alt="" /></a></p>
+
+<p>Obviously , there are other functions that are involved  in the process, but the ones shown in figure are the significant ones.</p>
+
+<p><strong>avl_insert :</strong> As discussed earlier insertion into an avl tree consists of the normal insertion followed by the checks for balancing and rotation if necessary. Normal insertion is performed first . Then the function self_bal() is called :</p>
+
+<p><strong>self_bal() </strong>:   The newly inserted node would obviously be balanced since it wont have any children. Therefore the balance factors of the nodes that come above the inserted node in the tree ( starting from the parent ,right upto the root ) is to be checked. The function &lsquo;self_bal&rsquo; invoked &lsquo;balance()&rsquo; which performs the further  tasks. Again, since a newly created tree is always balanced and since parent of the root points to NULL , the function &lsquo;balance()&rsquo; should not be called if the newly inserted node is the root itself.</p>
+
+<p><strong>balance() </strong>:   Invokes the function bal_fac() and checks if the balance factor is equal to +or- 2 . If yes , calls the appropriate rotate function.</p>
+
+<p><strong>bal_fac()   :</strong> Finds out the balance factor for each node.</p>
+
+<p><strong>rotate()     :</strong> Here rotate() is the just the cohesive name for the two types of rotate functions . According to the balance factor , the appropriate &lsquo;rotate&rsquo; functions are called. We will discuss them in detail later.</p>
+
+<p>The pictorial representation of &lsquo;delete()&rsquo; would be no different.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/delete.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/delete.png?w=300" alt="" /></a></p>
+
+<p>By now you would have understood that the central aspect in building up the whole Avl tree is the rotate() function, but before we get into implementing the &lsquo;rotate()&rsquo; function , its of prime importance that we give a little more thought into implementing the &lsquo;delete()&rsquo; function in the Avl tree. As mentioned above , there is just a minor change that needs to be made , due to the self balancing nature of the Avl tree.</p>
+
+<p>While performing a &lsquo;delete()&rsquo; function in a normal BST, we need to look into 5 different cases of how a particular node could be deleted and replaced with another one. Just peeping into them:</p>
+
+<p>1)The victim node being a leaf      node.</p>
+
+<p>2)The victim node having a right    child.</p>
+
+<p>2.1) The victim node having a right     child with a left subtree.</p>
+
+<p>2.2) The victim node having a right     child with no left subtree.</p>
+
+<p>3)The victim node not having a  right child.</p>
+
+<p>3.1) The victim node having a left  child with a right subtree.</p>
+
+<p>3.2) The victim node having a   left-child with no right subtree.</p>
+
+<p>Certainly , from what we have discussed until now, its clear that one of these conditions never happens. You might have guessed it by now.</p>
+
+<p>Case 3.1) would never happen in an Avl tree. This could be explained with the following figure.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/case3-11.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/case3-11.png?w=252" alt="" /></a></p>
+
+<p>Consider you want to delete the node &lsquo;10&rsquo; after adding &lsquo;9&rsquo; to the tree , but adding &lsquo;9&rsquo; to the tree would leave it unbalanced.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/case3.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/case3.png?w=250" alt="" /></a></p>
+
+<p>Hence the tree will be rotated so that it becomes balanced ( how?, we will come to know shortly) before you could delete &lsquo;10&rsquo; . Hence there will never be a case of a victim node have a &lsquo;left child with a right subtree&rsquo; and does not have a right child of its own.</p>
+
+<p>Now , its time that we move into the  in the creation of an Avl Tree, the &lsquo;rotate() &rsquo; function.</p>
+
+<p><strong>Rotation</strong> ,as mentioned ,<strong>follows up a deletion from or an insertion into an Avl tree</strong> in such a way that it destroys the balanced nature of the Tree.</p>
+
+<p>There are 4 kinds of rotation which are implemented using 2 different rotation functions.</p>
+
+<p>Its crucial at this stage that the following points are understood.</p>
+
+<p><em>Balance factor of a node = +2 implies that the node ( and ultimately the tree) is unbalanced because of  the left subtree of the node and there will be one right rotation for sure.</em></p>
+
+<p><em>Balance factor of a node = -2 implies that the node ( and ultimately the tree) is unbalanced because of the right subtree of the node and there will be one left rotation for sure.</em></p>
+
+<p><em>Whether a single rotation needs to be done or whether the tree needs to be rotated twice depends upon the balance factor of the child of the root of the subtree that is unbalanced. You needn&rsquo;t scratch your head on this , stuffs that follow would lighten up things.</em></p>
+
+<p>Let &lsquo;point&rsquo; be the root of the subtree which has made the tree go out of balance . The 4 kinds of rotation are:</p>
+
+<p>1)<strong>left  – left rotation:</strong> If balance factor(BF) of point is 2 and the BF of the left child is > 0 , then a single &lsquo;right&rsquo; rotation would do it for you.</p>
+
+<p>2)<strong>left  –  right rotation:</strong> If BF of point is 2 and the BF of the left child is &lt; 0 , then a    &lsquo;left&rsquo; rotation followed by a &lsquo;right&rsquo; rotation would do it for you.</p>
+
+<p>3<strong>)right – left rotation:</strong> If BF of point is -2 and the BF of the left child is > 0 , then a &lsquo;right&rsquo; rotation followed by a &lsquo;left&rsquo; rotation makes the tree balanced.</p>
+
+<p>4)<strong>right – right rotation:</strong> If BF of point is -2 and the BF of the left child is &lt; 0  , then a single &lsquo;left&rsquo; rotation would be enough.</p>
+
+<p>We will discuss rotation which happens as a result of the tree being unbalanced after an insertion or a deletion has been performed. The &lsquo;rotation&rsquo; function is independent of whether the previous function was a deletion or an insertion , it depends only on the current structure of the tree.</p>
+
+<p><em><strong>Left-Right Rotation  &amp;   Left-Left Rotation</strong></em></p>
+
+<p>Consider the figure :</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr1.png?w=231" alt="" /></a></p>
+
+<p><em>Here the point of imbalance is &lsquo;23&rsquo; and the reason for imbalance is the left subtree of &lsquo;23&rsquo;. </em>Hence performing a &lsquo;right&rsquo; rotation is essential . Now the left child of &lsquo;23&rsquo; has a BF of -1 ( &lt; 0 ) . Hence a left rotation also needs to be performed. This leads to a left-right rotation .</p>
+
+<p>left rotation : Left rotation is performed by invoking the rotate_left() function. The two parameters that are to passed to the function are &lsquo;root&rsquo; and &lsquo;pivot&rsquo; .</p>
+
+<p>Root &mdash;&ndash;> point of imbalance , I.e  &lsquo;17&rsquo;</p>
+
+<p>Pivot &mdash;&ndash;> right-child of the point of imbalance I.e &lsquo;19&rsquo;.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr2.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr2.png?w=231" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr3.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr3.png?w=278" alt="" /></a></p>
+
+<p>The left rotation has been performed.</p>
+
+<p>Now our problem has been reduced to performing a left-left rotation , you could see that from the figure .That is ,we need to perform a single &lsquo;right rotation&rsquo;:</p>
+
+<p>right rotation : The right rotation is performed by invoking the rotate_right() function. The two parameters would be :</p>
+
+<p>Root &mdash;&ndash;> point of imbalance : I.e 23</p>
+
+<p>Pivot &mdash;&ndash;> left-child of the point of imbalance I.e &lsquo;19&rsquo;.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr4.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr4.png?w=278" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/l11.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/l11.png?w=258" alt="" /></a></p>
+
+<p>The right rotation also has been performed. Now you may have a look at the tree and would find out that its balanced .</p>
+
+<p><em><strong>Right-Left Rotation &amp;  Right-Right Rotation.</strong></em></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lf11.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lf11.png?w=283" alt="" /></a></p>
+
+<p>Consider the figure above :</p>
+
+<p><em>Here the point of imbalance is &lsquo;17&rsquo; and the reason for imbalance is the right subtree of &lsquo;17&rsquo;. </em>Hence performing a &lsquo;left&rsquo; rotation is essential . Now the right child of &lsquo;17&rsquo; has a BF of 1( > 0 ) . Hence a &lsquo;right&rsquo; rotation also needs to be performed. This leads to a right-left rotation .</p>
+
+<p>right rotation : right rotation, as mentioned above is performed by invoking the rotate_right() function. The two parameters that are to passed to the function are &lsquo;root&rsquo; and &lsquo;pivot&rsquo; .</p>
+
+<p>Root &mdash;&ndash;> point of imbalance , I.e  &lsquo;23&rsquo;</p>
+
+<p>Pivot &mdash;&ndash;> left-child of the point of imbalance I.e &lsquo;19&rsquo;.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lf21.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lf21.png?w=283" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr31.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr31.png?w=300" alt="" /></a></p>
+
+<p>The right rotation has been performed.</p>
+
+<p>Now our problem has been reduced to performing a right-right rotation .That is ,we need to perform a single &lsquo;left rotation&rsquo;:</p>
+
+<p>left rotation : We have seen that left rotation is performed by invoking the rotate_left() function. The two parameters would be :</p>
+
+<p>Root &mdash;&ndash;> point of imbalance : I.e &lsquo;17&rsquo;</p>
+
+<p>Pivot &mdash;&ndash;> right-child of the point of imbalance I.e &lsquo;23&rsquo;.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/lr41.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/lr41.png?w=300" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/l12.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/l12.png?w=258" alt="" /></a></p>
+
+<p>The left rotation also has been performed. The tree has been balanced .We have found out how a tree could be balanced through rotation.</p>
+
+<p>There is another issue that we need to deal with while performing rotation. Two questions that we need to consider here are&hellip;</p>
+
+<p><strong>1)What happens to the left node of the pivot during a left rotation.?</strong></p>
+
+<p><strong>2)What happens to the right node of the pivot during the right rotation.?</strong></p>
+
+<p>Consider the following figure .</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/nw.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/nw.png?w=195" alt="" /></a></p>
+
+<p>The tree as you could see is unbalanced with the root (&lsquo;23&rsquo;) being the point of imbalance, the left subtree being the reason for the imbalance.. Since the BF of the left child of the root = -1 ( &lt; 0 ) , we need to perform a left – right rotation . I.e a left rotation followed by a right rotation . For performing the left rotation , the root is &lsquo;17&rsquo;  and the pivot is &lsquo;19&rsquo;. As you could see from the figure ,the left child of the pivot is marked &lsquo;L&rsquo; . Our question is what exactly happens to this &lsquo;L&rsquo; after the left rotation has been performed. ? The answer is right there in our next figure .</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/nw2.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/nw2.png?w=255" alt="" /></a></p>
+
+<p>L has become the right child of &lsquo;17 &rsquo; . To be more precise <strong>,after a left rotation, &lsquo;L&rsquo;( the left child of the pivot) has become the &lsquo;right child&rsquo; of the node which was the parent of the &lsquo;pivot&rsquo; before the rotation was performed.</strong></p>
+
+<p>As you could see, the tree still remains unbalanced as we have not performed the 2nd phase of our left-right rotation . We perform the right rotation and make the tree balanced .</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/10/nw3.png"><img src="http://sunilkumarn.files.wordpress.com/2010/10/nw3.png?w=255" alt="" /></a></p>
+
+<p>I think , by now you would be able to guess out the solution for the second question that we had asked .</p>
+
+<p>What happens to the right node of the pivot during the right rotation.?</p>
+
+<p>The answer is certain , this is exactly the complement of what happens after a left rotation that we have just seen . <strong>After performing a right rotation , the right child of the pivot becomes the left child of the node that was its parent before the rotation was performed</strong>.</p>
+
+<p>Here , I have tried and dealt with almost all issues that come up in the implementation of an Avl tree. You could download the complete source code<a href="http://github.com/sunilkumarn/Avl_Tree"> here</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Find the Endianity of your Processor:]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/09/23/find-the-endianity-of-your-processor"/>
+    <updated>2010-09-23T03:23:24+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/09/23/find-the-endianity-of-your-processor</id>
+    <content type="html"><![CDATA[<p>Your processors can be of two types:
+1)<em>Little Endian</em> : Little Endian means that the low-order byte of the number is stored in memory at the lowest address.For example, a two byte short int would be stored in memory as:
+<strong>Base address + 0 : Byte 1
+Base address + 1:  Byte 0</strong></p>
+
+<p>2)<em>Big Endian</em> : &lsquo;Big Endian means that the high-order byte of the number is stored in memory at the lowest address. The 'short int&rsquo; above would be stored
+<strong>Base address + 0 :  Byte 0
+Base address + 1 :  Byte 1</strong></p>
+
+<p>where Byte 0 and Byte 1 are the first and second  bytes of the short integer.</p>
+
+<p>You could verify the endianity of your processors by writing a short and sweet C code as follows:</p>
+
+<pre><code>        `{  
+            unsigned char *p;
+
+            short int i=0x1234;
+
+            p=&amp;i;
+
+            printf("%x\n",*p);
+
+        }`
+The result you obtain would show you the endianity of your processor.
+</code></pre>
+
+<p>Lets give a thought on what actually happens.</p>
+
+<p>0x1234 is a hexadecimal number and is stored in a variable &lsquo;i&rsquo; of type short int ( occupies 2 bytes of memory space ).</p>
+
+<p>Address of variable &lsquo;i&rsquo; is stored in a pointer of type unsigned char &lsquo;*p&rsquo; ( I.e &lsquo;p&rsquo; points to an object of type &lsquo;unsigned char&rsquo;).</p>
+
+<p>Dereferencing the pointer p would result in the access of just a single byte . This obviously would be the lower of the two bytes. <strong>This shows the fact that accessing a memory location with a pointer is purely dependent on the type of the pointer and not on the type of the actual value stored in the address being accessed. </strong>Note that the types of the' pointer to the memory location' and the &lsquo;actual value being stored in the location&rsquo; differ.</p>
+
+<p>You obtain the value that is stored in the lower byte of the two bytes that is allocated for the <strong>&lsquo;short integer</strong>&rsquo; with the use of a pointer of type &lsquo;<strong>unsigned char</strong>&rsquo; ( size = 1 byte). The value stored at the lower byte would indicate to you the endianity.</p>
+
+<p>From our sample program,and from what we know about little and big endians , an output of 34 indicates that your processor is &lsquo;little endian&rsquo; and an output of 12 indicates that its big endian.</p>
+
+<p>Just to mention &ndash; &lsquo;Intel x86&rsquo; processors are one common example for little endian processors whereas &lsquo;Motorola 6800&rsquo; is big endian.</p>
+]]></content>
+  </entry>
+  
+</feed>

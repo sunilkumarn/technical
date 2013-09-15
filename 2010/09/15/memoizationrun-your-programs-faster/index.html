@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Memoization:Run your programs faster. - Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="Memoization is an optimization technique to speed up programs . Here the function calls are not required to make repetitive calculations of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/2010/09/15/memoizationrun-your-programs-faster">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/github/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experinces</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/github/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Memoization:Run Your Programs Faster.</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-15T09:00:50+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong>Memoization is an optimization technique to speed up programs</strong> . Here the function calls are not required to make repetitive calculations of previously calculated results. The processing time of the program is reduced and the memory consumed is increased. <strong>Memoized functions become optimized for speed while they use a higher memory .</strong></p>
+
+<p>Lets go through an analysis of memoization: Consider the code segment for finding out the term of  a fibonacci series:</p>
+
+<p>_def fib(n):</p>
+
+<pre><code>if n==0:
+
+        return 0
+
+if n==1:
+
+    return 1
+
+else:
+
+    n=fib(n-1)+fib(n-2)
+
+    return n
+</code></pre>
+
+<p>_</p>
+
+<p>You could find out the time taken to run the code :
+<strong>$ time python filename.py
+</strong></p>
+
+<p>You would find out then that the time complexity of your program is O(exp(n)) . Try and find out the 40th term of the fibonacci series . This code segment will make you wait for a considerable amount of time before you view your result in the terminal. Trying to find out the 50th term would cause you to manually interrupt the process because you can not wait any longer. Therefore we need a method whereby we could find out the higher terms of the series in much faster time.</p>
+
+<p>Heres exactly where memoization comes in. Memoization is not any kind of magic. What it does is that is caches the results that have been calculated earlier and stores them in a lookup table so that these don&rsquo;t have to be calculated again. We make use of an associative array as a lookup table here.  The following code segment shows the memoized version.</p>
+
+<p>_table={0:0,1:1}</p>
+
+<p>def fib1(n):</p>
+
+<pre><code>if not n in table:
+
+    table[n]=fib1(n-1)+fib1(n-2)
+
+return table[n]
+</code></pre>
+
+<p>_</p>
+
+<p>Here we create an associative array with the first two numbers of the fibonacci series as its keys. Now
+upon the call of each function , the lookup table (&lsquo;table&rsquo;) is checked for the existence of the term . If the term is not present in the associative array , the term is calculated and stored in the associative array. In both cases the resulting term is returned. Now see for yourself , the pace of the results being processed.
+Try find out the 100th term of the series:
+Do
+<strong>$ time python myfilename.py</strong>
+You would see the 100th term of the fibonacci series in 12/1000th of a second.Try them for the 1000th,10000th terms&hellip;(provided that you have a higher recursion limit). Did you ever think  that it could be this faster.???</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-15T09:00:50+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sunilkumarn.github.io/technical/2010/09/15/memoizationrun-your-programs-faster" data-via="" data-counturl="http://sunilkumarn.github.io/technical/2010/09/15/memoizationrun-your-programs-faster" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/09/05/intermezzocoding-style" title="Previous Post: Intermezzo:Coding style">&laquo; Intermezzo:Coding style</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/09/15/crash-your-python-virtual-machine" title="Next Post: Crash  your python Virtual machine!!!">Crash  your python Virtual machine!!! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
