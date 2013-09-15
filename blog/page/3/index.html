@@ -89,6 +89,8 @@
 
 <time datetime="2010-10-16T09:51:58+05:30" pubdate data-updated="true">Oct 16<span>th</span>, 2010</time>
         
+         | <a href="/technical/2010/10/16/implementing-the-avl-tree#disqus_thread">Comments</a>
+        
       </p>
     
   </header>
@@ -346,6 +348,8 @@ Insertion is the usual process. There is nothing special in inserting a node int
 
 <time datetime="2010-10-04T00:05:22+05:30" pubdate data-updated="true">Oct 4<span>th</span>, 2010</time>
         
+         | <a href="/technical/2010/10/04/280#disqus_thread">Comments</a>
+        
       </p>
     
   </header>
@@ -463,6 +467,8 @@ This again shows the recursive nature of the make process. The Makefile is read 
 
 <time datetime="2010-10-03T21:02:07+05:30" pubdate data-updated="true">Oct 3<span>rd</span>, 2010</time>
         
+         | <a href="/technical/2010/10/03/swigsimplified-wrapper-and-interface-generator#disqus_thread">Comments</a>
+        
       </p>
     
   </header>
@@ -570,6 +576,8 @@ avl.traverse(1)</p></blockquote></blockquote></blockquote>
 
 
 <time datetime="2010-09-25T19:13:22+05:30" pubdate data-updated="true">Sep 25<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/25/evaluation-of-scheme-in-python#disqus_thread">Comments</a>
         
       </p>
     
@@ -679,6 +687,8 @@ You would see a module named &lsquo; ops&rsquo; being imported. This module cons
 
 <time datetime="2010-09-25T19:07:05+05:30" pubdate data-updated="true">Sep 25<span>th</span>, 2010</time>
         
+         | <a href="/technical/2010/09/25/concept-and-creation-of-environment#disqus_thread">Comments</a>
+        
       </p>
     
   </header>
@@ -741,6 +751,8 @@ scheme>>>( sq 4 )                       &mdash;&mdash;&ndash;>     statement 2</
 
 
 <time datetime="2010-09-24T02:22:00+05:30" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/24/analyzing-the-tinypy-virtual-machine#disqus_thread">Comments</a>
         
       </p>
     
@@ -858,6 +870,8 @@ would give you the union that stores the next element of the list . The size of 
 
 <time datetime="2010-09-24T02:19:32+05:30" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
         
+         | <a href="/technical/2010/09/24/an-overview-of-tinypy#disqus_thread">Comments</a>
+        
       </p>
     
   </header>
@@ -948,6 +962,8 @@ Or logically,
 
 <time datetime="2010-09-23T03:23:24+05:30" pubdate data-updated="true">Sep 23<span>rd</span>, 2010</time>
         
+         | <a href="/technical/2010/09/23/find-the-endianity-of-your-processor#disqus_thread">Comments</a>
+        
       </p>
     
   </header>
@@ -1022,6 +1038,8 @@ The result you obtain would show you the endianity of your processor.
 
 <time datetime="2010-09-15T09:02:22+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
         
+         | <a href="/technical/2010/09/15/crash-your-python-virtual-machine#disqus_thread">Comments</a>
+        
       </p>
     
   </header>
@@ -1071,6 +1089,8 @@ Lets try and find out the reason behind that:</p>
 
 
 <time datetime="2010-09-15T09:00:50+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
+        
+         | <a href="/technical/2010/09/15/memoizationrun-your-programs-faster#disqus_thread">Comments</a>
         
       </p>
     
@@ -1170,10 +1190,68 @@ You would see the 100th term of the fibonacci series in 12/1000th of a second.Tr
         <a href="/technical/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
       </li>
     
+      <li class="post">
+        <a href="/technical/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/technical/2011/07/04/ruby-conf-india-2011">RubyconfIndia 2011</a>
+      </li>
+    
   </ul>
 </section>
 
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sunilkumarn">@sunilkumarn</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
 
+        github.showRepos({
+            user: 'sunilkumarn',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/technical/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/sunil?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
 
 
 
@@ -1189,6 +1267,19 @@ You would see the 100th term of the fibonacci series in 12/1000th of a second.Tr
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'sunilkumarn';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
