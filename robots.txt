@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://sunilkumarn.github.io/technical/sitemap.xml 

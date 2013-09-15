@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Scribblings]]></title>
+  <link href="http://sunilkumarn.github.io/technical/atom.xml" rel="self"/>
+  <link href="http://sunilkumarn.github.io/technical/"/>
+  <updated>2013-09-15T14:45:20+05:30</updated>
+  <id>http://sunilkumarn.github.io/technical/</id>
+  <author>
+    <name><![CDATA[Sunil Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
