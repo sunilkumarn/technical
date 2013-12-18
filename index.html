@@ -125,21 +125,21 @@ MongoHQ is a cloud-based hosted database solution that allows developers to easi
 <p>I created a new database (SandBox, 512 MB &ndash;  thats all I needed anyways ) at MongoHQ.
 On creating a new database, MongoHQ provides us with a mongo console and mongo uri connection strings.</p>
 
+<p><b>Mongo Console</b></p>
+
 <div>
-  <pre><code class='bash'>&lt;strong&gt;Mongo Console&lt;/strong&gt;
-mongo paulo.mongohq.com:10097/chillr_db -u &lt;user&gt; -p&lt;password&gt;</code></pre>
+  <pre><code class='bash'>mongo paulo.mongohq.com:10097/chillr_db -u &lt;user&gt; -p&lt;password&gt;</code></pre>
 </div>
 
 
-
+<p><b>Mongo URI</b></p>
 
 <div>
-  <pre><code class='bash'>&lt;strong&gt;Mongo URI&lt;/strong&gt;
-mongodb://&lt;user&gt;:&lt;password&gt;@paulo.mongohq.com:10097/chillr_db</code></pre>
+  <pre><code class='bash'>mongodb://&lt;user&gt;:&lt;password&gt;@paulo.mongohq.com:10097/chillr_db</code></pre>
 </div>
 
 
-<p>Now, add the database user with a username, password. Check <a href="http://support.mongohq.com/common-questions/debugging-connection-issues.html">mongohq support docs</a> for reference.</p>
+<p>Now, add a database user with a username, password. Check <a href="http://support.mongohq.com/common-questions/debugging-connection-issues.html">mongohq support docs</a> for reference.</p>
 
 <p>You could try out the mongo console connection string from your local to check if the user credentials are valid. Once you find them valid, add the MONGOHQ_URL to the heroku config set.</p>
 
