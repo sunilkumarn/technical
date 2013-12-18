@@ -1,0 +1,883 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="Memoization is an optimization technique to speed up programs . Here the function calls are not required to make repetitive calculations of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/blog/page/4">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experiences.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/15/memoizationrun-your-programs-faster">Memoization:Run Your Programs Faster.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-15T09:00:50+05:30" pubdate data-updated="true">Sep 15<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/15/memoizationrun-your-programs-faster#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Memoization is an optimization technique to speed up programs</strong> . Here the function calls are not required to make repetitive calculations of previously calculated results. The processing time of the program is reduced and the memory consumed is increased. <strong>Memoized functions become optimized for speed while they use a higher memory .</strong></p>
+
+<p>Lets go through an analysis of memoization: Consider the code segment for finding out the term of  a fibonacci series:</p>
+
+<p>_def fib(n):</p>
+
+<pre><code>if n==0:
+
+        return 0
+
+if n==1:
+
+    return 1
+
+else:
+
+    n=fib(n-1)+fib(n-2)
+
+    return n
+</code></pre>
+
+<p>_</p>
+
+<p>You could find out the time taken to run the code :
+<strong>$ time python filename.py
+</strong></p>
+
+<p>You would find out then that the time complexity of your program is O(exp(n)) . Try and find out the 40th term of the fibonacci series . This code segment will make you wait for a considerable amount of time before you view your result in the terminal. Trying to find out the 50th term would cause you to manually interrupt the process because you can not wait any longer. Therefore we need a method whereby we could find out the higher terms of the series in much faster time.</p>
+
+<p>Heres exactly where memoization comes in. Memoization is not any kind of magic. What it does is that is caches the results that have been calculated earlier and stores them in a lookup table so that these don&rsquo;t have to be calculated again. We make use of an associative array as a lookup table here.  The following code segment shows the memoized version.</p>
+
+<p>_table={0:0,1:1}</p>
+
+<p>def fib1(n):</p>
+
+<pre><code>if not n in table:
+
+    table[n]=fib1(n-1)+fib1(n-2)
+
+return table[n]
+</code></pre>
+
+<p>_</p>
+
+<p>Here we create an associative array with the first two numbers of the fibonacci series as its keys. Now
+upon the call of each function , the lookup table (&lsquo;table&rsquo;) is checked for the existence of the term . If the term is not present in the associative array , the term is calculated and stored in the associative array. In both cases the resulting term is returned. Now see for yourself , the pace of the results being processed.
+Try find out the 100th term of the series:
+Do
+<strong>$ time python myfilename.py</strong>
+You would see the 100th term of the fibonacci series in 12/1000th of a second.Try them for the 1000th,10000th terms&hellip;(provided that you have a higher recursion limit). Did you ever think  that it could be this faster.???</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/05/intermezzocoding-style">Intermezzo:Coding Style</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-05T23:54:51+05:30" pubdate data-updated="true">Sep 5<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/05/intermezzocoding-style#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When writing long codes , its important that , as a programmer , you write your code in the best possible structure that is readable to others. Most languages can be written in different styles, and one may be better than the other. Choosing an appropriate coding style is important so that reading your code is not itching to the eyes.
+<strong>PEP8</strong> has emerged as the style guide that most codes adhere to. The most important points that needs to be followed are:
+1)Use 4-space indentation and no tabs .</p>
+
+<p>2)Use blank lines to separate functions and classes and large blocks of code within functions</p>
+
+<p>3)Use comments when possible</p>
+
+<p>4)Use docstrings in classes and functions.</p>
+
+<p>5)Use spaces around operators and commas e.g     &mdash;&mdash;&ndash;      &lsquo;c = a + b&rsquo;</p>
+
+<p>6)Naming your classes and functions consistently. Always use &lsquo;self&rsquo; as the name for the first argument a method in the class.</p>
+
+<p>7)Wrap lines so that they don&rsquo;t exceed 79 characters.</p>
+
+<p>Try using all of the above listed particulars and make you code eye-pleasing and obviously easy to understand.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/05/the-import-search-path-in-python">The Import Search Path in Python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-05T22:57:43+05:30" pubdate data-updated="true">Sep 5<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/05/the-import-search-path-in-python#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As a python programmer, i feel it necessary to mention about the library search path in python. Python looks in several places in your system when we try and import a module in python.
+Precisely , it searches in all directories mentioned in sys.path. Just try and see the directories in sys.path.</p>
+
+<blockquote><blockquote><blockquote><p>import sys
+<strong>sys.path</strong>
+This returns you a list of the directories where python does a &lsquo;look in&rsquo; to import your module. This list may vary from system to system and depends on the python version that you use.For me, sys.path is :</p></blockquote></blockquote></blockquote>
+
+<p>[&lsquo;&rsquo;, &lsquo;/usr/lib/python2.5&rsquo;, &lsquo;/usr/lib/python2.5/plat-linux2&rsquo;, &lsquo;/usr/lib/python2.5/lib-tk&rsquo;, &lsquo;/usr/lib/python2.5/lib-dynload&rsquo;, &lsquo;/usr/local/lib/python2.5/site-packages&rsquo;, &lsquo;/usr/lib/python2.5/site-packages&rsquo;, &lsquo;/usr/lib/python2.5/site-packages/Numeric&rsquo;, &lsquo;/usr/lib/python2.5/site-packages/PIL&rsquo;, &lsquo;/usr/lib/python2.5/site-packages/gst-0.10&rsquo;, &lsquo;/var/lib/python-support/python2.5&rsquo;, &lsquo;/usr/lib/python2.5/site-packages/gtk-2.0&rsquo;, &lsquo;/var/lib/python-support/python2.5/gtk-2.0&rsquo;]</p>
+
+<p>A few points about sys.path:</p>
+
+<p>**Importing the sys module makes all the attributes and functions of the module available to you.</p>
+
+<p>sys.path as i mentioned gives you the current search path.</p>
+
+<p>You could add a new directory to the python path by appending the list &lsquo;sys.path&rsquo;
+sys.path.append(/my_directory/my_setup)**
+Again view sys.path and you will find the directory mentioned above in the new search path.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/05/functions-in-python">Functions in Python.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-05T22:18:06+05:30" pubdate data-updated="true">Sep 5<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/05/functions-in-python#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just like most other languages , Python also has functions in it. Lets go through some of the aspects of functions in python.</p>
+
+<p><strong>def my_function(var1,var):</strong>
+This is how you declare a function in Python.
+The keyword def, the function name ,the arguments separeted by commas in parenthesis. Its important to understand that functions in python specify no return type. Each and every function returns something. Either the value returned or else &lsquo;none&rsquo; , the python &lsquo;null value&rsquo;. The arguments dont specify a type either , the type is made out from the values that are passed in .
+Python is a :
+<strong>dynamically typed language</strong>: The types are discovered at run time.
+<strong>strongly typed language</strong>: One particular type cannot converted to another type without explicit type conversion.</p>
+
+<p><strong>Higher order functions in python:</strong> Functions that operate on other functions, (functions that can take other functions as its arguments).
+Eg: filter(my_function,list_1)   is a built in higher order function , which takes the function &lsquo;my_function&rsquo; as one of its arguments.</p>
+
+<p><strong>Functions in python are first class:</strong>
+Consider :
+def my_function2(var1):
+We have defined a function &lsquo;my_function2&rsquo;
+Now we could do this:
+var=my_function.
+Now try printing the value of &lsquo;var&rsquo;
+Its the address of the function &lsquo;my_function2&rsquo; that will be printed because assigning a function name to a variable assigns it address to the variable.
+Now we could invoke the function as:
+var(my_parameter)
+Just check out the glob module in python (/usr/lib/python2.5/glob.py) for a good example of the first class nature of functions in python.
+Function composition is perhaps the best way to explain the fact that function are first class in python.
+def f(my_funct):</p>
+
+<p>def g(x):</p>
+
+<p>def compose (f(g(x))): &mdash;&mdash;&ndash; function composition&hellip;.functions are passed in as variables to other functions.
+The way variables are used in function in also important .  A good knowledge of the use of <a href="http://sunilkumarn.wordpress.com/2010/09/05/local-and-global-variables-in-python/">local and global variables</a> are required to avoid any kind of misperception  while using variables in python.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/05/local-and-global-variables-in-python">Local and Global Variables in Python..</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-05T22:15:20+05:30" pubdate data-updated="true">Sep 5<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/05/local-and-global-variables-in-python#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Lets see the working of global and local variables in python with the help of a few small examples: What you need to understand is that variables that are declared inside functions are local to that functions (cannot be accessed from outside the function), whereas variables that are declared outside the function are global to that function , they can be accessed within the function.</p>
+
+<p>_>>>a=1</p>
+
+<blockquote><blockquote><blockquote><p>def func():
+&hellip;    print a
+&hellip;    a=10
+&hellip;
+func()_
+would produce an error as:
+<strong>UnboundLocalError: local variable &lsquo;a&rsquo; referenced before assignment.</strong>
+This is because the local variable &lsquo;a&rsquo; is used in the &lsquo;print&rsquo; statement before it is being assigned a value.
+However ,</p></blockquote></blockquote></blockquote>
+
+<p>_>>>a=1</p>
+
+<blockquote><blockquote><blockquote><p>def func():
+&hellip;    global a
+&hellip;    print a
+&hellip;    a=10
+&hellip;  <br/>
+func()_
+wouldn&rsquo;t print an error of that sort.
+Note the use of the keyword <strong>&lsquo; global&rsquo; </strong>. This keyword indicates that the variable &lsquo;a&rsquo; that is being printed is a global variable. The python interpreter understands that there is a variable &lsquo;a&rsquo; that has been assigned to &lsquo;1&rsquo; outside the function and hence prints the value &lsquo;1&rsquo;.</p></blockquote></blockquote></blockquote>
+
+<p>Now do the following:</p>
+
+<p>_>>>a=1</p>
+
+<blockquote><blockquote><blockquote><p>def func():
+&hellip;    global a
+&hellip;    print a
+&hellip;    a=10
+&hellip;    print a
+func()_
+The result would be:
+1
+10
+Now try and print the value of &lsquo;a&rsquo;.
+The value printed would be:
+&lsquo;10&rsquo;
+This is because the value of the variable &lsquo;a&rsquo; has been changed to 10 by the function
+&lsquo;func&rsquo; because &lsquo;a&rsquo; has been declared as a global variable in the function &lsquo;func&rsquo;.</p></blockquote></blockquote></blockquote>
+
+<p>Now do :
+_>>>def func():
+&hellip;    print b
+&hellip;    b=10
+&hellip;</p>
+
+<blockquote><blockquote><blockquote><p>print b _
+would result in an error :
+<strong>NameError: name &lsquo;b&rsquo; is not defined</strong></p></blockquote></blockquote></blockquote>
+
+<p>because no variable &lsquo;b&rsquo; has been assigned a value outside the function. The variable &lsquo;b&rsquo; used in the function &lsquo;func&rsquo; is local to that function and cannot be accessed from that outside the function, that is , the variable &lsquo;b&rsquo; is <strong>local</strong> to the function.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/05/version-control-systems">Version Control Systems&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-05T20:23:32+05:30" pubdate data-updated="true">Sep 5<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/05/version-control-systems#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Version control is a system that records changes to your files and allows to view specific versions of a file or set of files.VCS is used so that you don&rsquo;t screw up your files or your entire project as a result of the silly , careless mistakes that you have made.
+Many people do their own version control by copying their files to another directory.This is a quite simple and easy approach if you are careful enough so that you won&rsquo;t agonize by doing something disastrous so that you may lose all your stuff later.Therefore keeping in mind that such things can happen ,after all we are all humans, we use version control systems.</p>
+
+<p><em>Centralized VCS and Distributed VCS.</em>
+<strong>Centralized VCS </strong>
+CVCS includes a single server that contains different versions of the files and the clients could check into that.The major advantage of this system is that administrators have fine grained control over whats happening ,but it has serious drawbacks as well. They are:
+Single point of storage if crash would be fatal.
+The clients could pull anything from the repository but they need a <strong>commit access </strong>to push something into it.This might lead to a client getting frustrated if he/she has not been granted a &lsquo;commit access&rsquo;  even after working for a longer period of time. Also there might something political issues related to administration.</p>
+
+<p><strong>Distributed VCS.</strong>
+In DVCS ,you could push data into the repository with the same ease with which you could pull from it. All the repositories are at the same level and therefore we could collaborate with any of the repositories.Examples of DVCS are Git , mercurial , bazaar..etc&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/03/shebang-lines">Shebang Lines&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-03T23:10:28+05:30" pubdate data-updated="true">Sep 3<span>rd</span>, 2010</time>
+        
+         | <a href="/2010/09/03/shebang-lines#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Shebang</strong>(also known as &lsquo;hashbang&rsquo;) refers to the characters #! when they are the first two characters (occurring at the left most corner, i.e the beginning of the very first line) of your script. The particular line that contains the shebang is the shebang line in your script.
+Now what&rsquo;s shebang meant to do.?
+In a unix-like operating system , <a href="http://en.wikipedia.org/wiki/Loader_(computing">the program loader</a>) (part of the operating system thats responsible for loading programs) finds the presence of these two characters(#!) , identifies it as a script and tries to execute it with the interpreter that will be specified using the remaining lines of the script.
+For example consider writing a shebang line for a python script..
+First and foremost you need to find the location of the interpreter for that particular script&hellip;
+<strong>$which python
+/usr/bin/python</strong>
+Therefore&hellip;the shebang line should be set as&hellip;
+<strong>#! /usr/bin/python</strong>
+Specifying the shebang line would execute your script as follows:
+./&lsquo;script name&rsquo;.py       instead of doing     &lsquo;python &#8216;script name&rsquo;.py&#8217;
+You could try out the use of shebang lines for any of the following types of scripts
+&lsquo;werbel&rsquo;, &lsquo;tinypy&rsquo; ,&lsquo;perl&rsquo;&hellip;..and many more&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/02/optimizing-your-python-code">Optimizing Your Python Code.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-02T08:40:43+05:30" pubdate data-updated="true">Sep 2<span>nd</span>, 2010</time>
+        
+         | <a href="/2010/09/02/optimizing-your-python-code#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>    Compare python with some of the other languages that are familiar to many of you. The obvious difference that will be caught by you , is the fact that python code, for the same program ,is much shorter than codes written in some of your favorite languages like C ,Java etc.
+</code></pre>
+
+<p>Understanding the essence of python programming would help you write shorter and interesting codes  and are easier to understand. Lets just have a look into some of the core points that need to be followed so that your python program becomes short and effective.</p>
+
+<pre><code>    First and foremost, you need to understand the fact that python has got a huge library with functions for almost every activity you would need frequently. The only thing you need to do is to identify whether a function is present that would handle your case and then call the function .There are lots of built in functions that we could call. Other functions that reside in certain modules can also be invoked after the module containing the function has been imported.
+</code></pre>
+
+<p> As an example , consider the following:</p>
+
+<pre><code>        **map(sqr,range(1,100)):**
+
+    'map' is a built -in higher order function that takes two or more arguments and returns you a list,'range' is another built-in which would return a list containing all the elements from the starting element up to the ending element.
+
+    This particular function returns a list of squares of all numbers from 1 up to 99 using a single line code. Compare this to a C code to find the squares of this many numbers,certainly ,a single line code wouldn't do that for you.
+
+    Python has got a large collection of such built ins which includes functions like 'filter','reduce','hex','cmp' and many more.
+
+    Python has got many more functions that are defined in different modules:To use those functions , you just need to import those modules and invoke them. Some of the most commonly invoked ones are :
+    **Module 're**' for pattern matching. Contains power full functions like findall' , search' , 'match' etc.
+    **Module 'os'** for operating system services. Includes functions 'mkdir' , 'chdir' ,' path.join,' path.abspath'' etc.
+    **Module 'shutil'** for shell utilities like copying files.
+
+    **Module 'urllib'** for dealing with 'URLs'.
+
+    **Module 'sys**' :sys.argv[index] would return the input given on the command line at position 'index.'
+
+    Identifying the correct functions that are present in these and more modules in python  would result in much shorter code length. 
+
+ A proper knowledge about the use of sequences and variables would do no harm in our purpose of decreasing the code size.
+
+Consider the code to swap the values of two variables. In other languages you would write:
+temp=a:
+a=b:
+b=temp:
+
+Once again, in python all you need is a single line code :
+
+**a,b=b,a**
+</code></pre>
+
+<p> The logic behind whats happening is to be understood. Consider the right hand side of the expression -variables are packed into a tuple. On the left hand side, the tuple is unpacked and the values are entered into the variables. Thus the values are swapped in a single line as opposed to three lines taken in other languages.</p>
+
+<pre><code>Use of generator expressions is another way to reduce your code size.
+Consider:
+xvec=[10,20,30]
+yvec=[30,40,50]
+</code></pre>
+
+<p>The expression <strong>sum(x*y for x,y in zip(xvec,yvec)) </strong>gives you the dot product of xvec and yvec in a single step where &lsquo;sum&rsquo; is another built in function. Think of writing a C code instead of this and the number of writing you would take.</p>
+
+<pre><code>There are many more such tricks that would decrease the code size considerably . Slicing of lists , usage of the appropriate sequences are all important in producing a short and elegant code. Obviously,the fact remains that to understand the methodology behind decreasing the code size is to keep on coding ,understanding the definitions of the functions and identifying where to use them. But again, compressing your code size heavily might result in your code being hard to digest by others, specially those beginners trying to understand a python code. Therefore its important to develop a skill where you would maintain a balance between decreasing the code size and the readability of your code. This can be achieved only through rigorous coding.
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/02/garbage-collection-in-python">Garbage Collection in Python.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-02T08:37:12+05:30" pubdate data-updated="true">Sep 2<span>nd</span>, 2010</time>
+        
+         | <a href="/2010/09/02/garbage-collection-in-python#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In C, once the memory allocated becomes garbage , that chunk of memory is gone wasted. Nothing more is possible on it.
+Consider
+<strong>int a[10];</strong>
+Some amount of memory would be allocated for the array &lsquo;a&rsquo;. Now if do a=&lsquo;some value&rsquo; , the memory that was allocated to the array becomes garbage because &lsquo;a&rsquo; no longer uses it as it is pointing to something else now. The memory is gone wasted and is no more usable.
+The bugs that create loss of memory are hard to detect as well ,simply because of the fact that they cannot be seen. Its only after executing the particular code for some amount of times that you might actually get to see the effects of the bug .By the time your system may have crashed.</p>
+
+<p>In python ,the interpreter is smart enough to do &lsquo;garbage collection&rsquo;. That is the memory which is unused is collected by the interpreter and is not gone wasted. The process of garbage collection is done by using a method called ref counting. Understand ref counting as :
+<strong>Consider a=[1,2,3]</strong>
+&lsquo;a&rsquo; points to a particular block of memory. At the end of the block of memory ,there would be a count that indicates the number of variables that point to the same block of memory. So now the count would be 1.</p>
+
+<p>Now if we do,</p>
+
+<p>b=a&hellip;&hellip;means that now b points to same block of memory. Therefore the count becomes 2.</p>
+
+<p>Now consider doing</p>
+
+<p>b=0.</p>
+
+<p>The count in the block of memory where b was pointing earlier reduces by 1. , hence count is now 1.
+Do</p>
+
+<p>&lsquo;a=0&rsquo;</p>
+
+<p>and the count in that block becomes 0.Now the python interpreter can allot the chunk of memory to some other variable as it may feel. The significant thing that you need to understand is the fact that the memory is not gone wasted as in C .</p>
+
+<p>Garbage collection keeps track of the variables that point to a block of memory and collects the unused memory accordingly. There is never a shortage of memory space. But there are obvious disadvantages with the process of garbage collection.</p>
+
+<p>One drawback , as you would except would be the matter of speed which would decrease.
+But the more significant drawback would be the <strong>non-deterministic behavior</strong> of the interpreter.
+Consider the two statements.
+ .i=0
+ .j=0
+You would expect the statement j=0 to be executed immediately after the statement i=0 has been executed. But as a result of this process of garbage collection ,this is not a guarantee. There might be a certain time delay in executing the second statement if the interpreter feels like doing some &lsquo;garbage collection&rsquo; after the first statement has been executed . This results in the delay.</p>
+
+<p>Therefore its clear that its not best to use python over languages like C when it comes to real time systems.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/31/arbitrary-argument-lists-in-python">Arbitrary Argument Lists in Python.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-31T08:09:23+05:30" pubdate data-updated="true">Aug 31<span>st</span>, 2010</time>
+        
+         | <a href="/2010/08/31/arbitrary-argument-lists-in-python#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Consider the function definition:
+<strong>def mapp(fun,first,*second): </strong>     (A function that is defined to implement the properties of the &lsquo;map&rsquo; function</p>
+
+<p>Here the function &lsquo;mapp&rsquo; consists of three arguments passed to it. Out of this ,the third argument (second) is the arbitrary argument list. The argument is itself optional and can be passed with different lists or tuples ranging from zero to any number of lists.
+The length of the arbitrary listed argument would be zero if no arguments are passed to it.(len(second)=0).</p>
+
+<p>The call to the above function would be as follows:
+mapp(sqr,a)</p>
+
+<p>OR</p>
+
+<p>mapp(add,a,b,c)</p>
+
+<p>OR</p>
+
+<p> mapp(mul,a,b)</p>
+
+<p>where a,b,c are any lists.
+and &lsquo;sqr&rsquo;,&lsquo;add&rsquo;,&lsquo;mul&rsquo; are functions.</p>
+
+<p>Suppose the call to the function be
+mapp(mul,a,b,c)</p>
+
+<p>The lists b,c are passed as arguments to the function &lsquo;mapp&rsquo; via the formal parameter &lsquo;second&rsquo; (arbitrary listed argument).
+Now     second[0]=b</p>
+
+<pre><code>second[1]=c.
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+<section class="googleplus">
+
+<h1>
+  <a href="http://github.com/sunilkumarn/"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/github_zpse87fc53d.jpg" width="40" height="40"></a>
+  &nbsp; &nbsp;
+  <a href="http://twitter.com/sunilkumar_g56"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/twitter_zps447bd274.jpg" width="40" height="40"></a>
+</h1>
+
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'techscribblings';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-44991607-1', 'sunilnkumar.com');
+    ga('send', 'pageview');
+  </script>
+</body>
+
+</html>
