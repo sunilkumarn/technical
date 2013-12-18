@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: UNIX | Scribblings]]></title>
+  <link href="http://sunilkumarn.github.io/technical/blog/categories/unix/atom.xml" rel="self"/>
+  <link href="http://sunilkumarn.github.io/technical/"/>
+  <updated>2013-12-18T19:41:36+05:30</updated>
+  <id>http://sunilkumarn.github.io/technical/</id>
+  <author>
+    <name><![CDATA[Sunil Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[UNIX - Create new commands and pass arguments]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/08/12/creating-new-commands-and-passing-arguments-in-unix"/>
+    <updated>2010-08-12T01:20:44+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/08/12/creating-new-commands-and-passing-arguments-in-unix</id>
+    <content type="html"><![CDATA[<p>When a particular sequence of commands is repeated time after ,it might be better if we create a shorter command of our own. These command creation mentioned may not be suitable for public use but would be helpful for private use.</p>
+
+<p>Consider suppose that we intend to count the number of users quite frequently:
+<strong>$ who|wc -l</strong></p>
+
+<p>We can make a small command of ours named &lsquo;count&rsquo; that does the same work.
+So we do
+<strong>$echo &lsquo;who|wc -l&rsquo;>count</strong> (A file named &lsquo;count&rsquo; is created).</p>
+
+<p>Now we run the shell program with its input coming from the file &lsquo;count&rsquo;.
+<strong>$ sh&lt;count</strong>
+this is same as
+<strong>$ sh count</strong></p>
+
+<p>Now to type sh all the time wouldn&rsquo;t be such a great thing. So we make the file &lsquo;count&rsquo; executable by
+<strong>$ chmod +x count</strong>
+Now the result of doing &lsquo;who|wc -l&rsquo; can be produced by doing &lsquo;count&rsquo;.
+<strong>$ count</strong>
+Install count ,place it in the /usr/bin directory. Set the path appropriately and start using the command
+created.</p>
+
+<p>Now again when we begin to create executable commands of our own, we will have to make it executable . So it would be better if we create a shorter command for <strong>chmod +x filename</strong>.
+The problem here would be that the filename that is passed to &lsquo;chmod&rsquo; may change every time.
+Therefore we do
+<strong>$ echo &lsquo;chmod +x $1&rsquo;>cx</strong> (cx would be the file created).</p>
+
+<p>Here $1-indicates that only 1 argument can be passed to the command at a time</p>
+
+<pre><code>     $2 would make it 2 and $9 would make it 9.
+</code></pre>
+
+<p>So to enable any number of arguments we do
+<strong>$ echo &lsquo;chmod +x $*&rsquo;>cx</strong></p>
+
+<p>Now we need to make cx executable.
+This can be done either by doing
+<strong>$ chmod +x cx</strong>       or else
+<strong>$ sh cx cx </strong>             because sh cx is equivalent to doing chmod +x $*.
+Now test it by creating a test command &lsquo;test&rsquo; ,install it and run the command. &lsquo;Permission denied&rsquo; will be the message. Now do
+<strong>$ cx test</strong>
+<strong>$ test</strong>
+The command &lsquo;test&rsquo; will run and the result will be produced.</p>
+
+<p>Now suppose we have a file &lsquo;class&rsquo; consisting of some information about the students of our class and consider a case where we need information about certain students  and  we need it quite frequently. This can be done with the help of the &lsquo;grep&rsquo; command.
+<strong>$ echo &lsquo;grep $* /root/new/class&rsquo;> find</strong>
+install the command.
+<strong>$ cx find</strong>              /* makes the file executable
+<strong>$ find</strong></p>
+
+<p>Now a possible would arise when the following case is given as the argument:
+$ find sunil kumar
+This is because the words sunil and kumar will be seen as two different arguments.
+Hence do
+<strong>$ echo &lsquo;grep “$*” /root/new/class&rsquo;> find</strong>
+This would solve the problem.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Files in the Unix file system and their permissions... ]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/08/04/files-in-the-unix-file-system-and-their-permissions"/>
+    <updated>2010-08-04T12:05:42+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/08/04/files-in-the-unix-file-system-and-their-permissions</id>
+    <content type="html"><![CDATA[<p>A file is a sequence of characters. A few commands and knowledge that may help in dealing with files and directories in UNIX are the following.
+The &lsquo;ls&rsquo; commands and its variations :
+The &lsquo;du&rsquo; command and its variations
+The command used to change the permissions – &lsquo;chmod&rsquo;.
+A look into these commands
+ls command gives a listing of all the files that are present in the current directory.
+The &lsquo;ls -l&rsquo; is used to provide a detailed listing of the files that are present.
+For eg. If you type the command &lsquo;ls -l&rsquo; the results be will produced as
+-rw-r&mdash;r&mdash; 1 root root 856 2010-08-03 20:15 delete.c</p>
+
+<p>-rw-r&mdash;r&mdash; 1 root root 868 2010-08-03 08:19 line.c</p>
+
+<p>where line.c and delete.c are the two files present in the directory.
+The other variations of the command include ls-u,ls-t etc
+The &lsquo;du&rsquo; (disk usage)provides information about the usage of the disk.
+The command &lsquo;du -a&rsquo; is used to provide disk informations about even the files of subdirectories.
+ The &lsquo;du-a|grep line.c&rsquo;
+provides the details about the file &lsquo;line.c&rsquo;.
+&lsquo;chmod&rsquo; is the command that is used to change permissions. The permissions can be changed by the superuser.
+Consider the following permissions:
+-rwxrwxrwx     &ndash;    indicates that the owner,the group and the other users of the system can all read&reg;,write(w)and execute(x) the file of which the permission has be shown.
+Inorder to change the permission , the &lsquo;chmod&rsquo; command is used.
+For eg. &lsquo;chmod 666  file&rsquo;
+indicates that the file can be read and written by all the three categories of users mentioned above.
+The octal values have their meanings as
+4-indicates that the file can be read
+2-file can be written
+1-file can be executed
+therefore &lsquo;chmod 444 file&rsquo; would set the permissions of the file to read only for all the  categories of users.
+6 6 6 indicates(4+2 4+2 4+2) for the three users.)
+Now do &lsquo;ls -l&rsquo; and you will see the permissions as
+-r&mdash;r&mdash;r&mdash;.
+&lsquo;+&rsquo; is used to turn a permission on   and &lsquo;&ndash;&rsquo; to turn it off.
+The command &lsquo;chmod +w file&rsquo; enables write permissions for the file
+and &lsquo;chmod -x file&rsquo; turns off the execute permissions for the file.
+The permissions of the file can be viewed using the &lsquo;ls -l&rsquo; command stated before. The permissions of the directory cab also be set and viewed using the &lsquo;ls -ld&rsquo; command.
+The &lsquo;ln&rsquo;,&lsquo;cp&rsquo;,&lsquo;mv&rsquo; commands are used in UNIX for slightly different uses.
+The &lsquo;ln command creates a link to the file. Therefore the same file can be accessed using the two file names. The syntax is as follows:
+'ln filename filename1&rsquo;
+You would obtain another link to the file named &lsquo;filename&rsquo; by the name of &lsquo;filename1&rsquo;:
+The change made to original file would reflect in the other as well. You could see that with help of the &lsquo;ls -i&rsquo; (command that indicates the &lsquo;i-number&rsquo; of the file)that the two files that are linked are having the same i-number.
+&lsquo;cp&rsquo; command is used to make the copy and the &lsquo;mv&rsquo; command is used to move or rename files.
+The command &lsquo;mv filename1 filenname2&hellip;&hellip; destination directory&rsquo; is used to move several files together to the destination directory.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A few basic commands in Linux]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/07/30/a-few-basic-commands-in-linux"/>
+    <updated>2010-07-30T16:27:38+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/07/30/a-few-basic-commands-in-linux</id>
+    <content type="html"><![CDATA[<p>The common  file system commands that would make a beginner get started with linux are the following:</p>
+
+<p><strong>ls</strong>:command that lists all the files in the current directory
+Variations in the use of the ls command would be found as the ls -l,ls -t&hellip;
+<strong>cp source dest</strong>:command that is used to copy file &lsquo;source&rsquo; to file &lsquo;dest&rsquo;
+<strong>mv source dest</strong>:moves the file &lsquo;source&rsquo; to file'dest'
+<strong>rm files</strong>:command used to remove a particular file
+These commands when invoked would be looked in the directory /usr/bin
+To check the presence of the &lsquo;cp&rsquo; command use:
+<strong>which cp</strong>
+You would get back /usr/bin
+There is a case where the use of a paricular command (say cp)would display in a message as follows
+bash:cp command not found
+Make use of the &lsquo;which&rsquo; command to see if the cp command is present in the directory
+<strong>which cp</strong>
+There might be no response
+Therefore the coreutil package needs to be reinstalled
+<strong>apt-get install coreutils &mdash;reinstall coreutils</strong>
+This would fix the problem.
+The other basic commands would include the commands for printing the text:
+<strong>cat filename</strong>:
+<strong>pr filename</strong>:</p>
+
+<p>Directories in linux contain files and subdirectories.Each user will be having his own home directory to whih he logs in at the beginning of a session.The user may then move on work in other directories which becomes his  current directory.</p>
+
+<p>The basic commands that are used in regard with the directories include the following</p>
+
+<p><strong>mkdir dirname:</strong>creates a new directory
+<strong>cd dirname:</strong>change to the particular directory(provided that you are in the correct place)
+To check whether you are in the correct place use
+<strong>pwd</strong>
+You would get back the &lsquo;current directory&rsquo;
+<strong>cd ..</strong>: is used to go the previous directory.
+<strong>cd</strong>: moves to the home directory.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The shell-Basic facilities offered]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2010/07/30/the-shell-basic-facilities-offered"/>
+    <updated>2010-07-30T16:26:41+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2010/07/30/the-shell-basic-facilities-offered</id>
+    <content type="html"><![CDATA[<p>Shell -the command interpreter.
+There are many basic facilities offered by the shell.They include</p>
+
+<p>1)Using shorthands for files(use of the asterisk &lsquo;<em>&rsquo;)
+For example the command
+<strong>pr temp</strong></em>
+would print the contents of all files beginning with &lsquo;temp&rsquo;
+Similarly the echo command
+<strong>echo </strong>*
+will list all the files in the current directory</p>
+
+<p>2)Input-Output redirection
+Consider the case where we want to list the files of the directory but not in the terminal
+So we redirect it to a file using the &lsquo;>&rsquo; operator
+<strong>ls > filename
+</strong>If the file &lsquo;filename &rsquo; is not already created it will be so,or else it will be overwritten.
+Counting the number of lines in a particular directory is done as
+<strong>ls >filename
+wc -l&lt;tfilename</strong></p>
+
+<p>3)Inorder to avoid the creation of a temporary file,PIPES are used for the input-output redirection
+The vertical bar &lsquo;|&rsquo; is the pipe.
+Instead of using
+ls>filename
+wc -l&lt;filename
+we use
+<strong>ls|wc -l </strong>
+for the redirection to be possible.</p>
+
+<p>4)Tailoring the environment
+As a user of UNIX,we could customize it in the way comfortable to us.
+The &lsquo;stty&rsquo; command helps us do that
+for eg:
+<strong>stty erase &lsquo;^h&rsquo;
+</strong>enables the user to use ctrl-h for erasing a particluar character.
+By storing it in the file .profile (present in the home directory),we need not type it each time we login
+One of the most important tailoring comes during the setting up of paths
+Again this could be made changed in the <strong>&lsquo;.profile&rsquo; </strong>file.
+The current path would enable searches in the directories /usr/bin and /bin.
+If we did want to augment another directory to the search path we do it as follows:
+<strong>PATH=export $PATH:/usr/games</strong>
+where usr/games would be the newly added search directory.
+The augmented path would be obtained using the &lsquo;echo&rsquo; command
+<strong>echo $PATH
+:/usr/bin:/bin:/usr/games</strong>
+All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
+]]></content>
+  </entry>
+  
+</feed>

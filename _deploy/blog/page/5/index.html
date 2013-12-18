@@ -1,0 +1,863 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="Consider the function definition:
+def mapp(fun,first,*second): (A function that is defined to implement the properties of the &lsquo;map&rsquo; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/blog/page/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experiences.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/31/arbitrary-argument-lists-in-python">Arbitrary Argument Lists in Python.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-31T08:09:23+05:30" pubdate data-updated="true">Aug 31<span>st</span>, 2010</time>
+        
+         | <a href="/2010/08/31/arbitrary-argument-lists-in-python#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Consider the function definition:
+<strong>def mapp(fun,first,*second): </strong>     (A function that is defined to implement the properties of the &lsquo;map&rsquo; function</p>
+
+<p>Here the function &lsquo;mapp&rsquo; consists of three arguments passed to it. Out of this ,the third argument (second) is the arbitrary argument list. The argument is itself optional and can be passed with different lists or tuples ranging from zero to any number of lists.
+The length of the arbitrary listed argument would be zero if no arguments are passed to it.(len(second)=0).</p>
+
+<p>The call to the above function would be as follows:
+mapp(sqr,a)</p>
+
+<p>OR</p>
+
+<p>mapp(add,a,b,c)</p>
+
+<p>OR</p>
+
+<p> mapp(mul,a,b)</p>
+
+<p>where a,b,c are any lists.
+and &lsquo;sqr&rsquo;,&lsquo;add&rsquo;,&lsquo;mul&rsquo; are functions.</p>
+
+<p>Suppose the call to the function be
+mapp(mul,a,b,c)</p>
+
+<p>The lists b,c are passed as arguments to the function &lsquo;mapp&rsquo; via the formal parameter &lsquo;second&rsquo; (arbitrary listed argument).
+Now     second[0]=b</p>
+
+<pre><code>second[1]=c.
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/30/c-vs-python-a-comparison">C vs Python : A Comparison</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-30T17:28:47+05:30" pubdate data-updated="true">Aug 30<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/30/c-vs-python-a-comparison#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>Coming from C ,a programming language where you might come across lot of un-expectencies while coding, python might be termed as 'lot easier' to deal with for a beginner especially. For those who have programmed in C,python provides you with the great advantage of 'not' having to get into the system specifications such as 'memory and bit' manipulations. Ask those C programmers who would always say that the biggest challenge they have come across in C as a beginner is while they have dealt with pointers as if they are being taunted . Luckily ,specially for the starters ,python doesn't require you to get into the memory allocation details and other stuff. All you need to do is to write your efficient code and wait for the result and most of the time the output you get wont give you a shock.
+
+You could create a long list of points that might attract you to do a bit of coding in Python although C obviously has its own standouts. Some of them may be noted.
+
+Python follows the Object oriented Programming paradigm whereas C follows Imperative programming paradigm.
+
+Python has got a really large library as compared to C and a huge number of really powerful and useful built in functions.
+
+Python code ,at first sight looks a lot more tidy than C because of its compulsory indentation requirement. You might know that this is not a necessity in C.
+
+Python codes can be slower than corresponding C codes. Because python performs an 'out-of-range' checking for each iteration while looping ,the code becomes a lot more slower. This check has its own advantage though. Programmers in C would no that trying to access a location outside the allocation of an array would cause disastrous results.Python also performs the process of [garbage collection](http://sunilkumarn.wordpress.com/2010/09/02/garbage-collection-in-python/) which again decreases the execution speed.
+
+The use of 'for loop' in Python is entirely different from that in C. The variable used is auto incremented and its important not to try and modify the loop variable of the 'for' loop.
+
+There are no type declarations in python as is necessary in C.
+
+    Python does not support in-line assignment as in C. Therefore there is no chance of accidently assigning the value to a variable that you thought you were comparing.i.e 'if a=5' would just produce an error in Python whereas in C this would make the value of a equal to 5.
+
+One of the major differences between python and C is that you wont get to play with pointers in python. Memory manipulation by the programmer is not required in Python as in C. Almost all the such activities done in C with the use of pointers can be done with sequences and associative arrays in python.
+
+The variables used in python would result in an error without making an appropriate assignment. This proves really beneficial because unassigned variables can trouble you leading even up to segmentation faults in C.
+
+Implementation of the 'stack' data structure becomes a lot more easier in python than in C. The implementation of 'queue' also becomes relatively easier. The python built-ins ;insert','append' etc helps in the purpose.
+
+Another important feature of python is the use of sequences 'lists' , 'tuples',strings' and the use of Associative arrays. and their different manipulations. This helps programmers to do almost anything that can imagine of with the data stored.
+
+Most importantly, python code is a lot more short than its  corresponding C code. Programs that may take up to a few lines in a normal C code would give you the result in about 1-2 lines of coding in Python.
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/27/an-introduction-to-python">An Introduction To python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-27T01:58:49+05:30" pubdate data-updated="true">Aug 27<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/27/an-introduction-to-python#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here is a small introduction to the python programming language provided by considering some of its most important features.</p>
+
+<p>a=[1,2,3]
+The above statement assigns &lsquo;a&rsquo; to a list which is [1,2,3]
+b=(1,2,3)
+The statement assigns &lsquo;b&rsquo; to a tuple which is (1,2,3)
+Lists and tuples are one of the most important features of python. They both are collection of values separated by &lsquo;commas&rsquo;(,). The difference between lists and tuples is that tuples are immutable(cannot be modified) whereas the value stored in a list can be changed and modified.
+Lets see that with an example:
+a[0]=10
+&lsquo;a&rsquo; now becomes [10,2,3].
+The above operation( I.e modification )cannot be performed with tuples).
+b[0]=10 would produce an error message.</p>
+
+<p>Lists can be manipulated in a number of interesting ways and the working of lists is also quite interesting.
+ .a=[1,2,3].
+ .b=a            would now make &lsquo;b&rsquo; [1,2,3]
+Now any changes made to b, suppose
+b[1]=20
+would also result in &lsquo;a[1]&rsquo; being changed to &lsquo;20&rsquo;. This is a really important concept that has to be understood in python.
+When <strong>b=a</strong> is done ,the statement makes &lsquo;b&rsquo; point to the same address where &lsquo;a&rsquo; points. Hence the changes applied to list &lsquo;b&rsquo; are reflected in &lsquo;a&rsquo; as well.
+If the above case is to be avoided, there are basically two ways:
+1)Pass the list &lsquo;a&rsquo; as a tuple to &lsquo;b&rsquo; so that it cannot be modified.
+A list can be converted into a tuple using the &lsquo;tuple&rsquo; command: &lsquo;tuple(list)&rsquo;
+2)Pass a clone of &lsquo;a&rsquo; to &lsquo;b&rsquo;. This can be done as b=a[:]. Here only a clone of &lsquo;a&rsquo; is passed to &lsquo;b&rsquo; thereby any changes made to &lsquo;b&rsquo; doesn&rsquo;t affect &lsquo;a&rsquo;.</p>
+
+<p>Manipulation of lists may be as:
+a=[1,2,3,4,5]
+a[1:3]
+would give as [2,3]
+a[1:]
+would give [2,3,4,5]
+a[:1]
+the result would be [1]</p>
+
+<p>There are a number of commands that can be applied on lists:They include the following:
+&lsquo;append&rsquo;
+a.append([10,2]) would give you &lsquo;a&rsquo; as [1,2,3,4,5[10,2]]</p>
+
+<p>&lsquo;extend&rsquo;
+a.extend([8,9]) would give us &lsquo;a&rsquo; as [1,2,3,4,5,[10,2],8,9]</p>
+
+<p>&lsquo;pop&rsquo;
+a.pop(4) would delete and return the element at the 4rth position.</p>
+
+<p>&lsquo;insert&rsquo;
+a.insert(2,10) would insert &lsquo;10&rsquo; at the 2nd position of the list..</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/17/increment-and-decrement-operators">Increment and Decrement Operators</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-17T14:12:27+05:30" pubdate data-updated="true">Aug 17<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/17/increment-and-decrement-operators#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Consider the statements:</p>
+
+<p>int c=5;
+printf(&ldquo;\n%d\n&rdquo;,c++);
+printf(&ldquo;\n%d\n&rdquo;,++c)</p>
+
+<p>The result as we except would be :
+5
+7</p>
+
+<p>Again consider the statement
+printf(&ldquo;\n%d %d:\n&rdquo;,c++,++c);</p>
+
+<p>Here the result wouldn&rsquo;t be as we thought and as is correct in the earlier example. When I executed this I obtained the result as:
+6 7:
+This is an undefined behaviour:Therefore its an important thing to keep in mind while using the increment/decrement operators:Its important &lsquo;not to&rsquo; increment/decrement the same object more than once in a statement.
+If an object appears more than once in an expression ,then modifying the object in the expression without the previous value of the object taking part in the modification process will lead to undefined behaviour. Thats whats done in the example just above. The value of c is modified in the expression for the second time(there fore &lsquo;c&rsquo; appearing twice) without the previous value participating in the process. So if at all an object has to be modified in an expression where it appears more than once ,then it should be something like as follows:
+c=c+1;
+Here c appears twice , c is modified but the previous value of &lsquo;c&rsquo; takes part in the process..</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/17/pointers-arrays-and-pointer-to-pointers">Pointers ,Arrays and Pointer to Pointers.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-17T14:11:39+05:30" pubdate data-updated="true">Aug 17<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/17/pointers-arrays-and-pointer-to-pointers#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Consider the following statement:
+<strong>char *lineptr[]={&ldquo;hello&rdquo;,&ldquo;hai&rdquo;,&ldquo;how&rdquo;};</strong>
+Here &lsquo;lineptr&rsquo; is an array that consists of pointers to characters.
+1)  Now this array is passed on to another function with a call as follows:
+<strong>str(lineptr)</strong>;
+The function &lsquo;str&rsquo; would have a declaration as follows:
+<strong>void str(char *lineptr[]);</strong></p>
+
+<p>2)  The same thing can be done in a different way as follows:
+<strong>str((char </strong>) lineptr)<strong>;
+The definition of &lsquo;str&rsquo; can be the same as the above or it could well be:
+</strong>void str(char <strong>lineptr);</strong>(the declaration of the function could have been the same when the call was
+str(lineptr); as well.
+This is an example of a pointer to a pointer.</p>
+
+<p>Here in our function call :str((char <strong>)lineptr);   we pass a pointer to a pointer (that points to characters).
+And that we have as (char</strong>)lineptr.
+This shows the thick relation between arrays and pointers in C. Any operation that can be done array   subscripting can also be done with pointers.
+.char s[]=”hello”;
+could be done using pointers as
+.char *s=”hello”.</p>
+
+<p><strong>The parenthesis and the type specification (char) that we have is extremely important. </strong>
+Without the parenthesis and the type,it would be as follows:
+**lineptr : dereferencing the dereferenced value of lineptr ,i.e,&amp;lineptr[0]  which would result in &lsquo;h&rsquo; as the answer.</p>
+
+<p>In both cases
+for(i=0;i&lt;3;i++)
+printf(“%s”,*lineptr++);
+would print out the contents of the array &lsquo;lineptr&rsquo; (.i.e (hellohaihow)).
+.lineptr++ increments lineptr by  a value of 4 since it points to pointers.</p>
+
+<p>Now consider another case ,
+The function call being
+<strong>str((char</strong>)lineptr) or str(lineptr)<strong><br/>
+The declaration being
+</strong>void str(char *ptr)**;
+Through the function call, we pass a pointer to pointer(that points to characters).But the declaration consists of a pointer that points to characters. Therefore the variable &lsquo;ptr&rsquo; in the function &lsquo;str&rsquo; would take up the base address of the array &lsquo;lineptr&rsquo; as its value. Now since this a pointer that points to characters ,   ptr++ would increment &lsquo;ptr&rsquo; by a value of only 1.And since this points to some unknown characters, undefined results would be produced.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/14/pointers-and-arrays-in-c">Pointers and Arrays in C.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-14T16:54:46+05:30" pubdate data-updated="true">Aug 14<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/14/pointers-and-arrays-in-c#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Pointers as we know are used to store addresses. There is a strong relation between pointers and arrays in C.
+Consider the following:
+int <em>p;
+int a[100];
+p=NULL;
+p=a;
+Here p is initialized to the starting address of the array a[].This is equivalent to doing
+p=&amp;a[0];
+the statement p=a clearly shows the relation between pointers and arrays in C. Pointers and arrays can be used instead of each other in C although there are some differences that needs to be considered. We will find out the basics in comparing an array and a pointer.
+Below a[] is an array and p is a pointer that has been initialized to the base address of the array.
+a[i] is equivalent to doing </em>(p+i)
+&amp;a[i] is equivalent to (p+i)-address of the i-th location of the array.
+p=a as we saw just above is valid, whereas a=p is illegal.
+Pointers are considered as normal variables and can be the increment operators, p++, whereas a++ is illegal.</p>
+
+<p>Now consider the case of characters. Again let the variables have the same meaning,&lsquo;a[]&rsquo; for an array and &lsquo;p&rsquo; for a pointer.
+Consider
+char a[size]=”hello”;      This can be written using pointers as
+char <em>p=”hello”;
+Here p is initialized to the starting address of the string “hello”(to the character &lsquo;h&rsquo;).
+Now obviously the difference comes here while printing.
+printf(“%s”,a) would result in printing of the string whereas printf(“%s”,</em>p) would result in a segfault (obviously not due to uninitialized dereferencing) but because of the fact that the pointer points to the starting of the string(a character).
+Hence it should be printed using
+printf(“%c”,*p)  -would print the character .
+This will be have to be looped if the entire string is to printed.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/14/use-of-pointer-arrays">Use of Pointer Arrays.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-14T16:52:16+05:30" pubdate data-updated="true">Aug 14<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/14/use-of-pointer-arrays#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>What will we do if we need to store more than one string in an array.?
+Double dimensional would be an option. For eg.
+<strong>char array[][10]={&ldquo;hello&rdquo;,&ldquo;hai&rdquo;,&ldquo;how&rdquo;};</strong> But here the the length of each string is be limited up to 10..Specifying the &lsquo;column&rsquo; is a must in case of 2dimensional arrays. Even during the definition of a function.</p>
+
+<p>Another option and perhaps a better one would be the use of pointers arrays .for e.g
+<strong>char *p[]={&ldquo;hello&rdquo;,&ldquo;how&rdquo;,&ldquo;hai&rdquo;};</strong>
+This is an example of pointer arrays. Each element of the array is used to keep pointers that point to some characters.  This method would be better in sense that the strings can be of variable lengths and obviously working with it can be a lot easier.
+It will be interesting to find out the working of pointer arrays.</p>
+
+<p>Consider a pointer &lsquo;p1&rsquo; such that :
+char <em>p1=”hello”
+Now this particular pointer can be entered into the pointer array like the following:
+p[0]=p1;    The pointer to string “hello” is entered into the 0th position of the pointer array.
+Similarly the pointer array can be filled with pointers to characters.
+Now in order to print a particular string whose pointer is stored in the 0th location of the pointer array we need to do.
+**&lsquo;printf(“%s”,p[0]); or printf(“”%s”,</em>(p+0));<strong>.    Both of them would give the result as hello&rsquo;.
+</strong>printf(“%d”,p[0])**; would give the pointer that is stored in the 0-th location of the array.</p>
+
+<p><strong>for(i=0;i&lt;3;i++)
+printf(“%d\n”,p+i);</strong>     would show you the addresses of the array locations.</p>
+
+<p>Pointer arrays would be very useful when playing with strings. Suppose if you want to sort different words according to their length. All you need to do if you have stored the pointers to those words in a pointer array is to exchange the positions of the pointers.
+That is , if the string whose pointer at position &lsquo;0&rsquo; is greater than that of the string at position &lsquo;1&rsquo;, then
+<strong>temp=a[0];
+a[0]=a[1];
+a[1]=temp;</strong>
+Thats it..the pointers have exchanged their positions..Now on printing, the string whose pointer is stored at location &lsquo;0&rsquo; of the array &lsquo;a[]&rsquo; will be printed first.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/12/aliasing-to-avoid-making-mistakes">Aliasing to Avoid Making Mistakes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-12T01:45:19+05:30" pubdate data-updated="true">Aug 12<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/12/aliasing-to-avoid-making-mistakes#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It might have happened to that you that you unintentionally deleted some files in your directory. The deleted files may be not recovered back. So its better that you take some precautionary measures to avoid making such mistakes. Setting up proper aliases is one such way to so so. Aliases are short names for certain commands.</p>
+
+<p>In order to set up your alias ,create a .bashrc file in your own home directory.
+$ vi .bashrc
+Set up your own aliases there.</p>
+
+<p>Aliases for not making mistakes while using the cp,mv and rm commands are follows.</p>
+
+<p> **14 alias rm=&lsquo;rm -i&rsquo;</p>
+
+<p> 15 alias cp=&lsquo;cp -i&rsquo;</p>
+
+<p> 16 alias mv=&lsquo;mv -i&rsquo;**</p>
+
+<p>These three statements ensure that whenever you the commands cp,mv or rm ,the system asks you to double check your decision just to make sure that is exactly what you wanted to do. This could help you against overwriting a file,or deleting a file unintentionally.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/12/creating-new-commands-and-passing-arguments-in-unix">UNIX - Create New Commands and Pass Arguments</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-12T01:20:44+05:30" pubdate data-updated="true">Aug 12<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/12/creating-new-commands-and-passing-arguments-in-unix#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When a particular sequence of commands is repeated time after ,it might be better if we create a shorter command of our own. These command creation mentioned may not be suitable for public use but would be helpful for private use.</p>
+
+<p>Consider suppose that we intend to count the number of users quite frequently:
+<strong>$ who|wc -l</strong></p>
+
+<p>We can make a small command of ours named &lsquo;count&rsquo; that does the same work.
+So we do
+<strong>$echo &lsquo;who|wc -l&rsquo;>count</strong> (A file named &lsquo;count&rsquo; is created).</p>
+
+<p>Now we run the shell program with its input coming from the file &lsquo;count&rsquo;.
+<strong>$ sh&lt;count</strong>
+this is same as
+<strong>$ sh count</strong></p>
+
+<p>Now to type sh all the time wouldn&rsquo;t be such a great thing. So we make the file &lsquo;count&rsquo; executable by
+<strong>$ chmod +x count</strong>
+Now the result of doing &lsquo;who|wc -l&rsquo; can be produced by doing &lsquo;count&rsquo;.
+<strong>$ count</strong>
+Install count ,place it in the /usr/bin directory. Set the path appropriately and start using the command
+created.</p>
+
+<p>Now again when we begin to create executable commands of our own, we will have to make it executable . So it would be better if we create a shorter command for <strong>chmod +x filename</strong>.
+The problem here would be that the filename that is passed to &lsquo;chmod&rsquo; may change every time.
+Therefore we do
+<strong>$ echo &lsquo;chmod +x $1&rsquo;>cx</strong> (cx would be the file created).</p>
+
+<p>Here $1-indicates that only 1 argument can be passed to the command at a time</p>
+
+<pre><code>     $2 would make it 2 and $9 would make it 9.
+</code></pre>
+
+<p>So to enable any number of arguments we do
+<strong>$ echo &lsquo;chmod +x $*&rsquo;>cx</strong></p>
+
+<p>Now we need to make cx executable.
+This can be done either by doing
+<strong>$ chmod +x cx</strong>       or else
+<strong>$ sh cx cx </strong>             because sh cx is equivalent to doing chmod +x $*.
+Now test it by creating a test command &lsquo;test&rsquo; ,install it and run the command. &lsquo;Permission denied&rsquo; will be the message. Now do
+<strong>$ cx test</strong>
+<strong>$ test</strong>
+The command &lsquo;test&rsquo; will run and the result will be produced.</p>
+
+<p>Now suppose we have a file &lsquo;class&rsquo; consisting of some information about the students of our class and consider a case where we need information about certain students  and  we need it quite frequently. This can be done with the help of the &lsquo;grep&rsquo; command.
+<strong>$ echo &lsquo;grep $* /root/new/class&rsquo;> find</strong>
+install the command.
+<strong>$ cx find</strong>              /* makes the file executable
+<strong>$ find</strong></p>
+
+<p>Now a possible would arise when the following case is given as the argument:
+$ find sunil kumar
+This is because the words sunil and kumar will be seen as two different arguments.
+Hence do
+<strong>$ echo &lsquo;grep “$*” /root/new/class&rsquo;> find</strong>
+This would solve the problem.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/12/125">Setting Up the Vim Configuration.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-12T00:35:56+05:30" pubdate data-updated="true">Aug 12<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/12/125#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>While writing C programs using the &lsquo;vi&rsquo; editor ,you might find a frustrating task of handling with line numbers ,setting up the indentation properly and of course you might never mind if some indications are given about the keywords using colors. There fore we set up the vim configuration and automate the above said tasks by doing the following.
+Create a file .exrc in your home directory..
+vi .exrc   &hellip;.filename ending with rc indicates that you can configure them the way you want it to be.
+Now type the following:
+<strong>set nu</strong>             /<em>to set up line numbers properly</em>/
+<strong>set cindent </strong>     /<em>to set up the indentation(for the better clarity of the program)</em>/
+<strong>syntax on</strong>        /<em>this sets the coloring &lsquo;on&rsquo; for the program according to the C syntax </em>/
+Now save the file and start writing your programs more comfortably.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/6/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/4/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts-2">Git -> a Brief on Reverts, Resets, Merges and Conflicts.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+<section class="googleplus">
+
+<h1>
+  <a href="http://github.com/sunilkumarn/"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/github_zpse87fc53d.jpg" width="40" height="40"></a>
+  &nbsp; &nbsp;
+  <a href="http://twitter.com/sunilkumar_g56"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/twitter_zps447bd274.jpg" width="40" height="40"></a>
+</h1>
+
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'techscribblings';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-44991607-1', 'sunilnkumar.com');
+    ga('send', 'pageview');
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ruby | Scribblings]]></title>
+  <link href="http://sunilkumarn.github.io/technical/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://sunilkumarn.github.io/technical/"/>
+  <updated>2013-12-18T19:41:36+05:30</updated>
+  <id>http://sunilkumarn.github.io/technical/</id>
+  <author>
+    <name><![CDATA[Sunil Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails admin with authlogic]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2013/07/06/rails-admin-with-authlogic"/>
+    <updated>2013-07-06T23:13:31+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2013/07/06/rails-admin-with-authlogic</id>
+    <content type="html"><![CDATA[<p>If you have used the rails_admin gem, you would have noticed that its tightly coupled with Devise. What happens if devise is not the pick and the application is already integrated with authlogic. Lets see,</p>
+
+<p>After installing the rails_admin gem, create a &lsquo;<strong>rails_admin.rb</strong>&rsquo; file in <strong>config/initializers</strong>. Paste the following code,</p>
+
+<p><div>
+  <pre><code class='ruby'>RailsAdmin.config do |config|&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;config.authorize_with do
+  redirect_to root_path, :alert =&amp;gt; &quot;You are not authorized!&quot; unless current_user.admin?
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  end&lt;/p&gt;
+
+&lt;p&gt;  RailsAdmin.config do |config|&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;config.authenticate_with do
+  unless current_user
+    redirect_to login_url
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  end</code></pre>
+</div>
+</p>
+
+<p>The authentication block checks if the user is currently logged in and the authorization block checks if the logged in user is an admin or not.</p>
+
+<p>Also add the rails admin route in the <strong>config/routes.rb</strong> file.</p>
+
+<p><div>
+  <pre><code class='ruby'>mount RailsAdmin::Engine =&gt; &amp;lsquo;/admin&amp;rsquo;, :as =&gt; &amp;lsquo;rails_admin&amp;rsquo;</code></pre>
+</div>
+</p>
+
+<p>This should enable the admin to run at /admin, now authenticated and authorized using authlogic.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mercury: The WYSIWYG html editor]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2013/05/21/mercury-the-wysiwyg-html-editor"/>
+    <updated>2013-05-21T00:53:48+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2013/05/21/mercury-the-wysiwyg-html-editor</id>
+    <content type="html"><![CDATA[<p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
+
+<p>To get started off with mercury, add</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;p&gt;gem &amp;lsquo;mercury-rails&amp;rsquo;&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>to the Gemfile and bundle it.</p>
+
+<p>Run the rails generator for the mercury files.</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;p&gt;rails g mercury:install&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>A couple of questions will be posted. Press &lsquo;yes&rsquo; to install the layout files.</p>
+
+<p>Now checking out the directory structure,  you could see three additional files.</p>
+
+<p><strong>mercury.js</strong> and<strong> mercury.css</strong> in the js and stylesheets assets respectively. Also, a new layout file for the mercury editor, <strong>mercury.html.erb </strong></p>
+
+<p>I did remove the mercury css file later on.</p>
+
+<p>One thing that needs to be noticed here is that the mercury.js file is heavy and it woudn&rsquo;t be a good idea to load it in all the pages. We would want to load it in only the pages that needs to be edited. Checkout the mercury layout file and you can see that the mercury.js file is included.</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;head&amp;gt;
+    &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, maximum-scale=1.0, initial-scale=1.0&quot;&amp;gt;
+    &amp;lt;%= csrf_meta_tags %&amp;gt;
+    &amp;lt;title&amp;gt;Mercury Editor&amp;lt;/title&amp;gt;
+    &amp;lt;%= stylesheet_link_tag 'mercury' %&amp;gt;
+    &amp;lt;%= javascript_include_tag 'jquery-1.7', 'mercury' %&amp;gt;
+&amp;lt;/head&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Now to prevent mercury.js from being loaded up in the pages, we could move all the other js files in our application to a separete directory and then require the directory in our application.js</p>
+
+<p>My application.js will have,</p>
+
+<p><div>
+  <pre><code class='ruby'>//= require_tree ./main</code></pre>
+</div>
+</p>
+
+<p>where main is the directory which has all the application specific javascript. (Probably could be a better name :) )</p>
+
+<p>Now peep into the routes file, you could see this extra line,</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;p&gt;mount Mercury::Engine =&gt; &amp;lsquo;/&amp;rsquo;&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>What this line does is that it allows the html pages in your application to be edited. An extra &lsquo;/editor&rsquo;  will have to be added at the beginning of each url path to load the mercury editor for the page.</p>
+
+<p>Consider you have the url &lsquo;<strong>localhost:3000/pages</strong>&rsquo; , all you need to load it in the mercury layout is to change it to &lsquo;<strong>'localhost:3000/editor/pages</strong>&rsquo; . You have mercury loaded up to edit your page and can now see it in the mercury editor&rsquo;s layout.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2013/05/screenshot.png"><img src="http://sunilkumarn.files.wordpress.com/2013/05/screenshot.png?w=570" alt="Screenshot" /></a></p>
+
+<p>However this isn&rsquo;t just enough to start editing the page. You need to specify editable regions in the page.
+In <code>pages.html.erb </code></p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;control-group&quot;&amp;gt;
+    &amp;lt;h3 class=&quot;section_header page-header&quot;&amp;gt;Pricing page&amp;lt;/h3&amp;gt;
+    &amp;lt;div id=&quot;faq&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&amp;gt;
+        &amp;lt;%= render :file =&amp;gt; file_path(@domain 'faq') %&amp;gt;
+    &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Consider this piece of code. A div with id=&ldquo;faq&rdquo; is made editable with<strong> class=&ldquo;mercury-region&rdquo; </strong>and attributes<strong> data-type=&ldquo;editable&rdquo; </strong>and<strong> data-mercury=&ldquo;full&rdquo;</strong>.</p>
+
+<p>Now you can see the editable region.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2013/05/screenshot-1.png"><img src="http://sunilkumarn.files.wordpress.com/2013/05/screenshot-1.png?w=570" alt="Screenshot-1" /></a></p>
+
+<p>This following line in above piece of code</p>
+
+<p><div>
+  <pre><code class='ruby'>&amp;lt;%= render :file =&gt; file_path(@domain, &amp;lsquo;faq&amp;rsquo;) %&gt;</code></pre>
+</div>
+</p>
+
+<p>invokes a helper method and loads the already created sample faq template which can now be edited and saved for the particular domain. As simple as that.</p>
+
+<p>Similarly you could edit more pages here. This is how the contacts page can be edited.</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;control-group&quot;&amp;gt;
+    &amp;lt;h3 class=&quot;section_header page-header&quot;&amp;gt;Contact page&amp;lt;/h3&amp;gt;
+    &amp;lt;div id=&quot;contact&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&amp;gt;
+        &amp;lt;%= render :file =&amp;gt; file_path(@domain, 'contact') %&amp;gt;
+    &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Also, you probably might want to change the save url of the mercury editor for the particular page. That is the controller action to which the mercury edited contents will be &lsquo;POST&rsquo; or &lsquo;PUT&rsquo; (depends on the configuration set in the mercury.html.erb)</p>
+
+<p>To change the mercury save url for this particular page, I wrote the script in the erb file ( pages.html.erb )</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;
+    $(window).on('mercury:ready', function () {
+        Mercury.saveUrl = &quot;&amp;lt;%= pages_upload_admin_domain_path(@domain) %&amp;gt;&quot;;
+    });
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>You might also want to change the page thats to be redirected to once we are done with editing using mercury. We could bind on mercury&rsquo;s save event to get this done.</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$(window).bind('mercury:saved', function() {
+    $(window.location.replace('/admin/domain'));
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>All this saved data would have to be dealt with in the controller action. Inspecting the params in the controller action ( the mercury Save url) ,</p>
+
+<pre><code>&lt;code&gt;{"content"=&gt;
+    {"faq"=&gt;
+        {"type"=&gt;"full",
+         "data"=&gt;{},
+         "value"=&gt; "&lt;h1&gt;This is where I have done my FAQ editing&lt;/h1&gt;"
+         "snippets" =&gt; {}
+        }     
+    },
+
+    {"contact"=&gt;
+        {"type"=&gt;"full",
+         "data"=&gt;{},
+         "value"=&gt; "&lt;h1&gt;This is where I have done my Contacts editing&lt;/h1&gt;"
+         "snippets" =&gt; {}
+        }
+    }
+}
+
+&lt;/code&gt;
+</code></pre>
+
+<p>There are two things of notice here. The contents hash contains all the mercury related stuff.  Each hash in the contents hash has a key which is equal to the id of the mercury editable html divisions ( see the view code pasted above ), here &lsquo;<strong>faq</strong>&rsquo; and &lsquo;<strong>contact</strong>&rsquo;. The actual edited html content can be found in the hash with key &lsquo;value&rsquo; ( <strong><h1>This is where I have done my Contacts editing</h1></strong>).  'The controller action could decide on how to save this html content.</p>
+
+<p><em>What have I done to solve my case mentioned at the starting?</em></p>
+
+<p><em><em>I created a pages directory in my public. Within the pages directory I created sub directories which corresponds to the domain. </em><strong>For eg, the domain localhost corresponds to the directory named localhost inside the public/pages directory and the domain remotehost corresponds to the remotehost directory</strong></em>.</p>
+
+<p>I then saved all these edited html content as html files within these domain specific directories. When a particular domain was loaded, the html pages ( for eg, faq and contact) was rendered from the corresponding domain directories in the public folder .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Delayed Jobs in Rails: Adding custom attributes]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
+    <updated>2013-05-19T11:48:38+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
+    <content type="html"><![CDATA[<p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
+</a></p>
+
+<p><div>
+  <pre><code class='ruby'>@mail_group.delay.save_group_contacts</code></pre>
+</div>
+</p>
+
+<p>where @mail_group is the active record group to which the mails_ids being uploaded and saved belong.</p>
+
+<p>The requirement was to show a progress bar for the process of the mail_ids being saved to the the mail group. To handle this, I decided to add custom attributes to the delayed jobs table so as to identify the owner of the delayed job and also find the progress of the job.</p>
+
+<p>To do this,</p>
+
+<p>1) DB migration to add the custom attributes</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class AddColumnToDelayedJob &amp;lt; ActiveRecord::Migration
+  def change
+    add_column :delayed_jobs, :job_process_status, :integer, :default =&amp;gt; 0
+    add_column :delayed_jobs, :job_owner_id, :integer
+    add_column :delayed_jobs, :job_owner_type, :string
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>2) A model for the delayed jobs table.</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;module Delayed
+  class Job &amp;lt; ActiveRecord::Base
+    self.table_name = &quot;delayed_jobs&quot;
+    attr_accessible :job_owner_id, :job_process_status, :job_owner_type
+    belongs_to :job_owner, :polymorphic =&amp;gt; true
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>As seen, three extra attributes (job_owner_id, job_owner_type attributes for establishing a polymorphic association with the job owner of the delayed job and a job_process_status attribute for updating the progress of the job) were added to the delayed jobs table.</p>
+
+<p>Delayed jobs were then created with the job_owner_id and job_owner_type.</p>
+
+<p><div>
+  <pre><code class='ruby'>@mail_group.delay(job_owner_id: @mail_group.id, job_owner_type: @mail_group.class.name).save_group_contacts</code></pre>
+</div>
+</p>
+
+<p>However this would not be enough to update the custom attributes. An attempt to create a delayed job would produce this</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ActiveModel::MassAssignmentSecurity::Error:
+    Can't mass-assign protected attributes: job_owner_id, job_owner_type
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>As a quick fix, add a <code>config/initializers/delayed_job.rb</code>
+and paste in the following code</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Delayed::Job &amp;lt; ActiveRecord::Base
+  self.attr_protected if self.to_s == 'Delayed::Backend::ActiveRecord::Job'   #loads protected attributes for                                                                                        # ActiveRecord instance
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Now the delayed job would get saved with the job_owner_id and job_owner_type.</p>
+
+<p>Also, in the mail_group model, set an association to the delayed jobs table.</p>
+
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class MailGroup &amp;lt; ActiveRecord::Base
+  has_many :deferred_jobs, :as =&amp;gt; :job_owner, :class_name =&amp;gt; &quot;::Delayed::Job&quot;
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Now you can access all the delayed jobs of a particular @mail_group as</p>
+
+<p><div>
+  <pre><code class='ruby'>@mail_group.deferred_jobs</code></pre>
+</div>
+</p>
+
+<p>The job process status which is updated by the running job can also be accessed as</p>
+
+<p><div>
+  <pre><code class='ruby'>@mail_group.deferred_jobs.job_process_status</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RubyconfIndia 2011]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2011/07/04/ruby-conf-india-2011"/>
+    <updated>2011-07-04T23:48:37+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2011/07/04/ruby-conf-india-2011</id>
+    <content type="html"><![CDATA[<p>May 27,28 &ndash; Attended Rubyconf India 2011 held at Royal Orchid hotel, Bangalore.&lsquo;  For some one who has less than a year of hands on with ruby, it was great hearing from the giants &ndash; the very Matz himself expressed his love for the community(in his own peculiar Japaneese way), Ola bini, Chad Fowler,  Brian and others. What in short ? &ndash; awesome 2 days.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700228850841_100001325964091_431985_2535899_n1.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700228850841_100001325964091_431985_2535899_n1.jpg" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700228850841_100001325964091_431985_2535899_n1.jpg">
+</a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg">
+</a><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg" alt="" /></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Module functions as class and instance methods]]></title>
+    <link href="http://sunilkumarn.github.io/technical/2011/07/04/module-functions-as-class-and-instance-methods"/>
+    <updated>2011-07-04T10:50:51+05:30</updated>
+    <id>http://sunilkumarn.github.io/technical/2011/07/04/module-functions-as-class-and-instance-methods</id>
+    <content type="html"><![CDATA[<p>Consider you have a module and a class.</p>
+
+<p>module Mymod and a class Myclass.</p>
+
+<p>The situation in hand is such that certain functions in the module need to end up being instance methods of the class Myclass and certain functions need to be Class methods.  You could very well imagine of such situations. Consider you are using ActiveRecord and have a sub class <strong>Subscription</strong> in correspondence with a DB table. You want to insert logic, within the module, that would work in each of the following case.</p>
+
+<p>1) When a subscription fails or succeeds.</p>
+
+<p>2) When an unsubscription fails or succeeds</p>
+
+<p>You do this.</p>
+
+<p><em>module SubscriptionLogic</em></p>
+
+<p><em>   def  after_sub</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>   end</em></p>
+
+<p><em>   def  after_unsub</em></p>
+
+<p><em>     &hellip;.</em></p>
+
+<p><em>   end</em></p>
+
+<p><em>   def  after_sub_fail</em></p>
+
+<p><em>     &hellip;.</em></p>
+
+<p><em>   end</em></p>
+
+<p><em>   def  after_unsub_fail</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>    end</em></p>
+
+<p><em>end</em></p>
+
+<p><em>class Subscription</em></p>
+
+<p><em>   include SubscriptionLogic</em></p>
+
+<p><em>   &hellip;..</em></p>
+
+<p><em>end</em></p>
+
+<p>You insert the logic as functions of a module, say <strong>SubscriptionLogic</strong>. Ideally you want the methods containing the logic to be instance methods of the class Subscription. You include the module SubscriptionLogic in the class and you avail all the functions in the module as Instance methods. Now you consider the case when an unsubscription fails &ndash; i.e, there is no existing subscription so that an unsub could take place.  No way is it possible that you could have a function &lsquo;logic_after_unsub_fail'  in the module SubscriptionLogic and use it as an instance method, <em><strong>simply because there is no instance available</strong></em>.  You think and decide to use the function as your class method, but you have &rsquo;<strong>include</strong>d'  the  module in your class and hence its not possible to use it as your class method. You cannot <strong>extend</strong> the entire module coz , ideally you want the logic to be instance methods.</p>
+
+<p>So you could get this solved up by a simple piece of extra coding.</p>
+
+<p>_module SubscriptionLogic _</p>
+
+<p><em>  def  after_sub</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>  end</em></p>
+
+<p><em>  def  after_unsub</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>  end</em></p>
+
+<p><em>  def  after_sub_fail</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>  end</em></p>
+
+<p><em>  module ClassMethods</em></p>
+
+<p><em>      def after_unsub_fail</em></p>
+
+<p><em>           &hellip;.</em></p>
+
+<p><em>      end</em></p>
+
+<p><em>      def self.included(base)</em></p>
+
+<p>_          base.extend(ClassMethods)    # base pertains to the class within which you include the module. _</p>
+
+<p><em>      end</em></p>
+
+<p><em>   end</em></p>
+
+<p><em>end</em></p>
+
+<p>Now within the class insert this line.</p>
+
+<p>_class Subscription _</p>
+
+<p>_   include SubscriptionLogic _</p>
+
+<p><strong><em>   extend SubscriptionLogic::ClassMethods</em></strong></p>
+
+<p><em>   &hellip;..</em></p>
+
+<p><em>end</em></p>
+]]></content>
+  </entry>
+  
+</feed>
