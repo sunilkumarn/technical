@@ -23,9 +23,9 @@ Adding mongolab on chillrapi... failed
  !    Verify now at https://heroku.com/verify
 {% endhighlight %}
 
-Clicking on the verification link asks for my credit card details. Now, its mentioned that mongohq-small is a free version of the add on. So you could probably carry on providing your details. For the others, you may please read on.
+ Clicking on the verification link asks for my credit card details. Now, its mentioned that mongohq-small is a free version of the add on. So you could probably carry on providing your details. For the others, you may please read on.
 
-MongoHQ is a cloud-based hosted database solution that allows developers to easily deploy, manage and scale both single and replica set MongoDB databases for their web and mobile applications. I created a new database (SandBox, 512 MB -  thats all I needed anyways ) at MongoHQ.
+ MongoHQ is a cloud-based hosted database solution that allows developers to easily deploy, manage and scale both single and replica set MongoDB databases for their web and mobile applications. I created a new database (SandBox, 512 MB -  thats all I needed anyways ) at MongoHQ.
 
 On creating a new database, MongoHQ provides us with a mongo console and mongo uri connection strings.
 
