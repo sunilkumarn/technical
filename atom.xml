@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://sunilkumarn.github.io/technical/atom.xml" rel="self"/>
   <link href="http://sunilkumarn.github.io/technical/"/>
-  <updated>2013-12-18T20:27:02+05:30</updated>
+  <updated>2013-12-18T20:33:21+05:30</updated>
   <id>http://sunilkumarn.github.io/technical/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -39,8 +39,9 @@ But unfortunately, this would ask me to verify my heroku account</p>
 </div>
 
 
-<p>Clicking on the verification link asks for my credit card details. Now, its mentioned that mongohq-small is a free version of the add on. So you could probably carry on providing your details. For the others, you may please read on.
-MongoHQ is a cloud-based hosted database solution that allows developers to easily deploy, manage and scale both single and replica set MongoDB databases for their web and mobile applications.</p>
+<p>Clicking on the verification link asks for my credit card details. Now, its mentioned that mongohq-small is a free version of the add on. So you could probably carry on providing your details. For the others, you may please read on.</p>
+
+<p>MongoHQ is a cloud-based hosted database solution that allows developers to easily deploy, manage and scale both single and replica set MongoDB databases for their web and mobile applications.</p>
 
 <p>I created a new database (SandBox, 512 MB &ndash;  thats all I needed anyways ) at MongoHQ.
 On creating a new database, MongoHQ provides us with a mongo console and mongo uri connection strings.</p>
