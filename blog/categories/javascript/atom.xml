@@ -2,17 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Javascript | Scribblings]]></title>
-<<<<<<< HEAD
   <link href="http://tech.sunilnkumar.com/technical/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/technical/"/>
   <updated>2014-01-09T16:51:13+05:30</updated>
   <id>http://tech.sunilnkumar.com/technical/</id>
-=======
-  <link href="http://tech.sunilnkumar.com//github/blog/categories/javascript/atom.xml" rel="self"/>
-  <link href="http://tech.sunilnkumar.com//github/"/>
-  <updated>2014-01-09T16:45:09+05:30</updated>
-  <id>http://tech.sunilnkumar.com//github/</id>
->>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -22,15 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Prototypal Inheritance in Javascript]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2013/06/28/prototypal-inheritance-in-javascript"/>
     <updated>2013-06-28T14:36:11+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2013/06/28/prototypal-inheritance-in-javascript</id>
-=======
-    <link href="http://tech.sunilnkumar.com//github/2013/06/28/prototypal-inheritance-in-javascript"/>
-    <updated>2013-06-28T14:36:11+05:30</updated>
-    <id>http://tech.sunilnkumar.com//github/2013/06/28/prototypal-inheritance-in-javascript</id>
->>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>When I decided to get my hands on Javascript, the biggest road block for me was to understand and follow the prototypal inheritance model in Javascript. Coming from a Ruby background, the inheritance model I learned and understood was the classical one. The prototypal model had fundamental differences and did run me nuts at times. Here I try to make some note of what its all about going along a few snippets.</p>
 
 <p><strong>What exactly is a prototype?</strong>

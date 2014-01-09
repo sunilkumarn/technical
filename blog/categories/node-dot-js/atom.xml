@@ -2,17 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Node.js | Scribblings]]></title>
-<<<<<<< HEAD
   <link href="http://tech.sunilnkumar.com/technical/blog/categories/node-dot-js/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/technical/"/>
   <updated>2014-01-09T16:51:13+05:30</updated>
   <id>http://tech.sunilnkumar.com/technical/</id>
-=======
-  <link href="http://tech.sunilnkumar.com//github/blog/categories/node-dot-js/atom.xml" rel="self"/>
-  <link href="http://tech.sunilnkumar.com//github/"/>
-  <updated>2014-01-09T16:45:09+05:30</updated>
-  <id>http://tech.sunilnkumar.com//github/</id>
->>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -22,15 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Node.js: Event Emitters and Listeners]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners"/>
     <updated>2013-07-07T13:32:26+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners</id>
-=======
-    <link href="http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners"/>
-    <updated>2013-07-07T13:32:26+05:30</updated>
-    <id>http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners</id>
->>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
 
 <p><div>
@@ -216,15 +203,9 @@ response.end();
   
   <entry>
     <title type="html"><![CDATA[Node.js: Streams and pipes.]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2013/06/23/node-js-streams-and-pipes"/>
     <updated>2013-06-23T00:27:26+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2013/06/23/node-js-streams-and-pipes</id>
-=======
-    <link href="http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes"/>
-    <updated>2013-06-23T00:27:26+05:30</updated>
-    <id>http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes</id>
->>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
 
 <p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
