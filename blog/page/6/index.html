@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="The static declaration can be applied to both external and internal variables. The static declaration if applied to external variables limits the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tech.sunilnkumar.com/technical/blog/page/6">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experiences.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tech.sunilnkumar.com/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/11/static-variables-and-declarations">Static Variables and Declarations&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-11T01:11:32+05:30" pubdate data-updated="true">Aug 11<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/11/static-variables-and-declarations#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The static declaration can be applied to both external and internal variables. The static declaration if applied to external variables limits the scope of that particular variable to the rest of the source file being compiled. Static declaration if applied to the internal variables ensures that the variables returns its previous value after the control has been transferred out and in of the particular function&hellip;i.e it provides permanent storage for the variable rather than temporary storage which is the case with normal internal variables.</p>
+
+<p>Lets see how static works with internal variables&hellip;
+Consider the program code&hellip;</p>
+
+<p>char yes(void)
+{</p>
+
+<pre><code>static int lastc=0;
+lastc=lastc+1;
+return lastc;
+</code></pre>
+
+<p>}
+The variable lastc has been declared static:
+Hence the value of lastc remains intact even after the function &lsquo;yes()&rsquo; has terminted&hellip;lastc will get back its older value when the next call to the function &lsquo;yes()&#8217;arrives.
+Therefore if the return values where to be printed&hellip;it would be as following:
+1
+2
+3
+&hellip;
+&hellip;</p>
+
+<p>This obviously wouldn&rsquo;t have been the case if the static declaration was not provided.
+Now consider the case:</p>
+
+<p>char yes(void)
+{</p>
+
+<pre><code>static int lastc;
+lastc=0;
+lastc=lastc+1;
+return lastc;
+</code></pre>
+
+<p>}</p>
+
+<p>Here the initial value of the variable has been assigned after the static declaration is performed.
+This would result in a normal execution. Obviously the variable would be static and has permanent storage but its that just the assignment operation after the static declaration takes its effect. Therefore its highly important to initialize the value of the variable declared &lsquo;static&rsquo; along with declaration.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/08/debugging-with-the-gdb">Debugging With the GDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-08T22:35:48+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/08/debugging-with-the-gdb#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>GNU debugger(GDB) allows you to view the step by step execution of the program code. This proves of great help in executing complex programs(specially the ones involving recursion) to see the exact flow of control. How to debug using the gdb and a few options used are worth notable:
+To debug a program with gdb , steps followed are
+&lsquo;cc -g file.c&rsquo;
+gdb a.out. &hellip;.&lsquo;a.out is your executable&hellip;&rsquo;
+You will see messages about the gdb version displayed on the terminal&hellip;.
+Now set the break point by
+&lsquo;break main&rsquo;
+Use the &lsquo;run&rsquo; command to start running the program.
+The 3 commonly used options are &rsquo;s&#8217; ,&lsquo;n&rsquo; ,&lsquo;q&rsquo; with the gdb are…
+&rsquo;s&#8217; moves to the next line of code-it enters functions as well.
+&lsquo;n&rsquo; moves to the next line of code as well but does not enter functions.
+&lsquo;q&rsquo; is used to quit from the process.</p>
+
+<p>A debugging process would be like this&hellip;</p>
+
+<p>sunil:~/new# cc -g quicksort.c
+sunil:~/new# gdb a.out
+<strong>GNU gdb 6.8-debian
+Copyright &copy; 2008 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later<br/>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type &ldquo;show copying&rdquo;
+and &ldquo;show warranty&rdquo; for details.
+This GDB was configured as &ldquo;i486-linux-gnu&rdquo;&hellip; </strong>
+(gdb) break main
+<strong>Breakpoint 1 at 0x80483e5: file quicksort.c, line 7</strong>.
+(gdb) run
+<strong>Starting program: /root/new/a.out
+Breakpoint 1, main () at quicksort.c:7
+7       int left=0,right=4,i; </strong>
+(gdb) s
+8       <strong>int array[]={4,8,1,9,3};
+&hellip;/<em>
+&hellip;continue the process&hellip;
+&hellip;/</em></strong>
+(gdb) q
+Quits from the debugger</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/08/recursion-in-c">Recursion in C..</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-08T22:17:39+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/08/recursion-in-c#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recursion may be used in C programs, where one function may be called within itself. The method of recursion will be simpler to understand with a small program code. The code is as follows.</p>
+
+<h1>include</h1>
+
+<p>void printd(int n)
+{</p>
+
+<pre><code>if (n &lt; 0) { 
+    putchar('-'); 
+    n = -n; 
+} 
+if (n / 10) 
+    printd(n / 10); 
+putchar(n % 10 + '0'); 
+</code></pre>
+
+<p>}</p>
+
+<p>The program is used to convert an integer decimal into its character digits.i.e 123 will be converted into 1
+2
+3
+&hellip;.the digits of the integer.
+Lets see how the code works.
+Consider the initial value of n as 123.
+printd(123)             //level 1
+123/10 is true:Hence
+printd(123/10);</p>
+
+<p>printd(12)              //level 2
+12/10 is true:Hence
+printd(12/10);</p>
+
+<p>printd(1)               //level 3
+1/10 is not true;
+hence putchar(1%10+&lsquo;0&rsquo;);        //1 is printed
+}</p>
+
+<p>Now the call to the completed function printd(1) came from the function printd(12/10)(level 2)  and the control returns to the end of the function printd(12/10) (n being 12)
+The next statement is
+hence putchar(12%10+&lsquo;0&rsquo;);       // 2 is printed</p>
+
+<p>Again the call to the completed function .i.e (printd(12)) is not from the main, but its from the function printd(123/10)(level 3) and hence the control is returned to the end of the function(n being 123).
+The next statement is
+hence putchar(123%10+&lsquo;0&rsquo;);      // 3 is printed
+Now the call to completed function(printd(123)) came from the main() and the control is returned there and the program proceeds.</p>
+
+<p>Hope this gives a basic idea of the working of recursive functions. The function used in quick sort algorithm for sorting would be a good way to understand the working of recursion in a better way.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/08/a-bit-about-bitwise-operators">A Bit About Bitwise Operators&#8230;.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-08T00:09:59+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/08/a-bit-about-bitwise-operators#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Before we get a view of the bitwise operators , its important to have an idea of  sizes of different types that are used in C.
+Since most of the values that are entered by us can be accommodated by the ‘type float’ we consider the int , short and char types.
+The data type char occupies a space of minimum of 8 bits(1 byte).The maximum value that can be placed in an unsigned char without the problem of truncation is 255. In case of unsigned char, this value moves to 127.The minimum value in signed char is -128.
+The type int stores a maximum value of 65,635 for unsigned type and a maximum of 32767 for the signed type(these are the minimum values offered by any system, the actual limits may change on different systems). The minimum for the signed type would be -32768.The minimum number of bits required for storage would be 16. These values are the same for the type ‘short’.
+These were some of the basics that were needed to get an idea about the bitwise operators. Obviously playing with the bits is a bit more difficult task than the higher level.
+The bitwise operators are
+&amp;-bitwise AND
+|-bitwise OR
+&lt;>-right shift
+^-exclusive or
+~-bitwise complement.</p>
+
+<p>&lt;&lt;-left shift operators would be the best way to get an idea about the bitwise operators.
+Consider doing the following
+255&lt;&lt;2….the result would be 1020….255&lt;<3 would give you 2040…255<<4….would give you 4080….and so….
+Lets see how this works….doing 255<<2 is equivalent to doing 255*2^2(here the ^ symbol stands for the ‘raise to’ operator….Similarly 255<<3 is equivalent to doing 255*2^3….
+A smaller number would  help in understanding this.
+Left shift operator shifts each bit of the character 2 places to the left. In the case 1<<2…would give 4 as the answer…
+1(00000001)<<2=00000100(4)….This is how you obtain 4 as the answer.
+Now the importance of the knowing the bit size of different types comes in here…
+Suppose that the character 255 has been stored using variable of the type ‘char’…Now it is obvious that after shifting it to left, the result cannot be held by the type ‘char’ because the maximum value that can be stored in ‘type char’ is 255..Therefore it will have to be stored in the type whose size is greater then that of ‘char’.
+.unsigned char s=255;
+.s=s<<2;  wouldn't be correct.
+We use the type 'int' to store the result...
+.unsigned char s=255;
+.int i=s<<2; is the right way to do it..
+Similarly its also important to consider the limits of the signed and unsigned values when using the shift operators.
+The attempt to shift more bits than is allotted would produce in a message as ‘>=width of the type’.
+The other bitwise operators work on the bits as follows….</p>
+
+<blockquote><blockquote><p>p  &mdash;&ndash;  shifts the bits p positions to the right…equivalent to dividing with 2<sup>p</sup>.
+&lsquo;&amp;&rsquo;  &mdash;-result is 1 when any of the bits are 1…
+^,|,~ all work in their own way….</p></blockquote></blockquote>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/07/the-lm-command">The &#8216;Lm&#8217; Option.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-07T23:14:16+05:30" pubdate data-updated="true">Aug 7<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/07/the-lm-command#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It may sometimes happen that when you use commands like sin,cos,pow etc&hellip;.you get a warning message like &lsquo;undefined reference&rsquo; .This may happen even when you have included the  header file  .This happens because your program has not been linked with the system library properly&hellip;
+A solution to the situation would be to use the option &lsquo;lm&rsquo; when you compile the file.This would fix the problem and the call would be referred to the function definitions in the system&rsquo;s library.
+The syntax would be as follows&hellip;.
+<strong>&lsquo;gcc -lm filename.c&rsquo;</strong></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/04/files-in-the-unix-file-system-and-their-permissions">Files in the Unix File System and Their Permissions&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T12:05:42+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/04/files-in-the-unix-file-system-and-their-permissions#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A file is a sequence of characters. A few commands and knowledge that may help in dealing with files and directories in UNIX are the following.
+The &lsquo;ls&rsquo; commands and its variations :
+The &lsquo;du&rsquo; command and its variations
+The command used to change the permissions – &lsquo;chmod&rsquo;.
+A look into these commands
+ls command gives a listing of all the files that are present in the current directory.
+The &lsquo;ls -l&rsquo; is used to provide a detailed listing of the files that are present.
+For eg. If you type the command &lsquo;ls -l&rsquo; the results be will produced as
+-rw-r&mdash;r&mdash; 1 root root 856 2010-08-03 20:15 delete.c</p>
+
+<p>-rw-r&mdash;r&mdash; 1 root root 868 2010-08-03 08:19 line.c</p>
+
+<p>where line.c and delete.c are the two files present in the directory.
+The other variations of the command include ls-u,ls-t etc
+The &lsquo;du&rsquo; (disk usage)provides information about the usage of the disk.
+The command &lsquo;du -a&rsquo; is used to provide disk informations about even the files of subdirectories.
+ The &lsquo;du-a|grep line.c&rsquo;
+provides the details about the file &lsquo;line.c&rsquo;.
+&lsquo;chmod&rsquo; is the command that is used to change permissions. The permissions can be changed by the superuser.
+Consider the following permissions:
+-rwxrwxrwx     &ndash;    indicates that the owner,the group and the other users of the system can all read&reg;,write(w)and execute(x) the file of which the permission has be shown.
+Inorder to change the permission , the &lsquo;chmod&rsquo; command is used.
+For eg. &lsquo;chmod 666  file&rsquo;
+indicates that the file can be read and written by all the three categories of users mentioned above.
+The octal values have their meanings as
+4-indicates that the file can be read
+2-file can be written
+1-file can be executed
+therefore &lsquo;chmod 444 file&rsquo; would set the permissions of the file to read only for all the  categories of users.
+6 6 6 indicates(4+2 4+2 4+2) for the three users.)
+Now do &lsquo;ls -l&rsquo; and you will see the permissions as
+-r&mdash;r&mdash;r&mdash;.
+&lsquo;+&rsquo; is used to turn a permission on   and &lsquo;&ndash;&rsquo; to turn it off.
+The command &lsquo;chmod +w file&rsquo; enables write permissions for the file
+and &lsquo;chmod -x file&rsquo; turns off the execute permissions for the file.
+The permissions of the file can be viewed using the &lsquo;ls -l&rsquo; command stated before. The permissions of the directory cab also be set and viewed using the &lsquo;ls -ld&rsquo; command.
+The &lsquo;ln&rsquo;,&lsquo;cp&rsquo;,&lsquo;mv&rsquo; commands are used in UNIX for slightly different uses.
+The &lsquo;ln command creates a link to the file. Therefore the same file can be accessed using the two file names. The syntax is as follows:
+&#8216;ln filename filename1&rsquo;
+You would obtain another link to the file named &lsquo;filename&rsquo; by the name of &lsquo;filename1&rsquo;:
+The change made to original file would reflect in the other as well. You could see that with help of the &lsquo;ls -i&rsquo; (command that indicates the &lsquo;i-number&rsquo; of the file)that the two files that are linked are having the same i-number.
+&lsquo;cp&rsquo; command is used to make the copy and the &lsquo;mv&rsquo; command is used to move or rename files.
+The command &lsquo;mv filename1 filenname2&hellip;&hellip; destination directory&rsquo; is used to move several files together to the destination directory.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/04/characters-integers-and-arrays">Characters , Integers and Arrays.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T12:01:03+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/04/characters-integers-and-arrays#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Consider the statement
+char c=&lsquo;5&rsquo;
+printf(“%d”,c);
+The result that will be printed is 53, which is the integer value of the character constant &lsquo;5&rsquo; ,stored in the machine.
+Now if we need to get 5 as the output,we need to use “%c” in &lsquo;printf&rsquo;.
+Character constants are integers written as one character within single  quotes.
+Now consider :
+int c=getchar();
+printf(“%d”,c);
+The result would be the integer value representation of the entered character.
+“%c” in &lsquo;printf&rsquo; would print the character in the terminal.
+Now consider the case of a character array
+char array[]={5,6,7}.
+If we print array[0],using “%d”, then &lsquo;5&rsquo; would be printed. Nothing would be printed if “%c” is used in the printf statement.
+Here 5 itself is a constant. Now if we need to enter alphabets into a character and print it we need to do the following:
+char array[]={&lsquo;a&rsquo;,&lsquo;b&rsquo;,&lsquo;c&rsquo;};
+Now print it using “%c”.The alphabets would be printed.
+If printed using “%d”, then the integer representations would be printed(97,98,99).The characters that entered into a character array are stored as integers inside the array.
+If we do
+char array[]={a,b,c}
+The result would be an error as such:
+&lsquo;a&rsquo; undeclared&hellip;.&lsquo;c&rsquo; undeclared&hellip;etc..</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/04/ensuring-the-correct-data-types-while-using-functions">Ensuring the Correct Data Types While Using Functions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T11:48:52+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/04/ensuring-the-correct-data-types-while-using-functions#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Some of the most common errors that are produced in a program are caused due to the lack of interest ensuring that the data types used are correct. Some of these errors will be displayed while some will not and its up to the user to search the program and find out whats wrong with it. Therefore the user must be very careful while using the type of the functions, the variables that are used etc&hellip;An example below shows the use of the data type of the functions and variables&hellip;
+Consider a program which is used perform the functions of a calculator: The functions that are used in the program are the follows:
+push(),pop(),getop(),atof(),main()(These are just the function names)
+ Now each of these functions have got a specific task.
+The &lsquo;getop&rsquo; function is used to get the character that is entered by the user. The value that will be returned by the function would be of an integer type:
+hence <strong>&lsquo;Int getop( char []);&rsquo;</strong> (A string is passed as the parameter)
+&lsquo;push&rsquo; is used to enter a value into the stack. The value would be of type &lsquo;double&rsquo;. Hence the argument that is passed to the function &lsquo;push&rsquo; would be of type &lsquo;double&rsquo;. Nothing is returned by &lsquo;push&rsquo;.
+Hence &lsquo;<strong>void push(double);</strong>&rsquo;
+&lsquo;pop&rsquo; returns a double value and nothing is passed to the &lsquo;pop&rsquo; as an argument because it just takes up the value from the array(array[] ,declared externally).
+Hence<strong> &lsquo;double pop(void)&rsquo;</strong>
+&lsquo;atof&rsquo; takes the string as the argument and returns a double value:
+hence &lsquo;<strong>double atof(char[]);&rsquo;</strong>
+The data type of &lsquo;array[]&rsquo; should again be double because it handles &lsquo;double&rsquo; values.
+Now the program looks like this:</p>
+
+<p> #include
+ #define MAX 50
+ int getop(char s[]);
+ double atof(char s[]);
+ void push(double);
+ double pop(void);
+ double arr[MAX];
+ int top=0;
+ main()</p>
+
+<p> Now if the data types of any of the above declarations are not according to the problem you wouldn&rsquo;t get the expected results.
+For example if the data type of array[] is not double(say integer) , you would get the result as some meaningless value. Same is the case with all of the above functions and variables declared.
+For the purpose of add,subtract,multiply and divide the use of &lsquo;double&rsquo; values is good(infact a necessity if you want the exact output).
+But when the &lsquo;%&rsquo;(modulus) operator is used ,then the problem arises. If the modulus operator is used with two double values the resulting error would be as follows:
+<strong> error: invalid operands to binary % (have ‘double’ and ‘double’) :</strong>
+Hence the values needs to be converted to type &lsquo;int&rsquo;.
+Int op=pop();
+push((int)pop()%op);
+The type is converted from double into int. Now since pop returns a double value, this will again be converted back to a double value.</p>
+
+<p>A note on External variables: Here array[] and top are declared as external variables and so can be accessed by the functions that are mentioned. Hence these values need not be passed as an argument to the functions. The fact that is to be taken into account that is that when external variables are used , the variable names cannot be changed within a function as is the case while passing arguments.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/04/errorswarnings-and-unexpected-results">Errors,warnings and Unexpected Results&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T08:45:14+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/04/errorswarnings-and-unexpected-results#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>While compiling C programs we might often come across errors,messages and unexpected results as our output.. The following shows a few of those :
+Sometimes u might get certain unexpected values like -1098763408 as your result.
+This might be due to the fact that u may not have initialized the variable used in the expression producing the result to a starting value(say i=0).
+The same doing (i.e a variable not set to its initial value) might produce a &lsquo;segmentation fault&rsquo; in the program. Segmentation fault may also be produced due to the fact that the alloted size for the particular string array is less than what you have just tried to fill in.
+For eg. If</p>
+
+<h1>define MAX 10</h1>
+
+<p>char string[MAX];
+The size is 10.Now if u try to fill in more than 10 characters a case of segmentation fault might occur.
+Another case exists where you might get an error as the following one:
+ error: conflicting types for ‘some_function_name’
+This might be because of the fact that the function name that you have used is the name of the function that is already present in one of the header files.
+For common functions like &lsquo;strlen&rsquo; ,&lsquo;strcat&rsquo; etc this might not occur because we wont use them as our function names. But this might occur sometimes for certain function names that we may not be familiar with.
+For eg. The error message would be displayed when you use function names as
+&lsquo;index&rsquo; or &lsquo;remove&rsquo; etc&hellip;even if your declaration,definition and the call might be correct.
+Don&rsquo;t keep pondering over it,you just need to change your function name to another one that does not exist in the system&rsquo;s headers. For eg..change &lsquo;the name index&rsquo; to &lsquo;ind&rsquo; or something else.</p>
+
+<p>Another common case where you may not obtain the result might be because of an error in the &lsquo;printf&rsquo; statement. For eg you may have used “%d” to print a float value even though “%f”should have been be used.</p>
+
+<p>It is important to check that the type of 1)the called function and 2) the variable that is used in the calling function in order to receive the value returned from the called function has to be same .If this is not the case ,an error would be produced (that would happen only if both the functions are in the same source file. But if the functions are in different source files, then the case becomes more complicated because the error would not be displayed.
+In case you find that the output you obtain has got some definite value but is meaningless according to the problem, then a solution might to have a look through all the data types used in the program and see if its appropriate and matching. Such cases might occur in programs involving many functions</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/01/local-and-external-variables">Local and External Variables</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-01T19:55:02+05:30" pubdate data-updated="true">Aug 1<span>st</span>, 2010</time>
+        
+         | <a href="/2010/08/01/local-and-external-variables#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Local variables are variables that come into existence only when the function is called and disappears thereafter whereas external variables are accessible to all functions of the program.
+To illustrate the difference between these two kinds of variables ,consider a function <strong>‘getline()’ </strong>
+At first we consider the case where local variables are used. The call and the function definition in this case would be as follows:
+Function call:
+<strong>getline(line,MAXLENGTH);</strong>
+Function definition:
+<strong>int getline(char s[],int lim)
+{
+}
+</strong>Here there is a requirement to pass the arguments from the caller function to the called function through the parenthesis as the variables used are local to the function. The value of the variable &lsquo;line&rsquo; is internal to the caller function.
+Whereas when we consider the case of external variables ,the situation changes. Consider the case of declaring variables externally:
+**#include</p>
+
+<h1>define MAXLINE 100</h1>
+
+<p>char line[MAXLINE];<em><em>       /</em>external variable declaration/</em></p>
+
+<p>The variables line has been declared externally.
+Hence the call and definition of the function ‘getline()’ could be modified as follows:
+Function call:
+<strong>getline()</strong>
+Function definition:
+<strong>int getline(void)
+{
+}</strong>
+The modified values of the variables would be available to all the functions.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/7/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/5/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+<section class="googleplus">
+
+<h1>
+  <a href="http://github.com/sunilkumarn/"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/github_zpse87fc53d.jpg" width="40" height="40"></a>
+  &nbsp; &nbsp;
+  <a href="http://twitter.com/sunilkumar_g56"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/twitter_zps447bd274.jpg" width="40" height="40"></a>
+</h1>
+
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'techscribblings';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-44991607-1', 'sunilnkumar.com');
+    ga('send', 'pageview');
+  </script>
+</body>
+
+</html>

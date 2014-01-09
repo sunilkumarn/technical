@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="C provides a lot of built in functions. Apart from that users define their own functions knows as user-defines functions. The function has got three &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tech.sunilnkumar.com/technical/blog/page/7">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experiences.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tech.sunilnkumar.com/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/01/functions-in-c">Functions in C</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-01T19:47:57+05:30" pubdate data-updated="true">Aug 1<span>st</span>, 2010</time>
+        
+         | <a href="/2010/08/01/functions-in-c#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>C provides a lot of built in functions. Apart from that users define their own functions knows as user-defines functions. The function has got three parts
+The declaration,the call and the definition.
+Consider a function<strong> &lsquo;getline&rsquo;</strong> which is used to obtain each line from the input.
+The three parts of the function would be as follows:
+Declaration:<strong>returntype getline(parameters);</strong>
+call:<strong>getline(arguments);</strong>
+definition:<strong>returntype getline(parameters)
+{
+declarations;
+statements;
+}</strong>
+The function definition may well contain a &lsquo;return&rsquo; statement to transfer the control back to the caller function. In such cases the return type of the function must not be &lsquo;void&rsquo;.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/01/inputoutput-and-type-conversion">Input,output and Type Conversion.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-01T19:44:06+05:30" pubdate data-updated="true">Aug 1<span>st</span>, 2010</time>
+        
+         | <a href="/2010/08/01/inputoutput-and-type-conversion#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Certain basic features of the C programming language are written here.
+A text stream is a sequence of characters.
+The <strong>getchar() </strong>statement in C is used so to obtain the next character  from a text stream that is inputted by the user.
+c=getchar()
+assigns the input character to c
+The type of c is declared to be int(when EOF case is used).
+<strong>putchar&copy;</strong>
+prints the character ,that has been inputted, on the terminal.
+Now consider what happens when we enter a statement
+<strong>putchar(c-&lsquo;0&rsquo;)</strong>
+where c=getchar() and the character inputted is &lsquo;r&rsquo;.
+The result is B.The reason for the result being obtained is the the automatic type conversion that is performed in C.
+The type of &lsquo;0&rsquo; is char and is converted to int,which is the type of &lsquo;c&rsquo;.Hence the integer value of &lsquo;0&rsquo; is subtracted from the integer value of &lsquo;r&rsquo; (i.e 114-48=65)which is equal to the integer value of &lsquo;B&rsquo;.Hence we obtain the result as B.
+Similar type conversions can be seen in C in different examples.
+If an operator has one float and one integer as its operands ,then the integer will be automatically converted to float.
+We express the decimal number 16 as a floating point constant as 16.0.The same number would be represented as an integer as 16.
+If we perform 16.0-16,the integer operand (i.e 16)would automatically be converted into floating point.
+<strong>The generalization of this is that a narrower operand is converted into a wider operand</strong>.
+For eg int->float,float->double,double->long double etc&hellip;.</p>
+
+<p>Now we again move onto the input/output portion.
+Consider a limit for the input is up to the EOF(end of file)
+read input upto end of file is reached.
+We set the condition as
+(<strong>c=getchar())!=EOF) </strong>****  .This implies that the characters are fetched onto &lsquo;c&rsquo; until the End of file is reached. EOF is an integer defined in  as -1.
+The paranthesis in (c=getchar())!=EOF is quite important. Without the paranthesis c would obtain values &lsquo;0&rsquo; or &lsquo;1&rsquo; depending upon the character not being EOF .This is because the precedence of != is greater than that of the assignment operator(=).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/01/tata-docomo-internet">TATA DOCOMO INTERNET</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-01T14:38:54+05:30" pubdate data-updated="true">Aug 1<span>st</span>, 2010</time>
+        
+         | <a href="/2010/08/01/tata-docomo-internet#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Inorder to set up an internet connection using TATA DOCOMO in debian using USB ,u need to do the following steps:
+Install &lsquo;wvdial&rsquo; &mdash;&mdash;U will need Debian 5.0 -1 &amp; 2 DVDs to do so.
+Install it using
+<strong>apt-get install wvdial</strong>
+Once u have finished installing wvdial create a file<em> &lsquo;wvdial.conf&rsquo;</em> in the /etc directory.Edit the settings for your TATA DOCOMO connection in the  file &lsquo;wvdial.conf&rsquo; .
+The settings for the connection would be as follows:</p>
+
+<p>[Dialer Defaults]</p>
+
+<p>Init1 = ATZ</p>
+
+<p>Init2 = ATQ0 V1 E1 S0=0 &amp;C1 &amp;D2 +FCLASS=0</p>
+
+<p>Password = MYPASSWORD</p>
+
+<p>Phone = MYISPPHONENUM</p>
+
+<p>Modem Type = USB Modem</p>
+
+<p>Stupid Mode = yes</p>
+
+<p>Baud = 460800</p>
+
+<p>Dial Command = ATDT</p>
+
+<p>Modem = /dev/ttyACM0</p>
+
+<p>ISDN = 0</p>
+
+<p>Username = MYUSERNAME</p>
+
+<p>Carrier Check = yes</p>
+
+<p>Auto Reconnect = yes</p>
+
+<p>[Dialer Docomo]</p>
+
+<p>Stupid Mode = yes</p>
+
+<p>Password = Docomo</p>
+
+<p>Auto Reconnect = yes</p>
+
+<p>Username = Docomo</p>
+
+<p>Phone = <em>99</em>**1#</p>
+
+<p>Save the file after editing,dial using
+wvdial docomo
+Certain messages will displayed in the terminal and you will obtain your
+primary DNS address :
+secondary DNS address:
+Now open &lsquo;resolv.conf&rsquo; in the /etc directory and edit the file and place your DNS addresses in the file as
+<strong>nameserver:primary DNS address
+nameserver:secondary DNS address</strong>
+Now save the file and do wvdial docomo and you will obtain your internet connection.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/07/30/a-few-basic-commands-in-linux">A Few Basic Commands in Linux</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-30T16:27:38+05:30" pubdate data-updated="true">Jul 30<span>th</span>, 2010</time>
+        
+         | <a href="/2010/07/30/a-few-basic-commands-in-linux#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The common  file system commands that would make a beginner get started with linux are the following:</p>
+
+<p><strong>ls</strong>:command that lists all the files in the current directory
+Variations in the use of the ls command would be found as the ls -l,ls -t&hellip;
+<strong>cp source dest</strong>:command that is used to copy file &lsquo;source&rsquo; to file &lsquo;dest&rsquo;
+<strong>mv source dest</strong>:moves the file &lsquo;source&rsquo; to file&#8217;dest&#8217;
+<strong>rm files</strong>:command used to remove a particular file
+These commands when invoked would be looked in the directory /usr/bin
+To check the presence of the &lsquo;cp&rsquo; command use:
+<strong>which cp</strong>
+You would get back /usr/bin
+There is a case where the use of a paricular command (say cp)would display in a message as follows
+bash:cp command not found
+Make use of the &lsquo;which&rsquo; command to see if the cp command is present in the directory
+<strong>which cp</strong>
+There might be no response
+Therefore the coreutil package needs to be reinstalled
+<strong>apt-get install coreutils &mdash;reinstall coreutils</strong>
+This would fix the problem.
+The other basic commands would include the commands for printing the text:
+<strong>cat filename</strong>:
+<strong>pr filename</strong>:</p>
+
+<p>Directories in linux contain files and subdirectories.Each user will be having his own home directory to whih he logs in at the beginning of a session.The user may then move on work in other directories which becomes his  current directory.</p>
+
+<p>The basic commands that are used in regard with the directories include the following</p>
+
+<p><strong>mkdir dirname:</strong>creates a new directory
+<strong>cd dirname:</strong>change to the particular directory(provided that you are in the correct place)
+To check whether you are in the correct place use
+<strong>pwd</strong>
+You would get back the &lsquo;current directory&rsquo;
+<strong>cd ..</strong>: is used to go the previous directory.
+<strong>cd</strong>: moves to the home directory.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/07/30/the-shell-basic-facilities-offered">The shell-Basic facilities offered</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-30T16:26:41+05:30" pubdate data-updated="true">Jul 30<span>th</span>, 2010</time>
+        
+         | <a href="/2010/07/30/the-shell-basic-facilities-offered#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Shell -the command interpreter.
+There are many basic facilities offered by the shell.They include</p>
+
+<p>1)Using shorthands for files(use of the asterisk &lsquo;<em>&rsquo;)
+For example the command
+<strong>pr temp</strong></em>
+would print the contents of all files beginning with &lsquo;temp&rsquo;
+Similarly the echo command
+<strong>echo </strong>*
+will list all the files in the current directory</p>
+
+<p>2)Input-Output redirection
+Consider the case where we want to list the files of the directory but not in the terminal
+So we redirect it to a file using the &lsquo;>&rsquo; operator
+<strong>ls > filename
+</strong>If the file &lsquo;filename &rsquo; is not already created it will be so,or else it will be overwritten.
+Counting the number of lines in a particular directory is done as
+<strong>ls >filename
+wc -l&lt;tfilename</strong></p>
+
+<p>3)Inorder to avoid the creation of a temporary file,PIPES are used for the input-output redirection
+The vertical bar &lsquo;|&rsquo; is the pipe.
+Instead of using
+ls>filename
+wc -l&lt;filename
+we use
+<strong>ls|wc -l </strong>
+for the redirection to be possible.</p>
+
+<p>4)Tailoring the environment
+As a user of UNIX,we could customize it in the way comfortable to us.
+The &lsquo;stty&rsquo; command helps us do that
+for eg:
+<strong>stty erase &lsquo;^h&rsquo;
+</strong>enables the user to use ctrl-h for erasing a particluar character.
+By storing it in the file .profile (present in the home directory),we need not type it each time we login
+One of the most important tailoring comes during the setting up of paths
+Again this could be made changed in the <strong>&lsquo;.profile&rsquo; </strong>file.
+The current path would enable searches in the directories /usr/bin and /bin.
+If we did want to augment another directory to the search path we do it as follows:
+<strong>PATH=export $PATH:/usr/games</strong>
+where usr/games would be the newly added search directory.
+The augmented path would be obtained using the &lsquo;echo&rsquo; command
+<strong>echo $PATH
+:/usr/bin:/bin:/usr/games</strong>
+All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/6/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+<section class="googleplus">
+
+<h1>
+  <a href="http://github.com/sunilkumarn/"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/github_zpse87fc53d.jpg" width="40" height="40"></a>
+  &nbsp; &nbsp;
+  <a href="http://twitter.com/sunilkumar_g56"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/twitter_zps447bd274.jpg" width="40" height="40"></a>
+</h1>
+
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'techscribblings';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-44991607-1', 'sunilnkumar.com');
+    ga('send', 'pageview');
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Node.js | Scribblings]]></title>
+  <link href="http://tech.sunilnkumar.com/technical/blog/categories/node-dot-js/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com/technical/"/>
+  <updated>2014-01-09T16:51:13+05:30</updated>
+  <id>http://tech.sunilnkumar.com/technical/</id>
+  <author>
+    <name><![CDATA[Sunil Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Node.js: Event Emitters and Listeners]]></title>
+    <link href="http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners"/>
+    <updated>2013-07-07T13:32:26+05:30</updated>
+    <id>http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners</id>
+    <content type="html"><![CDATA[<p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
+
+<p><div>
+  <pre><code class='javascript'>&lt;/p&gt;
+
+&lt;p&gt;$(&amp;lsquo;#toBeClicked&amp;rsquo;).on(&amp;lsquo;click&amp;rsquo;, function() { alert(&amp;lsquo;clicked&amp;rsquo;) })&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Here we handle a <em>click event</em> on the element with id &lsquo;toBeClicked&rsquo;. When the element is clicked, a &lsquo;click&rsquo; event is emitted which is handled by the above statement written by us.</p>
+
+<p>Just like in the DOM,  many objects in node emit events. When they do so, they inherit from the <strong>EventEmitter</strong> constructor.</p>
+
+<p>Lets straight away build a custom event emitter and see whats going on,</p>
+
+<p><div>
+  <pre><code class='javascript'>&lt;/p&gt;
+
+&lt;p&gt;EventEmitter = require(&amp;lsquo;events&amp;rsquo;).EventEmitter       // The Event Emitter constructor in the events.js module .&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Now, we create our custom emitter which is an instance of EventEmitter,</p>
+
+<p><div>
+  <pre><code class='javascript'>emitter = new EventEmitter();&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>We listen for the error event,</p>
+
+<p><div>
+  <pre><code class='javascript'>emitter.on(&amp;lsquo;error&amp;rsquo;, function(msg1, msg2) { console.log(&amp;lsquo;ERR: &amp;rsquo; + msg1 + &amp;lsquo; &amp;rsquo; + msg2 ) })&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Here, <code>function(msg1, msg2) { console.log('ERR' + msg1 + ' ' + msg2 ) }</code></p>
+
+<p>is the callback to be performed once the event is emitted,</p>
+
+<p>We could also listen as,</p>
+
+<p><div>
+  <pre><code class='javascript'>emitter.addListener(&amp;lsquo;error&amp;rsquo;, function(msg1, msg2) { console.log(&amp;lsquo;ERR: &amp;rsquo; + msg1 + &amp;lsquo; &amp;rsquo; + msg2 ) } )&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Now we emit the error event,</p>
+
+<p><div>
+  <pre><code class='javascript'>emitter.emit(&amp;lsquo;error&amp;rsquo;, &amp;lsquo;Bug detected&amp;rsquo;, &amp;lsquo;@ Step 4&amp;rsquo;)&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Once the &lsquo;error&rsquo; event is emitted, the listener performs the callback and we see the error logged in the console(as we have written in the callback function)
+<code>ERR: Bug detected @ Step 4</code></p>
+
+<p>We could add listeners on any more custom events and handle them when the event is emitted.</p>
+
+<p>Now that we have got to know how events are emitted and handled via listeners, lets try out a small server that listens for requests and processes them.</p>
+
+<p><div>
+  <pre><code class='javascript'>&lt;/p&gt;
+
+&lt;p&gt;var http = require(&amp;lsquo;http&amp;rsquo;),&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sys = require(&#39;sys&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;var server = http.createServer(function(request, response) {
+  request.on(&amp;lsquo;data&amp;rsquo;, function (chunk) { console.log(chunk.toString()); });&lt;/p&gt;
+
+&lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
+response.end();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  });&lt;/p&gt;
+
+&lt;p&gt;});&lt;/p&gt;
+
+&lt;p&gt;console.log(&amp;ldquo;Starting up the server&amp;rdquo;);
+server.listen(8000);&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Here, <code>http.createServer</code> method returns an object which inherits from the EventEmitter constructor.</p>
+
+<p>Check out the <a href="http://nodejs.org/api/http.html#http_http_createserver_requestlistener">nodejs api doc</a> for the createServer method in the<strong> http.js</strong> module,</p>
+
+<p><code>http.createServer([requestListener]), </code><em>It says that requestListener is a function which is automatically added to the &lsquo;request&rsquo; event.</em></p>
+
+<p>To check whats going on behind the scenes here, lets dive into the code base of nodejs,
+As can be seen from code, the createServer method is within the http.js module. Inspecting the <strong>http.js</strong> module,</p>
+
+<p><div>
+  <pre><code class='javascript'>exports.createServer = function(requestListener) {
+  return new Server(requestListener);
+};</code></pre>
+</div>
+</p>
+
+<p>Check for the <strong>_http_server.js</strong> module to find the <code>Server</code> constructor which has the following lines of code,</p>
+
+<p><div>
+  <pre><code class='javascript'>if (requestListener) {
+  this.addListener(&amp;lsquo;request&amp;rsquo;, requestListener); // event listener for the server
+}</code></pre>
+</div>
+</p>
+
+<p>As per the above snippet, &lsquo;<strong>this</strong>&rsquo;(the current server instance ) listens for the &lsquo;request&rsquo; event and attaches the requestListener function to be performed when the event is emitted.</p>
+
+<p>Here,</p>
+
+<p><div>
+  <pre><code class='javascript'>function(request, response) {
+  request.on(&amp;lsquo;data&amp;rsquo;, function (chunk) { console.log(chunk.toString()); });&lt;/p&gt;
+
+&lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
+response.end();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  });
+}</code></pre>
+</div>
+</p>
+
+<p><em>is our requestListener.</em></p>
+
+<p>Now, further inspecting the <strong>_http_server.js </strong>module<strong>, </strong>we could also see how the request event is emitted,</p>
+
+<p><div>
+  <pre><code class='javascript'>self.emit(&amp;lsquo;request&amp;rsquo;, req, res); // event emitter for the server</code></pre>
+</div>
+</p>
+
+<p><em>&lsquo;req&rsquo; and &lsquo;res&rsquo; are the request, response objects that are passed as arguments to the requestListener function called when the &lsquo;request&rsquo; event is emitted. Here self is &lsquo;this&rsquo; ( our current server instance)</em>.</p>
+
+<p>We could well make the server listen for the request event on our own. For this,</p>
+
+<p><div>
+  <pre><code class='javascript'>var server = http.createServer()
+server.on(&amp;lsquo;request&amp;rsquo;, function(request, response) {
+  request.on(&amp;lsquo;data&amp;rsquo;, function (chunk) { console.log(chunk.toString()); });&lt;/p&gt;
+
+&lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
+response.end();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  })
+});</code></pre>
+</div>
+</p>
+
+<p>Here when we create the server instance, we do not pass the requestListener( <em>Do notice that requestListener was only optional in http.createServer([requestListener]) </em>). Instead we attach a listener of our own on the server which listens to the &lsquo;request&rsquo; event and performs the callback function when the request event is emitted, i.e,</p>
+
+<p><div>
+  <pre><code class='javascript'>server.on(&amp;lsquo;request&amp;rsquo;, function(request, response) { &amp;hellip; });</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Node.js: Streams and pipes.]]></title>
+    <link href="http://tech.sunilnkumar.com/technical/2013/06/23/node-js-streams-and-pipes"/>
+    <updated>2013-06-23T00:27:26+05:30</updated>
+    <id>http://tech.sunilnkumar.com/technical/2013/06/23/node-js-streams-and-pipes</id>
+    <content type="html"><![CDATA[<p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
+
+<p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
+
+<p><div>
+  <pre><code class='javascript'>var http = require(&amp;lsquo;http&amp;rsquo;),
+  sys = require(&amp;lsquo;sys&amp;rsquo;),
+  fs = require(&amp;lsquo;fs&amp;rsquo;);&lt;/p&gt;
+
+&lt;p&gt;  var server = http.createServer();
+  console.log(&amp;ldquo;Starting up the server&amp;rdquo;);
+  server.listen(8000);&lt;/p&gt;
+
+&lt;p&gt;  server.on(&amp;lsquo;request&amp;rsquo;, function(request, response) {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var file = fs.createWriteStream(&#39;copy.csv&#39;);
+var fileSize = request.headers[&#39;content-length&#39;];
+var uploadedSize = 0;
+
+request.on(&#39;data&#39;, function (chunk) {
+  uploadedSize += chunk.length;
+  uploadProgress = (uploadedSize/fileSize) * 100;
+  response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
+  var bufferStore = file.write(chunk);
+  if(bufferStore == false)
+    request.pause();
+});
+
+file.on(&#39;drain&#39;, function() {
+  request.resume();
+})
+
+request.on(&#39;end&#39;, function() {
+  response.write(&#39;Upload done!&#39;);
+  response.end();
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  });&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>The basics: We create a node server that listens on port 8000. Upon receival of a request, we create a write stream ( the destination file path ). Each chunk of data received is written on to the destination path, the upload progress is calculated and responded back.</p>
+
+<p>Lets break up the above snippet into pieces and make an analysis of whats happening.</p>
+
+<p>A writeStream is created and &lsquo;copy.csv&rsquo; is the destination path to which the received data will be written.</p>
+
+<p><div>
+  <pre><code class='javascript'>var file = fs.createWriteStream(&amp;lsquo;copy.csv&amp;rsquo;);</code></pre>
+</div>
+</p>
+
+<p>The following piece forms the core of the upload process.</p>
+
+<p><div>
+  <pre><code class='javascript'>request.on(&amp;lsquo;data&amp;rsquo;, function (chunk) {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var bufferStore = file.write(chunk);
+if(bufferStore == false)
+  request.pause();
+uploadedSize += chunk.length;
+uploadProgress = (uploadedSize/fileSize) * 100;
+response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  });&lt;/p&gt;
+
+&lt;p&gt;  file.on(&amp;lsquo;drain&amp;rsquo;, function() {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;request.resume();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  })</code></pre>
+</div>
+</p>
+
+<p>Looking at the code &ndash; on receiving each chunk of data ( via the read stream ), its written to the write stream as
+<code>file.write(chunk);</code></p>
+
+<p>Right now, we need to pause a bit to check whether there might be a cause of worry in this whole read-write streaming process. The answer is yes, and is very obvious. <strong>There exists a real possibility that the rate at which the data is written to the writeStream is less than the rate at which its read from the readStream</strong>. This is a genuine cause of concern and hence cannot be ignored. How we handle this forms our next two lines of code.</p>
+
+<p><code>file.write(chunk)</code> stores the data onto a buffer. It returns true if the write was performed and returns false if the write failed due to the buffer being full. So, we need to handle this by pausing the readStream if the buffer storage is full.</p>
+
+<p><div>
+  <pre><code class='javascript'>var bufferStore = file.write(chunk);
+  if(bufferStore == false)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;request.pause();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Also, we need to re-start streaming data from the read stream once the buffer is drained out. The following lines of code does just that.</p>
+
+<p><div>
+  <pre><code class='javascript'>file.on(&amp;lsquo;drain&amp;rsquo;, function() {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;request.resume();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  })</code></pre>
+</div>
+</p>
+
+<p><strong>Pipes in node</strong>: Here, we have handled the logic of keeping the read &ndash; write rate to be in sync. Node.js provides us with pipes which has this logic already encapsulated in it.</p>
+
+<p>The following line,</p>
+
+<p><div>
+  <pre><code class='javascript'>request.pipe(file) // The notion is quite similar to UNIX pipes. Pipes the input into an output stream.&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>would be equivalent to</p>
+
+<p><div>
+  <pre><code class='javascript'>request.on(&amp;lsquo;data&amp;rsquo;, function(chunk) {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var bufferStore = file.write(chunk);
+if(bufferStore == false)
+  request.pause();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  })&lt;/p&gt;
+
+&lt;p&gt;  file.on(&amp;lsquo;drain&amp;rsquo;, function() {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;request.resume();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;  })</code></pre>
+</div>
+</p>
+
+<p>Pipe by itself maintains the read write rate to be in sync by pausing and resuming when necessary.</p>
+
+<p>Now since we have handled our cause of concern, all that is left is to calculate the upload percentage upon receiving each chunk of data and respond back with the calculated percentage.</p>
+
+<p><div>
+  <pre><code class='javascript'>uploadedSize += chunk.length;
+  uploadProgress = (uploadedSize/fileSize) * 100;
+  response.write(Math.round(uploadProgress) + &amp;ldquo;%&amp;rdquo; + &amp;ldquo; uploaded\n&amp;rdquo; );</code></pre>
+</div>
+</p>
+
+<p>Do note that the actual size of the upload file is calculated from the request headers.</p>
+
+<p><div>
+  <pre><code class='javascript'>var fileSize = request.headers[&amp;lsquo;content-length&amp;rsquo;];&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Now, when the request ends ( i.e the &lsquo;end&rsquo; event is emitted by the request ), the final chunk of response is given back to the client indicating that our file upload has been done successfully.</p>
+
+<p>To test this, run the node server and try making a request, something like this:</p>
+
+<p><code>curl -v --upload-file "upload_file.csv" "http://localhost:8000"</code></p>
+
+<p>and the upload progress could be tracked.</p>
+]]></content>
+  </entry>
+  
+</feed>

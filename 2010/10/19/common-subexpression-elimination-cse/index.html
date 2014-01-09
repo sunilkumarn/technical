@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Common Subexpression elimination by GCC - Scribblings</title>
+  <meta name="author" content="Sunil Kumar">
+
+  
+  <meta name="description" content="Common subexpression elimination (CSE) is a compiler optimization technique of finding redundant expression evaluations, and replacing them with a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tech.sunilnkumar.com/technical/2010/10/19/common-subexpression-elimination-cse">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Scribblings</a></h1>
+  
+    <h2>Scribbling down experiences.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tech.sunilnkumar.com/technical" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Common Subexpression Elimination by GCC</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-19T17:12:16+05:30" pubdate data-updated="true">Oct 19<span>th</span>, 2010</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong>Common subexpression elimination</strong> (CSE) is a compiler optimization technique of finding redundant expression evaluations, and replacing them with a single computation . This saves the time overhead resulted by evaluating the expression for more than once . We will have a look into this phenomenon by considering a simple code and again taking a walk through its assembly code .</p>
+
+<p>Consider the code that we have written and saved in file &lsquo; pgm.c &rsquo;</p>
+
+<p><code>main(){
+int i, j, k, r;
+scanf("%d%d", &amp;i, &amp;j);
+k = i + j + 10;
+r = i + j + 30;
+printf("%d %d\n", k, r);
+}</code></p>
+
+<p>Do :</p>
+
+<p><strong>$ : cc -S pgm.c</strong></p>
+
+<p><strong>$ : less pgm.s</strong></p>
+
+<p>Read the assembly code &lsquo; pgm.s &rsquo;</p>
+
+<p>Scan the assembly code and find out the call to the function &lsquo;scanf()&rsquo; . This is where our area of interest begins . This is because its after calling &lsquo;scanf &rsquo; that we load the value of the input variables into the registers .</p>
+
+<p>Right after the call to &lsquo;scanf &rsquo; , i have this in my assembly code ,</p>
+
+<p><strong>movl    -16(%ebp), %edx
+movl    -20(%ebp), %eax</strong> .</p>
+
+<p>Here we move the values of the two variables &lsquo;i &rsquo; and &lsquo;j &rsquo; into registers &lsquo;edx &rsquo; and &lsquo;eax &rsquo; .</p>
+
+<p>Now just have a look into our C code and you will see the two expressions as follows :</p>
+
+<p><code>k = i + j + 10;
+r = i + j + 30;</code></p>
+
+<p>Looking at the two expressions , you would find out the redundant part in the two expressions .</p>
+
+<p>Its that &lsquo;i+j&rsquo; is calculated twice .</p>
+
+<p>Now lets find out what happens in the assembly code :</p>
+
+<p>I had these statements in your assembly code :</p>
+
+<p><strong>movl    -16(%ebp), %edx</strong></p>
+
+<p><strong>movl    -20(%ebp), %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;> We had mentioned these two statements  above .</p>
+
+<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;>  values in edx and eax are added and loaded into eax</p>
+
+<p><strong>addl    $10, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 10 is added with the value in eax</p>
+
+<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;&ndash;>   values in edx and eax are added and loaded into eax</p>
+
+<p><strong>addl    $30, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 30 is added with the value in eax</p>
+
+<p>You could see that there is redundancy in the assembly code .</p>
+
+<p>The statement<strong> &lsquo; leal(%edx,%eax), %eax</strong> &rsquo; performs the evaluation of the subexpression ( &lsquo; i + j &rsquo; ) which is done twice thereby throwing in redundancy and hence creating unnecessary overheads .</p>
+
+<p>Obviously our compiler when asked to perform optimization would avoid this redundancy .This is what is termed as <strong>Common Subexpression Elimination</strong> ,i.e , the subexpression that is common( &lsquo; i + j &rsquo; ) in the two expressions is evaluated only once , in essence the second evaluation is eliminated .  Lets have a look into CSE by again peeping into our assembly code  .</p>
+
+<p>Do</p>
+
+<p><strong>$ : cc &ndash; S &ndash; O3 pgm .c</strong></p>
+
+<p><strong>$ : less pgm.s</strong></p>
+
+<p>Take a look into your assembly code  .</p>
+
+<p>As mentioned above , our area of interest starts from the call to &lsquo;scanf ()&rsquo; .</p>
+
+<p>Instead of those 6 statements that were used to evaluate those two expressions ,</p>
+
+<p>i + j + 10 &amp; i + j + 30 ,</p>
+
+<p>you would find this ,</p>
+
+<p><strong>movl    -12(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  move the value of the variable &lsquo;i&rsquo; into eax</p>
+
+<p><strong>addl    -8(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> add the value of the variable &lsquo;j&rsquo; with &lsquo;i&rsquo; stored in eax .</p>
+
+<p><strong>leal    30(%eax), %edx</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 30 with eax ( contains the sum of i &amp; j ) and stores in edx</p>
+
+<p><strong>addl    $10, %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 10 with eax ( contains the sum of i &amp; j ) and stores in eax .</p>
+
+<p>Here the second statement performs the evaluation of the subexpression , &lsquo; i + j &rsquo; . You could get it quite clearly from the code segment that the redundancy that was found in the unoptimized assembly code has been eliminated by the compiler .</p>
+
+<p>The later 2 statements perform the evaluation of the expressions</p>
+
+<p>( i + j + 30 )   and    ( i + j + 10 ) respectively .</p>
+
+<p>We have just used a very simple case of CSE , but this optimization technique could be used in even more useful cases . Consider :</p>
+
+<p>k = f() + g() + 30</p>
+
+<p>r = f() + g() + 10</p>
+
+<p>where f() and g() are functions . In an unoptimized code , the technique of CSE wouldn&rsquo;t be used and hence there would be overhead due to the redundancy added with the more serious problem of having to call each function twice . The technique of <strong>Common Subexpression Elimination</strong> avoids this very redundancy  .</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-19T17:12:16+05:30" pubdate data-updated="true">Oct 19<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c/'>C</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/technical/2010/10/19/common-subexpression-elimination-cse" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/technical/2010/10/19/common-subexpression-elimination-cse" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/10/19/function-inlining" title="Previous Post: Function inlining">&laquo; Function inlining</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/10/21/memcheck-a-memory-error-detection-tool" title="Next Post: Memcheck : A Memory Error Detection Tool">Memcheck : A Memory Error Detection Tool &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to 'Wireless Disabled by Hardware Switch'</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+<section class="googleplus">
+
+<h1>
+  <a href="http://github.com/sunilkumarn/"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/github_zpse87fc53d.jpg" width="40" height="40"></a>
+  &nbsp; &nbsp;
+  <a href="http://twitter.com/sunilkumar_g56"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/twitter_zps447bd274.jpg" width="40" height="40"></a>
+</h1>
+
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sunil Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'techscribblings';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://tech.sunilnkumar.com/technical/2010/10/19/common-subexpression-elimination-cse';
+        var disqus_url = 'http://tech.sunilnkumar.com/technical/2010/10/19/common-subexpression-elimination-cse';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-44991607-1', 'sunilnkumar.com');
+    ga('send', 'pageview');
+  </script>
+</body>
+
+</html>

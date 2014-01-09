@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Tinypy | Scribblings]]></title>
+  <link href="http://tech.sunilnkumar.com/technical/blog/categories/tinypy/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com/technical/"/>
+  <updated>2014-01-09T16:51:13+05:30</updated>
+  <id>http://tech.sunilnkumar.com/technical/</id>
+  <author>
+    <name><![CDATA[Sunil Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Analyzing the Tinypy Virtual Machine ]]></title>
+    <link href="http://tech.sunilnkumar.com/technical/2010/09/24/analyzing-the-tinypy-virtual-machine"/>
+    <updated>2010-09-24T02:22:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/technical/2010/09/24/analyzing-the-tinypy-virtual-machine</id>
+    <content type="html"><![CDATA[<p>The major task in tinypy is to analyze the working of the virtual machine. Analyzing and understanding its source code is, obviously, the major challenge that is faced. The code itself is not well arranged and the lack of proper documentation makes the challenge even bigger. Proper use of the GNU debugger, &lsquo;gdb&rsquo;, and the indexing tool, Ctags makes the process of analysis of the VM a lot simpler. Perhaps the best way to understand the working of the VM is to use the VM to execute the byte code of a simple python program and see and understand the actual flow of control. Here a sample program &lsquo;sample.py&rsquo; is used:</p>
+
+<p><code>def add(a,b):
+c = a + b
+return(c)
+print(add(1,9))</code></p>
+
+<p>Note that the use of the parentheses for built-in functions too is a part of the syntax in TinyPy. Obtaining sample.tpc is explained <a href="http://sunilkumarn.wordpress.com/2010/09/23/an-overview-of-tinypy/">here.</a></p>
+
+<p>**cc vmmain.c -1m</p>
+
+<pre><code>        ./a.out sample.tpc   **
+</code></pre>
+
+<p>gives you the output:
+<em>10</em></p>
+
+<p>Understanding the flow of control for this program would give an idea of the working of a segment of the virtual machine.
+Each time the VM is invoked, a new instance of the VM is created .
+<strong>tp_vm *tp =tp_init(argc,argv);</strong></p>
+
+<p>The key point to be understood in the analysis of VM is that each object in tinypy is stored as a union in the C API.
+Lets get into the details:<strong> tp_obj</strong> is the tinypy&rsquo;s object representation.</p>
+
+<p><code>typedef union tp_obj  {
+int type;
+tp_number_ number;
+struct{int type;int *data;}gci;
+tp_string_ string;
+tp_dict_ dict;
+tp_list_ list;
+tp_fnc_ fnc;
+tp_data_ data;
+} tp_obj;
+</code>
+The union tp_obj with its fields are shown. The field <strong>&lsquo;type&rsquo;</strong> of the union indicates the type of the object. A type value of 1 indicates that a number is being used, type = 2 indicates object is a string and type = 4 indicates a list. In our sample program, our objective is to add two numbers &lsquo;a&rsquo; and &lsquo;b&rsquo; and print their output. A function in the virtual machine <strong>&lsquo;tp_add&rsquo;</strong> does the job of adding two arguments that is passed to the function as input. The arguments could be numbers, strings or lists. Lets analyze the function &lsquo;tp_add&rsquo;.</p>
+
+<p><strong>tp_obj tp_add(TP,tp_obj a,tp_obj b)
+</strong>
+The Function definition of &lsquo;tp_add&rsquo; contains three arguments:
+• <em>TP &ndash;> the VM instance
+• tp_obj a &ndash;> the union variable representing the object &lsquo;a&rsquo; in the sample program
+• tp_obj b &ndash;> the union variable representing the object &lsquo;b&rsquo; in the sample program
+_
+Within the function<strong> tp_add</strong>, the type of the two objects are checked and the appropriate function is performed. In our example, two numbers are to be added. As we mentioned above, &lsquo;a&rsquo; and &lsquo;b&rsquo; are stored as unions and the union contains fields for types such as number, strings, lists etc. We access the field **tp_number</em><strong> in the union &lsquo;a&rsquo; as &lsquo;</strong>a.number&rsquo;<strong>. </strong>&lsquo;number&rsquo;<strong> is a variable of the structure </strong>tp_number<em><strong> which contains a variable </strong>&lsquo;val<strong>&rsquo; that stores the exact value of the number . Therefore </strong>a.number.val<strong> would give you the actual object . Analyzing the addition of strings would be interesting as well. &lsquo;</strong>a.string&rsquo;<strong> would give you the union which represents the string object. The union</strong> tp_obj<strong> contains a field </strong>tp_string</em>** which is a structure and includes the pointer that points to the address where the string &lsquo;a&rsquo; is stored. The structure of tp_string_:</p>
+
+<p><code>typedef struct tp_string_ {
+int type;
+struct tp_string_ info*;
+char const *val;
+int len;
+}  tp_string_;</code></p>
+
+<p>An idea about the manipulation of lists would do no harm to our primary objective, the study of the working of the VM. Consider two simple lists in python :
+a = [1,2,3] , b = [4,5,6]</p>
+
+<p>Again we start from tp_add which needs us to go back to our function. The VM uses a function <strong>&lsquo;tp_extend</strong>&rsquo; which returns a union that contains the new (extended) list. You would see that the value of the field &lsquo;type&rsquo; of the union that is returned would be 4 which indicates a list. Access the field &lsquo;list&rsquo; as <strong>&lsquo;a.list&rsquo;</strong>. <strong>&lsquo;list</strong>&rsquo; is a structure variable that includes a pointer <strong>*val </strong>that points to another structure &lsquo;<strong>_tp_list&rsquo;:</strong></p>
+
+<p><code>typedef struct _tp_list {
+int gci;
+tp_obj *items;
+int len;
+int alloc;
+} _tp_list;</code></p>
+
+<p>The pointer <strong>*items</strong> as you could see is of type tp_obj and de-referencing it would give you the union tp_obj. This union contains a single element of the list. Starting from the function tp_add:</p>
+
+<p><strong>*r.list.val &ndash;> items
+</strong>
+would give you the union mentioned above. Accessing the field &lsquo;<strong>val</strong>&rsquo; of the field<strong> &lsquo;number</strong>&rsquo; (variable of the structure tp_list_) of the union would give you the element of the list. Now , the obvious question is how do we obtain the next element of the list. For this you need to have some idea about the storage of unions.</p>
+
+<p><strong>r.list.val &ndash;> items</strong></p>
+
+<p>would give you the address of the union. Suppose the address be &lsquo;<strong>0x96ca048&rsquo;</strong> . Now to obtain the union which contains the next element of the list, you need to add the address of the current union with the size taken by each union (sizeof(union)).
+<em>Union containing the next element of the list = Address of the current union + size of each union</em>. For example :
+<strong>r.list.val &ndash;> items = 0x96ca048 + 10</strong>
+would give you the union that stores the next element of the list . The size of the union is 10, in hexadecimal = 16 bytes.
+<a href="http://sunilkumarn.files.wordpress.com/2010/09/image-1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-1.png?w=300" alt="" /></a></p>
+
+<p>The path of <strong>tp_add</strong> can be traced using the &lsquo;bt&rsquo; option in gdb. The path of the function tp_add is as follows:
+<a href="http://sunilkumarn.files.wordpress.com/2010/09/image-2.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-2.png?w=245" alt="" /></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[An Overview of TinyPy]]></title>
+    <link href="http://tech.sunilnkumar.com/technical/2010/09/24/an-overview-of-tinypy"/>
+    <updated>2010-09-24T02:19:32+05:30</updated>
+    <id>http://tech.sunilnkumar.com/technical/2010/09/24/an-overview-of-tinypy</id>
+    <content type="html"><![CDATA[<p>TinyPython is a minimalist implementation of Python in 64K code. It is a parser and byte-code compiler written in TinyPython itself. It is also fully bootstrapped in the sense that initially, TinyPython converts a Python script (.py) into a special TinyPy byte-code format (.tpc), and this generated code is then passed into a  subset of the TinyPython source code called the Virtual Machine, where the actual execution takes place.</p>
+
+<p>One can even extend the idea that if the VM is compiled into a low-level format adaptable to a particular micro controller, then the VM will reside inside that chip, and any .tpc files can be downloaded into the chip as its input.</p>
+
+<p>As outlined above, TinyPy comprises of two phases: the byte-code generation, and the execution of the byte-code in the TinyPy Virtual Machine. Out of these, the first phase will not be mentioned here.</p>
+
+<p><em><strong>Building Up</strong></em>
+The TinyPython source code used was downloaded from <a href="http://code.google.com/p/tinypy/downloads/list">here</a>. Initially, the file listing will look like the following figure.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/image-01.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-01.png?w=300" alt="" /></a></p>
+
+<p>You can find that the &lsquo;build&rsquo; folder will be empty. The &lsquo;doc&rsquo;, &lsquo;examples&rsquo; and &lsquo;modules&rsquo; folder may or may not contain any documents, Python scripts and batteries (or modules) respectively, depending on the downloaded package. The LICENSE.txt and README.txt are self-explanatory names. The CHANGES.txt contain a record of all the changes that the author of TinyPy thought of making in the source code at some point. The ROADMAP.txt gives a brief description of the features of TinyPy, and an idea about the future developments to be implemented. The &lsquo;setup.py&rsquo; contains the initial code to build the TinyPy from scratch. At the terminal, type as follows:
+<strong>python setup.py linux
+</strong>
+It is implied that you need a Python interpreter available in your system. The &lsquo;linux&rsquo; option is to specify that the code will be compiled so as to make it work in a Linux environment. After running this command, a new executable &lsquo;tinypy&rsquo; will appear in the &lsquo;build&rsquo; folder as shown.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/image-3.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-3.png?w=300" alt="" /></a></p>
+
+<p>To fully bootstrap and test TinyPy, give the command as,
+<strong>python setup.py linux boot</strong></p>
+
+<p>Now, in the &lsquo;tinypy&rsquo; folder shown in the above figure, two new executables, &lsquo;tinypy&rsquo; and &lsquo;vm&rsquo; will appear, which are the TinyPy parser, and Virtual Machine respectively. It can be noticed that all the .pyc files for the corresponding .py files have been generated by the Python interpreter. In addition to that, some test scrips &ndash; named as Temp &ndash; will be invoked too. The most interesting thing will be the presence of new <strong>.tpc</strong> files for some of the initial <strong>.py</strong> files. The general usage and some options available are listed below.</p>
+
+<p>python setup.py command [option] [module]
+• 64 k &ndash; build a a64k version of TinyPy source code
+• blob &ndash; build a single tinypy.c and tinypy.h</p>
+
+<p>The tinypy folder will now have the following contents: Out of these, the &lsquo;py2bc.py&rsquo; script is used to convert a user-generated Python script into its corresponding .tpc file. The format will be:
+ <strong>py2bc.py sample.py sample.tpc</strong></p>
+
+<p>Here, tinypy_path is the path (relative to current position) of either the tinypy executable in the &lsquo;build&rsquo; folder, or the one in the &lsquo;tinypy&rsquo; folder. &lsquo;sample.py&rsquo; is the name of the user-script. &lsquo;sample.tpc&rsquo; is the name given for the byte-code converted file. Or you can simply give it as:
+<strong>python py2bc.py sample.py sample.tpc</strong></p>
+
+<p>Finally, the generated byte-code (.tpc) is to be passed into the VM for compilation and execution. Assuming the current directory as &lsquo;tinypy&rsquo; folder, it is done as:
+<strong>vm sample.tpc
+</strong>
+Or logically,
+<strong>gcc vmmain.c -lm ./a.out sample.tpc</strong></p>
+
+<p>The &lsquo;vmmain.c&rsquo; will be present in the &lsquo;tinypy&rsquo; folder. It is the main function of the VM which runs and automatically links to all the other files necessary for the VM. It is necessary to link the math module too, hence the option &lsquo;-lm&rsquo;. And now the output is obtained and displayed. For a better picture, the files actually needed for VM are:</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/image-4.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-4.png?w=300" alt="" /></a></p>
+
+<p>Writing and compiling the code only accounts to half of the process. The other half is debugging and understanding the flow of control within the source code. To do that, make use of the GNU debugging tool, &lsquo;gdb&rsquo;.
+<strong>gcc -g vmmain.c -lm gdb ./a.out</strong></p>
+
+<p>Inside the &lsquo;gdb&rsquo;, you can set breakpoint for any function. Then run the process for the byte-code you need. Here, &lsquo;sample.tpc&rsquo; is used as example.</p>
+
+<p><strong>(gdb) run sample.tpc OR r sample.tpc</strong></p>
+
+<p>Another essential tool will be &lsquo;ctags&rsquo;. After its installed, go to the &lsquo;tinypy&rsquo; folder and build the tag stack as follows:</p>
+
+<p><strong>ctags <em>.c </em>.h</strong></p>
+
+<p>You can see that a new file named &lsquo;tags&rsquo; is now available. Now when you are inside a .c or a.h file, you can use &lsquo;ctrl + ]&rsquo; and &lsquo;ctrl + T&rsquo; to jump back and forth between cross references spanning different files.</p>
+]]></content>
+  </entry>
+  
+</feed>
