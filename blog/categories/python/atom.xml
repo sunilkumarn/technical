@@ -2,17 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Python | Scribblings]]></title>
-<<<<<<< HEAD
   <link href="http://tech.sunilnkumar.com//github/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com//github/"/>
   <updated>2014-01-09T15:21:48+05:30</updated>
   <id>http://tech.sunilnkumar.com//github/</id>
-=======
-  <link href="http://sunilkumarn.github.io/technical/blog/categories/python/atom.xml" rel="self"/>
-  <link href="http://sunilkumarn.github.io/technical/"/>
-  <updated>2013-12-18T20:33:21+05:30</updated>
-  <id>http://sunilkumarn.github.io/technical/</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -22,15 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Python DB-API]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2010/10/18/python-db-api"/>
     <updated>2010-10-18T23:53:31+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2010/10/18/python-db-api</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2010/10/18/python-db-api"/>
-    <updated>2010-10-18T23:53:31+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2010/10/18/python-db-api</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>Python is one of the more popular Open Source programming languages, owing largely to its own native expressiveness as well as to the variety of support modules that are available to extend its capabilities. One of these modules is DB-API, which, as the name implies, provides a database application programming interface. We will have a discussion about how to connect and use a General purpose database system like Mysql with Python. The DB API provides a minimal standard for working with databases, using Python structures and syntax wherever possible .</p>
 
 <p>4 Steps of the Python DB-API includes the following:</p>
@@ -214,15 +201,9 @@ _</p>
   
   <entry>
     <title type="html"><![CDATA[Evaluation of Scheme in Python]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2010/09/25/evaluation-of-scheme-in-python"/>
     <updated>2010-09-25T19:13:22+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2010/09/25/evaluation-of-scheme-in-python</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2010/09/25/evaluation-of-scheme-in-python"/>
-    <updated>2010-09-25T19:13:22+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2010/09/25/evaluation-of-scheme-in-python</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>Those who have ever gone through the SICP ( Structure and interpretation of computer programs) , would have come across the implementation of a Metacircular evaluator ( an evaluator written in a language that it evaluates) for scheme in the 4rth Chapter.
 <a href="http://sunilkumarn.files.wordpress.com/2010/09/cover.jpg"><img src="http://sunilkumarn.files.wordpress.com/2010/09/cover.jpg?w=207" alt="" /></a></p>
 
@@ -301,15 +282,9 @@ You would see a module named &lsquo; ops&rsquo; being imported. This module cons
   
   <entry>
     <title type="html"><![CDATA[Concept and creation of Environment ]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2010/09/25/concept-and-creation-of-environment"/>
     <updated>2010-09-25T19:07:05+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2010/09/25/concept-and-creation-of-environment</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2010/09/25/concept-and-creation-of-environment"/>
-    <updated>2010-09-25T19:07:05+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2010/09/25/concept-and-creation-of-environment</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>One of the most important thing you need to grasp while doing a project on interpreters and evaluator is the idea of an environment. Within the program the environment is a collection of the names(whether variables or functions) and its corresponding values. While using such names you will need an environment where you can store the value of those names so that you could fetch it for further use. While implementing the evaluator for scheme in python , the concept of environment was implemented using <strong>associative arrays</strong> in python. 3 dictionaries were used to implement the concept of environment. Lets go through a bit of details on the creation and use of environments.</p>
 
 <p>Consider writing the scheme statements:</p>
@@ -343,15 +318,9 @@ scheme>>>( sq 4 )                       &mdash;&mdash;&ndash;>     statement 2</
   
   <entry>
     <title type="html"><![CDATA[Crash  your python Virtual machine!!!]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2010/09/15/crash-your-python-virtual-machine"/>
     <updated>2010-09-15T09:02:22+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2010/09/15/crash-your-python-virtual-machine</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2010/09/15/crash-your-python-virtual-machine"/>
-    <updated>2010-09-15T09:02:22+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2010/09/15/crash-your-python-virtual-machine</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>Causing a python virtual machine to crash is not what I intended but it just happened so. But since this happened , I would just like to give an explanation about what happened and the reason for it.</p>
 
 <p>While trying out <a href="http://sunilkumarn.wordpress.com/2010/09/15/memoizationrun-your-programs-faster/">memoization</a> , I tried to increase the maximum recursion limit which was set to 1000 in my system.
@@ -372,15 +341,9 @@ Lets try and find out the reason behind that:</p>
   
   <entry>
     <title type="html"><![CDATA[Memoization:Run your programs faster.]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2010/09/15/memoizationrun-your-programs-faster"/>
     <updated>2010-09-15T09:00:50+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2010/09/15/memoizationrun-your-programs-faster</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2010/09/15/memoizationrun-your-programs-faster"/>
-    <updated>2010-09-15T09:00:50+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2010/09/15/memoizationrun-your-programs-faster</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p><strong>Memoization is an optimization technique to speed up programs</strong> . Here the function calls are not required to make repetitive calculations of previously calculated results. The processing time of the program is reduced and the memory consumed is increased. <strong>Memoized functions become optimized for speed while they use a higher memory .</strong></p>
 
 <p>Lets go through an analysis of memoization: Consider the code segment for finding out the term of  a fibonacci series:</p>

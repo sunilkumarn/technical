@@ -2,17 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Node.js | Scribblings]]></title>
-<<<<<<< HEAD
   <link href="http://tech.sunilnkumar.com//github/blog/categories/node-dot-js/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com//github/"/>
   <updated>2014-01-09T15:21:48+05:30</updated>
   <id>http://tech.sunilnkumar.com//github/</id>
-=======
-  <link href="http://sunilkumarn.github.io/technical/blog/categories/node-dot-js/atom.xml" rel="self"/>
-  <link href="http://sunilkumarn.github.io/technical/"/>
-  <updated>2013-12-18T20:33:21+05:30</updated>
-  <id>http://sunilkumarn.github.io/technical/</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -22,15 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Node.js: Event Emitters and Listeners]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners"/>
     <updated>2013-07-07T13:32:26+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2013/07/07/node-js-event-emitters-and-listeners"/>
-    <updated>2013-07-07T13:32:26+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2013/07/07/node-js-event-emitters-and-listeners</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
 
 <p><div>
@@ -109,11 +96,7 @@
 
 &lt;p&gt;var http = require(&amp;lsquo;http&amp;rsquo;),&lt;/p&gt;
 
-<<<<<<< HEAD
 &lt;pre&gt;&lt;code&gt;sys = require(&#39;sys&#39;);
-=======
-&lt;pre&gt;&lt;code&gt;sys = require('sys');
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;var server = http.createServer(function(request, response) {
@@ -121,11 +104,7 @@
 
 &lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
 
-<<<<<<< HEAD
 &lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
-=======
-&lt;pre&gt;&lt;code&gt;response.write('Request Completed!');
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 response.end();
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -175,11 +154,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 &lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
 
-<<<<<<< HEAD
 &lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
-=======
-&lt;pre&gt;&lt;code&gt;response.write('Request Completed!');
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 response.end();
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -208,11 +183,7 @@ server.on(&amp;lsquo;request&amp;rsquo;, function(request, response) {
 
 &lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
 
-<<<<<<< HEAD
 &lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
-=======
-&lt;pre&gt;&lt;code&gt;response.write('Request Completed!');
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 response.end();
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -232,15 +203,9 @@ response.end();
   
   <entry>
     <title type="html"><![CDATA[Node.js: Streams and pipes.]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes"/>
     <updated>2013-06-23T00:27:26+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes"/>
-    <updated>2013-06-23T00:27:26+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
 
 <p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
@@ -256,19 +221,11 @@ response.end();
 
 &lt;p&gt;  server.on(&amp;lsquo;request&amp;rsquo;, function(request, response) {&lt;/p&gt;
 
-<<<<<<< HEAD
 &lt;pre&gt;&lt;code&gt;var file = fs.createWriteStream(&#39;copy.csv&#39;);
 var fileSize = request.headers[&#39;content-length&#39;];
 var uploadedSize = 0;
 
 request.on(&#39;data&#39;, function (chunk) {
-=======
-&lt;pre&gt;&lt;code&gt;var file = fs.createWriteStream('copy.csv');
-var fileSize = request.headers['content-length'];
-var uploadedSize = 0;
-
-request.on('data', function (chunk) {
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
   uploadedSize += chunk.length;
   uploadProgress = (uploadedSize/fileSize) * 100;
   response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
@@ -277,21 +234,12 @@ request.on('data', function (chunk) {
     request.pause();
 });
 
-<<<<<<< HEAD
 file.on(&#39;drain&#39;, function() {
   request.resume();
 })
 
 request.on(&#39;end&#39;, function() {
   response.write(&#39;Upload done!&#39;);
-=======
-file.on('drain', function() {
-  request.resume();
-})
-
-request.on('end', function() {
-  response.write('Upload done!');
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
   response.end();
 })
 &lt;/code&gt;&lt;/pre&gt;

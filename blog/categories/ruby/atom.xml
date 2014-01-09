@@ -2,17 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Ruby | Scribblings]]></title>
-<<<<<<< HEAD
   <link href="http://tech.sunilnkumar.com//github/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com//github/"/>
   <updated>2014-01-09T15:21:48+05:30</updated>
   <id>http://tech.sunilnkumar.com//github/</id>
-=======
-  <link href="http://sunilkumarn.github.io/technical/blog/categories/ruby/atom.xml" rel="self"/>
-  <link href="http://sunilkumarn.github.io/technical/"/>
-  <updated>2013-12-18T20:33:21+05:30</updated>
-  <id>http://sunilkumarn.github.io/technical/</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -22,15 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rails admin with authlogic]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic"/>
     <updated>2013-07-06T23:13:31+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2013/07/06/rails-admin-with-authlogic"/>
-    <updated>2013-07-06T23:13:31+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2013/07/06/rails-admin-with-authlogic</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>If you have used the rails_admin gem, you would have noticed that its tightly coupled with Devise. What happens if devise is not the pick and the application is already integrated with authlogic. Lets see,</p>
 
 <p>After installing the rails_admin gem, create a &lsquo;<strong>rails_admin.rb</strong>&rsquo; file in <strong>config/initializers</strong>. Paste the following code,</p>
@@ -73,15 +60,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Mercury: The WYSIWYG html editor]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor"/>
     <updated>2013-05-21T00:53:48+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2013/05/21/mercury-the-wysiwyg-html-editor"/>
-    <updated>2013-05-21T00:53:48+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2013/05/21/mercury-the-wysiwyg-html-editor</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
 
 <p>To get started off with mercury, add</p>
@@ -125,13 +106,8 @@ end
     &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, maximum-scale=1.0, initial-scale=1.0&quot;&amp;gt;
     &amp;lt;%= csrf_meta_tags %&amp;gt;
     &amp;lt;title&amp;gt;Mercury Editor&amp;lt;/title&amp;gt;
-<<<<<<< HEAD
     &amp;lt;%= stylesheet_link_tag &#39;mercury&#39; %&amp;gt;
     &amp;lt;%= javascript_include_tag &#39;jquery-1.7&#39;, &#39;mercury&#39; %&amp;gt;
-=======
-    &amp;lt;%= stylesheet_link_tag 'mercury' %&amp;gt;
-    &amp;lt;%= javascript_include_tag 'jquery-1.7', 'mercury' %&amp;gt;
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 &amp;lt;/head&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -176,11 +152,7 @@ In <code>pages.html.erb </code></p>
 &lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;control-group&quot;&amp;gt;
     &amp;lt;h3 class=&quot;section_header page-header&quot;&amp;gt;Pricing page&amp;lt;/h3&amp;gt;
     &amp;lt;div id=&quot;faq&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&amp;gt;
-<<<<<<< HEAD
         &amp;lt;%= render :file =&amp;gt; file_path(@domain &#39;faq&#39;) %&amp;gt;
-=======
-        &amp;lt;%= render :file =&amp;gt; file_path(@domain 'faq') %&amp;gt;
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     &amp;lt;/div&amp;gt;
 &amp;lt;/div&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -212,11 +184,7 @@ In <code>pages.html.erb </code></p>
 &lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;control-group&quot;&amp;gt;
     &amp;lt;h3 class=&quot;section_header page-header&quot;&amp;gt;Contact page&amp;lt;/h3&amp;gt;
     &amp;lt;div id=&quot;contact&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&amp;gt;
-<<<<<<< HEAD
         &amp;lt;%= render :file =&amp;gt; file_path(@domain, &#39;contact&#39;) %&amp;gt;
-=======
-        &amp;lt;%= render :file =&amp;gt; file_path(@domain, 'contact') %&amp;gt;
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     &amp;lt;/div&amp;gt;
 &amp;lt;/div&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -233,11 +201,7 @@ In <code>pages.html.erb </code></p>
   <pre><code class='ruby'>&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;
-<<<<<<< HEAD
     $(window).on(&#39;mercury:ready&#39;, function () {
-=======
-    $(window).on('mercury:ready', function () {
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
         Mercury.saveUrl = &quot;&amp;lt;%= pages_upload_admin_domain_path(@domain) %&amp;gt;&quot;;
     });
 &amp;lt;/script&amp;gt;
@@ -252,13 +216,8 @@ In <code>pages.html.erb </code></p>
 <p><div>
   <pre><code class='ruby'>&lt;/p&gt;
 
-<<<<<<< HEAD
 &lt;pre&gt;&lt;code&gt;$(window).bind(&#39;mercury:saved&#39;, function() {
     $(window.location.replace(&#39;/admin/domain&#39;));
-=======
-&lt;pre&gt;&lt;code&gt;$(window).bind('mercury:saved', function() {
-    $(window.location.replace('/admin/domain'));
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 });
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -301,15 +260,9 @@ In <code>pages.html.erb </code></p>
   
   <entry>
     <title type="html"><![CDATA[Delayed Jobs in Rails: Adding custom attributes]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
     <updated>2013-05-19T11:48:38+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
-    <updated>2013-05-19T11:48:38+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
 </a></p>
 
@@ -375,11 +328,7 @@ end
   <pre><code class='ruby'>&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;ActiveModel::MassAssignmentSecurity::Error:
-<<<<<<< HEAD
     Can&#39;t mass-assign protected attributes: job_owner_id, job_owner_type
-=======
-    Can't mass-assign protected attributes: job_owner_id, job_owner_type
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;</code></pre>
@@ -393,11 +342,7 @@ and paste in the following code</p>
   <pre><code class='ruby'>&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;class Delayed::Job &amp;lt; ActiveRecord::Base
-<<<<<<< HEAD
   self.attr_protected if self.to_s == &#39;Delayed::Backend::ActiveRecord::Job&#39;   #loads protected attributes for                                                                                        # ActiveRecord instance
-=======
-  self.attr_protected if self.to_s == 'Delayed::Backend::ActiveRecord::Job'   #loads protected attributes for                                                                                        # ActiveRecord instance
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 end
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -439,15 +384,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[RubyconfIndia 2011]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011"/>
     <updated>2011-07-04T23:48:37+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2011/07/04/ruby-conf-india-2011"/>
-    <updated>2011-07-04T23:48:37+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2011/07/04/ruby-conf-india-2011</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>May 27,28 &ndash; Attended Rubyconf India 2011 held at Royal Orchid hotel, Bangalore.&lsquo;  For some one who has less than a year of hands on with ruby, it was great hearing from the giants &ndash; the very Matz himself expressed his love for the community(in his own peculiar Japaneese way), Ola bini, Chad Fowler,  Brian and others. What in short ? &ndash; awesome 2 days.</p>
 
 <p><a href="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg" alt="" /></a></p>
@@ -464,15 +403,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Module functions as class and instance methods]]></title>
-<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com//github/2011/07/04/module-functions-as-class-and-instance-methods"/>
     <updated>2011-07-04T10:50:51+05:30</updated>
     <id>http://tech.sunilnkumar.com//github/2011/07/04/module-functions-as-class-and-instance-methods</id>
-=======
-    <link href="http://sunilkumarn.github.io/technical/2011/07/04/module-functions-as-class-and-instance-methods"/>
-    <updated>2011-07-04T10:50:51+05:30</updated>
-    <id>http://sunilkumarn.github.io/technical/2011/07/04/module-functions-as-class-and-instance-methods</id>
->>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <content type="html"><![CDATA[<p>Consider you have a module and a class.</p>
 
 <p>module Mymod and a class Myclass.</p>
