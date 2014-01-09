@@ -18,7 +18,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
+<<<<<<< HEAD
   <link rel="canonical" href="http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes">
+=======
+  <link rel="canonical" href="http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes">
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -50,7 +54,11 @@
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
+<<<<<<< HEAD
     <input type="hidden" name="q" value="site:tech.sunilnkumar.com//github" />
+=======
+    <input type="hidden" name="q" value="site:sunilkumarn.github.io/technical" />
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -99,20 +107,35 @@
 <p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
 
 <div>
+<<<<<<< HEAD
   <pre><code class='javascript'>var http = require(&#39;http&#39;),
   sys = require(&#39;sys&#39;),
   fs = require(&#39;fs&#39;);
+=======
+  <pre><code class='javascript'>var http = require('http'),
+  sys = require('sys'),
+  fs = require('fs');
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 
   var server = http.createServer();
   console.log(&quot;Starting up the server&quot;);
   server.listen(8000);
 
+<<<<<<< HEAD
   server.on(&#39;request&#39;, function(request, response) {
     var file = fs.createWriteStream(&#39;copy.csv&#39;);
     var fileSize = request.headers[&#39;content-length&#39;];
     var uploadedSize = 0;
 
     request.on(&#39;data&#39;, function (chunk) {
+=======
+  server.on('request', function(request, response) {
+    var file = fs.createWriteStream('copy.csv');
+    var fileSize = request.headers['content-length'];
+    var uploadedSize = 0;
+
+    request.on('data', function (chunk) {
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
       uploadedSize += chunk.length;
       uploadProgress = (uploadedSize/fileSize) * 100;
       response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
@@ -121,12 +144,21 @@
         request.pause();
     });
 
+<<<<<<< HEAD
     file.on(&#39;drain&#39;, function() {
       request.resume();
     })
 
     request.on(&#39;end&#39;, function() {
       response.write(&#39;Upload done!&#39;);
+=======
+    file.on('drain', function() {
+      request.resume();
+    })
+
+    request.on('end', function() {
+      response.write('Upload done!');
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
       response.end();
     })
 
@@ -141,14 +173,22 @@
 <p>A writeStream is created and &lsquo;copy.csv&rsquo; is the destination path to which the received data will be written.</p>
 
 <div>
+<<<<<<< HEAD
   <pre><code class='javascript'>var file = fs.createWriteStream(&#39;copy.csv&#39;);</code></pre>
+=======
+  <pre><code class='javascript'>var file = fs.createWriteStream('copy.csv');</code></pre>
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 </div>
 
 
 <p>The following piece forms the core of the upload process.</p>
 
 <div>
+<<<<<<< HEAD
   <pre><code class='javascript'>request.on(&#39;data&#39;, function (chunk) {
+=======
+  <pre><code class='javascript'>request.on('data', function (chunk) {
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     var bufferStore = file.write(chunk);
     if(bufferStore == false)
       request.pause();
@@ -157,7 +197,11 @@
     response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
   });
 
+<<<<<<< HEAD
   file.on(&#39;drain&#39;, function() {
+=======
+  file.on('drain', function() {
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     request.resume();
   })</code></pre>
 </div>
@@ -180,7 +224,11 @@
 <p>Also, we need to re-start streaming data from the read stream once the buffer is drained out. The following lines of code does just that.</p>
 
 <div>
+<<<<<<< HEAD
   <pre><code class='javascript'>file.on(&#39;drain&#39;, function() {
+=======
+  <pre><code class='javascript'>file.on('drain', function() {
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     request.resume();
   })</code></pre>
 </div>
@@ -198,13 +246,21 @@
 <p>would be equivalent to</p>
 
 <div>
+<<<<<<< HEAD
   <pre><code class='javascript'>request.on(&#39;data&#39;, function(chunk) {
+=======
+  <pre><code class='javascript'>request.on('data', function(chunk) {
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     var bufferStore = file.write(chunk);
     if(bufferStore == false)
       request.pause();
   })
 
+<<<<<<< HEAD
   file.on(&#39;drain&#39;, function() {
+=======
+  file.on('drain', function() {
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
     request.resume();
   })</code></pre>
 </div>
@@ -224,7 +280,11 @@
 <p>Do note that the actual size of the upload file is calculated from the request headers.</p>
 
 <div>
+<<<<<<< HEAD
   <pre><code class='javascript'>var fileSize = request.headers[&#39;content-length&#39;];</code></pre>
+=======
+  <pre><code class='javascript'>var fileSize = request.headers['content-length'];</code></pre>
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
 </div>
 
 
@@ -271,7 +331,11 @@
     
       <div class="sharing">
   
+<<<<<<< HEAD
   <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes" >Tweet</a>
+=======
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes" data-via="sunilkumar_g56" data-counturl="http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes" >Tweet</a>
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
   
   
   
@@ -368,7 +432,11 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
+<<<<<<< HEAD
   Copyright &copy; 2014 - Sunil Kumar -
+=======
+  Copyright &copy; 2013 - Sunil Kumar -
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
@@ -380,8 +448,13 @@
       
         
         // var disqus_developer = 1;
+<<<<<<< HEAD
         var disqus_identifier = 'http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes';
         var disqus_url = 'http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes';
+=======
+        var disqus_identifier = 'http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes';
+        var disqus_url = 'http://sunilkumarn.github.io/technical/2013/06/23/node-js-streams-and-pipes';
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
         var disqus_script = 'embed.js';
       
     (function () {

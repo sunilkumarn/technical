@@ -1,4 +1,8 @@
 User-agent: *
 Disallow: 
 
+<<<<<<< HEAD
 Sitemap: http://tech.sunilnkumar.com//github/sitemap.xml 
+=======
+Sitemap: http://sunilkumarn.github.io/technical/sitemap.xml 
+>>>>>>> 6390372dfede4dbcf5519e78ead9cc12c67c72ac
