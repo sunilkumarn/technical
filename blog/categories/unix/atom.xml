@@ -2,10 +2,17 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: UNIX | Scribblings]]></title>
+<<<<<<< HEAD
   <link href="http://tech.sunilnkumar.com/technical/blog/categories/unix/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/technical/"/>
   <updated>2014-01-09T16:51:13+05:30</updated>
   <id>http://tech.sunilnkumar.com/technical/</id>
+=======
+  <link href="http://tech.sunilnkumar.com//github/blog/categories/unix/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com//github/"/>
+  <updated>2014-01-09T16:45:09+05:30</updated>
+  <id>http://tech.sunilnkumar.com//github/</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -15,9 +22,15 @@
   
   <entry>
     <title type="html"><![CDATA[UNIX - Create new commands and pass arguments]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2010/08/12/creating-new-commands-and-passing-arguments-in-unix"/>
     <updated>2010-08-12T01:20:44+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2010/08/12/creating-new-commands-and-passing-arguments-in-unix</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2010/08/12/creating-new-commands-and-passing-arguments-in-unix"/>
+    <updated>2010-08-12T01:20:44+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/08/12/creating-new-commands-and-passing-arguments-in-unix</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>When a particular sequence of commands is repeated time after ,it might be better if we create a shorter command of our own. These command creation mentioned may not be suitable for public use but would be helpful for private use.</p>
 
 <p>Consider suppose that we intend to count the number of users quite frequently:
@@ -78,9 +91,15 @@ This would solve the problem.</p>
   
   <entry>
     <title type="html"><![CDATA[Files in the Unix file system and their permissions... ]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2010/08/04/files-in-the-unix-file-system-and-their-permissions"/>
     <updated>2010-08-04T12:05:42+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2010/08/04/files-in-the-unix-file-system-and-their-permissions</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2010/08/04/files-in-the-unix-file-system-and-their-permissions"/>
+    <updated>2010-08-04T12:05:42+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/08/04/files-in-the-unix-file-system-and-their-permissions</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>A file is a sequence of characters. A few commands and knowledge that may help in dealing with files and directories in UNIX are the following.
 The &lsquo;ls&rsquo; commands and its variations :
 The &lsquo;du&rsquo; command and its variations
@@ -129,9 +148,15 @@ The command &lsquo;mv filename1 filenname2&hellip;&hellip; destination directory
   
   <entry>
     <title type="html"><![CDATA[A few basic commands in Linux]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2010/07/30/a-few-basic-commands-in-linux"/>
     <updated>2010-07-30T16:27:38+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2010/07/30/a-few-basic-commands-in-linux</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2010/07/30/a-few-basic-commands-in-linux"/>
+    <updated>2010-07-30T16:27:38+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/07/30/a-few-basic-commands-in-linux</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>The common  file system commands that would make a beginner get started with linux are the following:</p>
 
 <p><strong>ls</strong>:command that lists all the files in the current directory
@@ -171,9 +196,15 @@ You would get back the &lsquo;current directory&rsquo;
   
   <entry>
     <title type="html"><![CDATA[The shell-Basic facilities offered]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2010/07/30/the-shell-basic-facilities-offered"/>
     <updated>2010-07-30T16:26:41+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2010/07/30/the-shell-basic-facilities-offered</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2010/07/30/the-shell-basic-facilities-offered"/>
+    <updated>2010-07-30T16:26:41+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/07/30/the-shell-basic-facilities-offered</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>Shell -the command interpreter.
 There are many basic facilities offered by the shell.They include</p>
 

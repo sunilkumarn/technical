@@ -2,10 +2,17 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Ruby | Scribblings]]></title>
+<<<<<<< HEAD
   <link href="http://tech.sunilnkumar.com/technical/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/technical/"/>
   <updated>2014-01-09T16:51:13+05:30</updated>
   <id>http://tech.sunilnkumar.com/technical/</id>
+=======
+  <link href="http://tech.sunilnkumar.com//github/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com//github/"/>
+  <updated>2014-01-09T16:45:09+05:30</updated>
+  <id>http://tech.sunilnkumar.com//github/</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -15,9 +22,15 @@
   
   <entry>
     <title type="html"><![CDATA[Rails admin with authlogic]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2013/07/06/rails-admin-with-authlogic"/>
     <updated>2013-07-06T23:13:31+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2013/07/06/rails-admin-with-authlogic</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic"/>
+    <updated>2013-07-06T23:13:31+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>If you have used the rails_admin gem, you would have noticed that its tightly coupled with Devise. What happens if devise is not the pick and the application is already integrated with authlogic. Lets see,</p>
 
 <p>After installing the rails_admin gem, create a &lsquo;<strong>rails_admin.rb</strong>&rsquo; file in <strong>config/initializers</strong>. Paste the following code,</p>
@@ -60,9 +73,15 @@ end
   
   <entry>
     <title type="html"><![CDATA[Mercury: The WYSIWYG html editor]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2013/05/21/mercury-the-wysiwyg-html-editor"/>
     <updated>2013-05-21T00:53:48+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2013/05/21/mercury-the-wysiwyg-html-editor</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor"/>
+    <updated>2013-05-21T00:53:48+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
 
 <p>To get started off with mercury, add</p>
@@ -260,9 +279,15 @@ In <code>pages.html.erb </code></p>
   
   <entry>
     <title type="html"><![CDATA[Delayed Jobs in Rails: Adding custom attributes]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
     <updated>2013-05-19T11:48:38+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
+    <updated>2013-05-19T11:48:38+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
 </a></p>
 
@@ -384,9 +409,15 @@ end
   
   <entry>
     <title type="html"><![CDATA[RubyconfIndia 2011]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2011/07/04/ruby-conf-india-2011"/>
     <updated>2011-07-04T23:48:37+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2011/07/04/ruby-conf-india-2011</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011"/>
+    <updated>2011-07-04T23:48:37+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>May 27,28 &ndash; Attended Rubyconf India 2011 held at Royal Orchid hotel, Bangalore.&lsquo;  For some one who has less than a year of hands on with ruby, it was great hearing from the giants &ndash; the very Matz himself expressed his love for the community(in his own peculiar Japaneese way), Ola bini, Chad Fowler,  Brian and others. What in short ? &ndash; awesome 2 days.</p>
 
 <p><a href="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg" alt="" /></a></p>
@@ -403,9 +434,15 @@ end
   
   <entry>
     <title type="html"><![CDATA[Module functions as class and instance methods]]></title>
+<<<<<<< HEAD
     <link href="http://tech.sunilnkumar.com/technical/2011/07/04/module-functions-as-class-and-instance-methods"/>
     <updated>2011-07-04T10:50:51+05:30</updated>
     <id>http://tech.sunilnkumar.com/technical/2011/07/04/module-functions-as-class-and-instance-methods</id>
+=======
+    <link href="http://tech.sunilnkumar.com//github/2011/07/04/module-functions-as-class-and-instance-methods"/>
+    <updated>2011-07-04T10:50:51+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2011/07/04/module-functions-as-class-and-instance-methods</id>
+>>>>>>> 6801b2e37ab446353609ba0924d076e1aef8298d
     <content type="html"><![CDATA[<p>Consider you have a module and a class.</p>
 
 <p>module Mymod and a class Myclass.</p>
