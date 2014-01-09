@@ -1,104 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Scribblings</title>
-  <meta name="author" content="Sunil Kumar">
-
-  
-  <meta name="description" content="Currently, I develop a Rails app with mongodb as the database.
-When I decided to deploy this in heroku, as per the heroku dev doc, I was asked to &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://tech.sunilnkumar.com//github">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
-  
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Scribblings</a></h1>
-  
-    <h2>Scribbling down experiences.</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:tech.sunilnkumar.com//github" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/about">About</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
+  <title><![CDATA[Scribblings]]></title>
+  <link href="http://tech.sunilnkumar.com//github/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com//github/"/>
+  <updated>2014-01-09T15:21:48+05:30</updated>
+  <id>http://tech.sunilnkumar.com//github/</id>
+  <author>
+    <name><![CDATA[Sunil Kumar]]></name>
     
-      <h1 class="entry-title"><a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-
-
-<time datetime="2013-12-18T19:01:00+05:30" pubdate data-updated="true">Dec 18<span>th</span>, 2013</time>
-        
-         | <a href="/2013/12/18/heroku-deployment-with-mongodb-database#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Currently, I develop a Rails app with <a href="http://www.mongodb.org/">mongodb</a> as the database.
+  <entry>
+    <title type="html"><![CDATA[Heroku deployment with MongoDB database]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2013/12/18/heroku-deployment-with-mongodb-database"/>
+    <updated>2013-12-18T19:01:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/12/18/heroku-deployment-with-mongodb-database</id>
+    <content type="html"><![CDATA[<p>Currently, I develop a Rails app with <a href="http://www.mongodb.org/">mongodb</a> as the database.
 When I decided to deploy this in heroku, as per the heroku dev doc, I was asked to simply install the MongoHQ Add-on, and specify the plan that I desire.</p>
 
 <p>So, supposedly all I had to do was this,</p>
@@ -151,44 +71,15 @@ On creating a new database, MongoHQ provides us with a mongo console and mongo u
 
 <p>Be sure to replace the username and password while adding.
 Thats it, Mongodb hosted in MongoHQ should be now available for use in the application.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-01T13:32:26+05:30" pubdate data-updated="true">Sep 1<span>st</span>, 2013</time>
-        
-         | <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Migrating from Wordpress to <a href="http://jekyllrb.com/">Jekyll</a> is not at all a fussy process. Here, I will state down the 10 steps on how I moved my blog from Wordpress to github pages using jekyll.  It would be really good if you could just have a walk through jekyll&rsquo;s home pages to get an idea of the prerequisities and workings.</p>
+  <entry>
+    <title type="html"><![CDATA[Migrating from Wordpress to Jekyll in ten steps]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps"/>
+    <updated>2013-09-01T13:32:26+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps</id>
+    <content type="html"><![CDATA[<p>Migrating from Wordpress to <a href="http://jekyllrb.com/">Jekyll</a> is not at all a fussy process. Here, I will state down the 10 steps on how I moved my blog from Wordpress to github pages using jekyll.  It would be really good if you could just have a walk through jekyll&rsquo;s home pages to get an idea of the prerequisities and workings.</p>
 
 <p>1) Export your blog from Wordpress and download the exported xml thats generated by Wordpress. Use xmllint for xml validation and correct any errors that might be there.</p>
 
@@ -255,44 +146,15 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>The source of my website can be found <a href="https://github.com/sunilkumarn/sunilkumarn.github.io">here</a></p>
 
 <p>Happy migrating :)</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-07T13:32:26+05:30" pubdate data-updated="true">Jul 7<span>th</span>, 2013</time>
-        
-         | <a href="/2013/07/07/node-js-event-emitters-and-listeners#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
+  <entry>
+    <title type="html"><![CDATA[Node.js: Event Emitters and Listeners]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners"/>
+    <updated>2013-07-07T13:32:26+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners</id>
+    <content type="html"><![CDATA[<p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
 
 <div>
   <pre><code class='javascript'>$(&#39;#toBeClicked&#39;).on(&#39;click&#39;, function() { alert(&#39;clicked&#39;) })</code></pre>
@@ -443,44 +305,15 @@ server.on(&#39;request&#39;, function(request, response) {
 
 
 
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-06T23:13:31+05:30" pubdate data-updated="true">Jul 6<span>th</span>, 2013</time>
-        
-         | <a href="/2013/07/06/rails-admin-with-authlogic#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>If you have used the rails_admin gem, you would have noticed that its tightly coupled with Devise. What happens if devise is not the pick and the application is already integrated with authlogic. Lets see,</p>
+  <entry>
+    <title type="html"><![CDATA[Rails admin with authlogic]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic"/>
+    <updated>2013-07-06T23:13:31+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic</id>
+    <content type="html"><![CDATA[<p>If you have used the rails_admin gem, you would have noticed that its tightly coupled with Devise. What happens if devise is not the pick and the application is already integrated with authlogic. Lets see,</p>
 
 <p>After installing the rails_admin gem, create a &lsquo;<strong>rails_admin.rb</strong>&rsquo; file in <strong>config/initializers</strong>. Paste the following code,</p>
 
@@ -511,44 +344,15 @@ server.on(&#39;request&#39;, function(request, response) {
 
 
 <p>This should enable the admin to run at /admin, now authenticated and authorized using authlogic.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-28T14:36:11+05:30" pubdate data-updated="true">Jun 28<span>th</span>, 2013</time>
-        
-         | <a href="/2013/06/28/prototypal-inheritance-in-javascript#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When I decided to get my hands on Javascript, the biggest road block for me was to understand and follow the prototypal inheritance model in Javascript. Coming from a Ruby background, the inheritance model I learned and understood was the classical one. The prototypal model had fundamental differences and did run me nuts at times. Here I try to make some note of what its all about going along a few snippets.</p>
+  <entry>
+    <title type="html"><![CDATA[Prototypal Inheritance in Javascript]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2013/06/28/prototypal-inheritance-in-javascript"/>
+    <updated>2013-06-28T14:36:11+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/06/28/prototypal-inheritance-in-javascript</id>
+    <content type="html"><![CDATA[<p>When I decided to get my hands on Javascript, the biggest road block for me was to understand and follow the prototypal inheritance model in Javascript. Coming from a Ruby background, the inheritance model I learned and understood was the classical one. The prototypal model had fundamental differences and did run me nuts at times. Here I try to make some note of what its all about going along a few snippets.</p>
 
 <p><strong>What exactly is a prototype?</strong>
 As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object’s prototype is a reference to another object from which properties are inherited. Every JavaScript object has a second JavaScript object (or null, but this is rare) associated with it. This second object is known as a prototype, and the first object inherits properties from the prototype.</p>
@@ -828,44 +632,15 @@ s2.stream()
 
 
 
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-23T00:27:26+05:30" pubdate data-updated="true">Jun 23<span>rd</span>, 2013</time>
-        
-         | <a href="/2013/06/23/node-js-streams-and-pipes#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
+  <entry>
+    <title type="html"><![CDATA[Node.js: Streams and pipes.]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes"/>
+    <updated>2013-06-23T00:27:26+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes</id>
+    <content type="html"><![CDATA[<p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
 
 <p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
 
@@ -1006,44 +781,15 @@ s2.stream()
 <p><code>curl -v --upload-file "upload_file.csv" "http://localhost:8000"</code></p>
 
 <p>and the upload progress could be tracked.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-21T00:53:48+05:30" pubdate data-updated="true">May 21<span>st</span>, 2013</time>
-        
-         | <a href="/2013/05/21/mercury-the-wysiwyg-html-editor#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
+  <entry>
+    <title type="html"><![CDATA[Mercury: The WYSIWYG html editor]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor"/>
+    <updated>2013-05-21T00:53:48+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor</id>
+    <content type="html"><![CDATA[<p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
 
 <p>To get started off with mercury, add</p>
 
@@ -1198,44 +944,15 @@ In <code>pages.html.erb </code></p>
 <p><em><em>I created a pages directory in my public. Within the pages directory I created sub directories which corresponds to the domain. </em><strong>For eg, the domain localhost corresponds to the directory named localhost inside the public/pages directory and the domain remotehost corresponds to the remotehost directory</strong></em>.</p>
 
 <p>I then saved all these edited html content as html files within these domain specific directories. When a particular domain was loaded, the html pages ( for eg, faq and contact) was rendered from the corresponding domain directories in the public folder .</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-19T11:48:38+05:30" pubdate data-updated="true">May 19<span>th</span>, 2013</time>
-        
-         | <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
+  <entry>
+    <title type="html"><![CDATA[Delayed Jobs in Rails: Adding custom attributes]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
+    <updated>2013-05-19T11:48:38+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
+    <content type="html"><![CDATA[<p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
 </a></p>
 
 <div>
@@ -1328,44 +1045,15 @@ and paste in the following code</p>
 
 
 
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-18T14:13:37+05:30" pubdate data-updated="true">Dec 18<span>th</span>, 2011</time>
-        
-         | <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p style="text-align: left;">As a developer, I find <a title="Git" href="http://git-scm.com/" target="_blank">Git</a> both powerful and amazing. It tracks changes to source code and enables collaboration between developers. This post shows you how to easily fix wrong commits that are commonly made in development.</p>
+  <entry>
+    <title type="html"><![CDATA[Git Reset, Revert, Merge Conflicts and the Faulty Merge]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts"/>
+    <updated>2011-12-18T14:13:37+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts</id>
+    <content type="html"><![CDATA[<p style="text-align: left;">As a developer, I find <a title="Git" href="http://git-scm.com/" target="_blank">Git</a> both powerful and amazing. It tracks changes to source code and enables collaboration between developers. This post shows you how to easily fix wrong commits that are commonly made in development.</p>
 
 
 <h1><strong><span style="color: #000000;">Remove uncommitted changes</span></strong></h1>
@@ -1575,44 +1263,15 @@ and paste in the following code</p>
 
 
 
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-07-12T19:05:52+05:30" pubdate data-updated="true">Jul 12<span>th</span>, 2011</time>
-        
-         | <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ohhh &hellip; Suddenly my wifi goes off( a combination of DELL with Ubuntu natty) and got a display &ndash; <strong>wireless disabled by hardware switch</strong>. Got down to googling and finally got this.</p>
+  <entry>
+    <title type="html"><![CDATA[Solution to 'Wireless disabled by Hardware switch']]></title>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/12/solution-to-wireless-disabled-by-hardware-switch"/>
+    <updated>2011-07-12T19:05:52+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2011/07/12/solution-to-wireless-disabled-by-hardware-switch</id>
+    <content type="html"><![CDATA[<p>Ohhh &hellip; Suddenly my wifi goes off( a combination of DELL with Ubuntu natty) and got a display &ndash; <strong>wireless disabled by hardware switch</strong>. Got down to googling and finally got this.</p>
 
 <p>To get back your wifi to start working, type in the following:</p>
 
@@ -1644,142 +1303,563 @@ and paste in the following code</p>
 <p><strong>$: sudo /etc/init.d/networking restart</strong></p>
 
 <p>and yup! the wifi should be back now.</p>
-</div>
+]]></content>
+  </entry>
   
+  <entry>
+    <title type="html"><![CDATA[RubyconfIndia 2011]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011"/>
+    <updated>2011-07-04T23:48:37+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011</id>
+    <content type="html"><![CDATA[<p>May 27,28 &ndash; Attended Rubyconf India 2011 held at Royal Orchid hotel, Bangalore.&lsquo;  For some one who has less than a year of hands on with ruby, it was great hearing from the giants &ndash; the very Matz himself expressed his love for the community(in his own peculiar Japaneese way), Ola bini, Chad Fowler,  Brian and others. What in short ? &ndash; awesome 2 days.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700228850841_100001325964091_431985_2535899_n1.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700228850841_100001325964091_431985_2535899_n1.jpg" alt="" /></a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700228850841_100001325964091_431985_2535899_n1.jpg">
+</a></p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg">
+</a><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg" alt="" /></a></p>
+]]></content>
+  </entry>
   
+  <entry>
+    <title type="html"><![CDATA[Module functions as class and instance methods]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/04/module-functions-as-class-and-instance-methods"/>
+    <updated>2011-07-04T10:50:51+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2011/07/04/module-functions-as-class-and-instance-methods</id>
+    <content type="html"><![CDATA[<p>Consider you have a module and a class.</p>
 
+<p>module Mymod and a class Myclass.</p>
 
-    </article>
+<p>The situation in hand is such that certain functions in the module need to end up being instance methods of the class Myclass and certain functions need to be Class methods.  You could very well imagine of such situations. Consider you are using ActiveRecord and have a sub class <strong>Subscription</strong> in correspondence with a DB table. You want to insert logic, within the module, that would work in each of the following case.</p>
+
+<p>1) When a subscription fails or succeeds.</p>
+
+<p>2) When an unsubscription fails or succeeds</p>
+
+<p>You do this.</p>
+
+<p><em>module SubscriptionLogic</em></p>
+
+<p><em>   def  after_sub</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>   end</em></p>
+
+<p><em>   def  after_unsub</em></p>
+
+<p><em>     &hellip;.</em></p>
+
+<p><em>   end</em></p>
+
+<p><em>   def  after_sub_fail</em></p>
+
+<p><em>     &hellip;.</em></p>
+
+<p><em>   end</em></p>
+
+<p><em>   def  after_unsub_fail</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>    end</em></p>
+
+<p><em>end</em></p>
+
+<p><em>class Subscription</em></p>
+
+<p><em>   include SubscriptionLogic</em></p>
+
+<p><em>   &hellip;..</em></p>
+
+<p><em>end</em></p>
+
+<p>You insert the logic as functions of a module, say <strong>SubscriptionLogic</strong>. Ideally you want the methods containing the logic to be instance methods of the class Subscription. You include the module SubscriptionLogic in the class and you avail all the functions in the module as Instance methods. Now you consider the case when an unsubscription fails &ndash; i.e, there is no existing subscription so that an unsub could take place.  No way is it possible that you could have a function &lsquo;logic_after_unsub_fail&#8217;  in the module SubscriptionLogic and use it as an instance method, <em><strong>simply because there is no instance available</strong></em>.  You think and decide to use the function as your class method, but you have &rsquo;<strong>include</strong>d&#8217;  the  module in your class and hence its not possible to use it as your class method. You cannot <strong>extend</strong> the entire module coz , ideally you want the logic to be instance methods.</p>
+
+<p>So you could get this solved up by a simple piece of extra coding.</p>
+
+<p>_module SubscriptionLogic _</p>
+
+<p><em>  def  after_sub</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>  end</em></p>
+
+<p><em>  def  after_unsub</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>  end</em></p>
+
+<p><em>  def  after_sub_fail</em></p>
+
+<p><em>      &hellip;.</em></p>
+
+<p><em>  end</em></p>
+
+<p><em>  module ClassMethods</em></p>
+
+<p><em>      def after_unsub_fail</em></p>
+
+<p><em>           &hellip;.</em></p>
+
+<p><em>      end</em></p>
+
+<p><em>      def self.included(base)</em></p>
+
+<p>_          base.extend(ClassMethods)    # base pertains to the class within which you include the module. _</p>
+
+<p><em>      end</em></p>
+
+<p><em>   end</em></p>
+
+<p><em>end</em></p>
+
+<p>Now within the class insert this line.</p>
+
+<p>_class Subscription _</p>
+
+<p>_   include SubscriptionLogic _</p>
+
+<p><strong><em>   extend SubscriptionLogic::ClassMethods</em></strong></p>
+
+<p><em>   &hellip;..</em></p>
+
+<p><em>end</em></p>
+]]></content>
+  </entry>
   
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
+  <entry>
+    <title type="html"><![CDATA[Back after a Long Gap...]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/03/back-after-a-long-gap"/>
+    <updated>2011-07-03T15:26:25+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2011/07/03/back-after-a-long-gap</id>
+    <content type="html"><![CDATA[<p>Haven&rsquo;t Written any thing for  quite some time now. It was last november that i actually sat down to write something. Started off my professional career then and obviously was busy with work and stuff. Need to get back to writing stuff, little and bigger stuffs that i have learnt while working. In between i have fallen in love with a a new language &ndash; Ruby, the popular choice for web apps these days.  From a person who never had any kind of fondness for OOP, i have started loving to talk about about objects and classes. Learnt the difference between fun coding and professional coding. These 6-8 months has really been a learning curve for me and i really do hope that my following posts would reflect that.</p>
+]]></content>
+  </entry>
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps">Migrating From Wordpress to Jekyll in Ten Steps</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/07/node-js-event-emitters-and-listeners">Node.js: Event Emitters and Listeners</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a>
-      </li>
-    
-  </ul>
-</section>
+  <entry>
+    <title type="html"><![CDATA[Getting started with PHP and apache]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2010/11/27/getting-started-with-php-and-apache"/>
+    <updated>2010-11-27T14:44:10+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/11/27/getting-started-with-php-and-apache</id>
+    <content type="html"><![CDATA[<p>Someone who gives it a thought of using PHP , apache and stuff for the first time will be faced up with a few number of fixed problems . Configuring your apache server , establishing a connection between PHP and apache , stuffs like that . Here is a basic introduction to start using these things and kick off as a web programmer .</p>
 
+<p>Obviously you need to have PHP and apache installed on your system .</p>
 
+<p><strong>$ : sudo apt-get install apache2</strong></p>
 
+<p><strong>$ : sudo apt-get install php5-cli</strong></p>
 
-<section class="googleplus">
+<p><strong>$: sudo apt-get install libapache2-mod-php5</strong></p>
 
-<h1>
-  <a href="http://github.com/sunilkumarn/"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/github_zpse87fc53d.jpg" width="40" height="40"></a>
-  &nbsp; &nbsp;
-  <a href="http://twitter.com/sunilkumar_g56"><img src="http://i835.photobucket.com/albums/zz277/sunilkumargec56/twitter_zps447bd274.jpg" width="40" height="40"></a>
-</h1>
+<p>would get you apache and PHP installed on your system  .</p>
 
-</section>
+<p>Using the appropriate versions is left upto individuals .</p>
 
+<p>Just have a peep into some of the files like :</p>
 
+<p><em>/etc/php5/apache2/php.ini</em> &mdash;&mdash;&ndash;> You would see a lot of variables set to &lsquo;ON&rsquo;  and &lsquo;OFF&rsquo; . You may well have to toggle those values as and when necessary .</p>
 
+<p>Try starting , stopping and restarting your apache web server .</p>
+
+<p><strong>$ :sudo  /etc/init.d/apache2 start</strong></p>
+
+<p><strong>$: sudo /etc/init.d/apache2 stop</strong></p>
+
+<p><strong>$: sudo /etc/init.d/apache2  restart</strong></p>
+
+<p>Once everything is fine and and perfect  , try out your first PHP script . Script it , save it in a file with a &lsquo;.php&rsquo; extension and put your file in the directory &lsquo;/var/www &rsquo;. Now you could access this script from your browser</p>
+
+<p><strong>localhost/&lsquo;scriptname&rsquo;</strong></p>
+
+<p>and you see the result right there in front of you . Thats just how you enter the world of web programming .</p>
+]]></content>
+  </entry>
   
-</aside>
+  <entry>
+    <title type="html"><![CDATA[GreaseMonkey : Customizing your webpages ]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2010/11/24/greasemonkey-customizing-your-webpages"/>
+    <updated>2010-11-24T22:04:29+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/11/24/greasemonkey-customizing-your-webpages</id>
+    <content type="html"><![CDATA[<p>There would have been times when you would have felt if the web page in front of you behaved a bit more according to your like . This might specially happen if the page consists of forms that you fill with data directed to live servers .  In such cases you wouldn&rsquo;t mind customizing the page to suit your needs so that you don&rsquo;t do some nonsense that would result in chaos .</p>
 
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Sunil Kumar -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
+<p>Firefox , i see many using it as their default browser , offers a plugin called &lsquo;<strong>Grease monkey</strong>&#8216;  that allows you to do just that . All you need to is to install the plugin , write your own javascripts , install them ( thats pretty easy to do ) and start using them  .</p>
 
-</footer>
+<p>Write your javascripts to customize your webpage . What you need to do in addition is to add some <strong>metadata</strong> providing extra information to greasemonkey .</p>
+
+<p>The meta data might look as follows :</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/11/untitled-1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/11/untitled-1.png?w=300" alt="" /></a></p>
+
+<p>The first and the last lines are necessary to indicate to the greasemonkey that the script it to be processed by it .</p>
+
+<p>The <strong>name and the description are optional</strong> . It might prove helpful to you if you have scripted and installed a number of greasemonkey scripts .</p>
+
+<p>The 4th an the 5th line of the metadata are extremely important and needs to be well understood . <strong>These lines tell the greasemonkey the URLs on which the script is to be applied and not to be applied </strong>.</p>
+
+<p><strong>@include</strong> &ndash;> specifies the URLs on which the script is to be installed . Here &lsquo;*&rsquo; is specified which is just a wildcard and indicates that the script is to applied on all the sites  .</p>
+
+<p><strong>@exclude</strong> &ndash;> specifies the URLs that are to be left out . It is to be noted that @exclude is processed before @include .</p>
+
+<p>This gives you an idea of the metadata part of the script . Now you may write your own javascript , add your metadata at the beginning and save the file with the extension &lsquo; <strong>.user.js </strong>&#8216;  .</p>
+
+<p>To install the script , open the file in firefox and you would see an option &lsquo;install&rsquo; . Just give a click and you are ready to use your greasemonkey script .You could manage your script , disable it , uninstall it as well . Just click</p>
+
+<p><em>Tools &mdash;&mdash;> Greasemonkey &mdash;&mdash;> Manage user scripts &hellip;.</em></p>
+
+<p>Having another plugin &lsquo;<strong>firebug&rsquo;</strong> may help you in the process of writing the script . This allows you to view the html code of the webpage that is infront of you . Infact the plugin is almost a necessity to help you write efficient code with greasemonkey .</p>
+
+<p>Now you may start writing your own greasemonkey scripts and customize any of the webpages as and according to your like . It&rsquo;s also to be understood that greasemonkey is a plugin of firefox . If you use Google chrome as your browser , you wouldn&rsquo;t need to install any plugin . The facility to customize the webpage is provided by default . You may use the same code that you have written to work with greasemonkey . The metadata and the process of installing is the same and obviously the results are the same as well .</p>
+]]></content>
+  </entry>
   
+  <entry>
+    <title type="html"><![CDATA[Using Screens]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2010/11/24/using-screens"/>
+    <updated>2010-11-24T20:43:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/11/24/using-screens</id>
+    <content type="html"><![CDATA[<p>You might have often had the experience where you would have had to open quite a few terminals on your screen simultaneously . This might often be the case when you are doing stuffs like data processing on particular files and you intend not to sit idle during that particular time . What you do is to keep unnecessary number of terminals open on your screen .</p>
 
-<script type="text/javascript">
-      var disqus_shortname = 'techscribblings';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
+<p>You could get rid of this by using the &lsquo;screens&rsquo; option in Linux . This allows you to enter a new screen where you could perform time consuming processes like a data processing operation using the  &lsquo;awk&#8217;  command . Start the process in the screen , exit the screen and now do your own stuff in the main console , go back to your screen after a while and view the results of  whatever operations you had performed . You could do all this stuff without the necessity of opening terminals again and again .</p>
 
+<p>Create a new Screen :</p>
 
+<p><strong>$ : screen -S &lsquo;Screen name&rsquo; </strong></p>
 
+<p>To detach from the current screen :</p>
 
+<p>Use<strong> CTRL + a + d</strong></p>
 
+<p>To terminate a screen :</p>
 
+<p>Use <strong>CTRL + d</strong></p>
 
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
+<p>To attach an already created screen :</p>
 
+<p><strong>$ : screen -x &lsquo;screen name&rsquo;</strong></p>
 
+<p>You could keep on creating screens within screens and keep going on as and when needed  .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Semaphores and Synchronization Patterns]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2010/10/26/semaphores-and-synchronization-patterns"/>
+    <updated>2010-10-26T09:20:46+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/10/26/semaphores-and-synchronization-patterns</id>
+    <content type="html"><![CDATA[<p>Semaphores as we know is a mechanism that is used to solve the issue of synchronization . The concept and use of semaphores is a bit more than what you normally call &lsquo; tricky &rsquo; .Here we try and analyze a basic synchronization pattern and solve the issue with semaphores  .</p>
 
+<p>Have a look into the pattern given below .</p>
 
+<p>statements in THREAD A</p>
 
+<p>strcpy(a , &ldquo;Hello &rdquo;);   -  A1
+printf(&ldquo;%s\n&rdquo; ,b);      -    B2</p>
 
+<p>statements in THREAD B</p>
 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<p>strcpy(b , &ldquo;World&rdquo;)  &ndash; B1
+printf(&ldquo;%s\n&rdquo; ,a);    -  A2</p>
 
-    ga('create', 'UA-44991607-1', 'sunilnkumar.com');
-    ga('send', 'pageview');
-  </script>
-</body>
+<p>Here we have two threads which consists of two statements each .
+<strong>Constraint :</strong>
+What we need to ensure is that the statements suffixed A1 &amp; B1 are executed before the statements suffixed A2 &amp; B2  execute. Here the two threads &lsquo;rendezvous &rsquo; at a point of execution and is not allowed to proceed until both have arrived .</p>
 
-</html>
+<p>Without using a mechanism like semaphore , no way is it possible to ensure such a constraint due to the scheduling mechanism that cannot be predicted . Hence we use semaphores to solve this issue .</p>
+
+<p>To ensure that it works according to wish  , we do this  :</p>
+
+<p>THREAD A</p>
+
+<p>strcpy(a , &ldquo;Hello &rdquo;);  &ndash; A1
+up(sem1);
+down(sem2);
+printf(&ldquo;%s\n&rdquo; ,b);   &ndash; B2</p>
+
+<p>THREAD B</p>
+
+<p>strcpy(b , &ldquo;World&rdquo;);  &ndash; B1
+up(sem2);
+down(sem1);
+printf(&ldquo;%s\n&rdquo; ,a);   &ndash; A1</p>
+
+<p>Now we need to give a thought on how this works .
+Here we have two semaphores ,sem1 and sem2 as we have two critical sections</p>
+
+<p>Now , how is the synchronization issue solved  .?
+The &lsquo;<strong>down</strong> &rsquo; operation just before the two statements suffixed &lsquo;2&rsquo; ensures that the two statements are not executed until the &lsquo;<strong>up&rsquo;</strong> operation on the corresponding semaphore is not invoked . Hence whichever be the order of scheduling , both the threads rendezvous at a point  and will not proceed ( as a result of the &lsquo;down&rsquo; operation  )until the next thread arrives (and the corresponding &lsquo;up&rsquo; operation is performed ).</p>
+
+<p>This synchronization pattern as been solved using semaphores .</p>
+
+<p>You could find the solution to these and more such patterns from <a href="http://github.com/sunilkumarn/Synchroniation_patterns">here</a> .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Memcheck : A Memory Error Detection Tool]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2010/10/21/memcheck-a-memory-error-detection-tool"/>
+    <updated>2010-10-21T09:13:49+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/10/21/memcheck-a-memory-error-detection-tool</id>
+    <content type="html"><![CDATA[<p>Linux distros provide a  tool suite called <strong>&lsquo;Valgrind&rsquo;</strong> that consists of a number of tools that help you make your programs faster and more correct . The most popular tool out of this is called is <strong>memcheck</strong> that is used to detect memory related errors in C and C++ programs that can lead to serious issues like  segfaults and even more grevious issues like unpredictable behaviours .</p>
+
+<p>Lets take a look into how we use the tool &lsquo;memcheck&rsquo; so that we detect , try and avoid the memory related issues in our program.</p>
+
+<p>First of all we need to create a memory leak so that we have something to detect .</p>
+
+<p>We write a program that consists of a memory leak . Here is one such in a file &lsquo; pgm.c&rsquo;</p>
+
+<p><code>1 #include &lt;stdlib.h&gt;
+2 #include &lt;string.h&gt;
+3 void f(char *s)
+4 {
+5 char *x = malloc(strlen(s));
+6 x[7] = 0;
+7 }</code></p>
+
+<p><code>8 int  main()
+9 {
+10 char *s="Hello";
+11 f(s);
+12 }</code></p>
+
+<p>As you could see , there are two major memory related bugs in this code:</p>
+
+<p>1) Trying to write in the location x[7] which is out of the allocated memory space .This will lead to what is called a <strong>&lsquo;heap block overrun</strong>&rsquo; .</p>
+
+<p>2) The memory that is allocated to x remains unused . This memory becomes garbage on returning from the function . In short , you have seen a <strong>&lsquo;memory leak</strong> &rsquo;.</p>
+
+<p>Now lets try and detect the two problems using memcheck :</p>
+
+<p>You need to have valgrind installed in your system .
+<strong>$ : apt-get install valgrind</strong>
+if you don&rsquo;t have it already .</p>
+
+<p>Do</p>
+
+<p><strong>$: cc -g pgm.c</strong></p>
+
+<p>We  compile the program using the -g option so that the line number informations are displayed when using memcheck .</p>
+
+<p>Do</p>
+
+<p><strong>$: valgrind  &mdash;leak-check = yes a.out</strong></p>
+
+<p>the option  &lsquo; &mdash;leak-check &rsquo; being set equal to yes displays the informations on memory leak issues .</p>
+
+<p>Now lets look out what are the informations that are being displayed when the memcheck tool is used .</p>
+
+<p>First lets have a look into the &lsquo;heap block overrun&rsquo; problem :</p>
+
+<p><code>==3350== Invalid write of size 1
+==3350==    at 0x80483F6: f (pgm.c:6)
+==3350==    by 0x804841D: main (pgm.c:11)
+==3350==  Address 0x419102f is 2 bytes after a block of size 5 alloc'd
+==3350==    at 0x4023D6E: malloc (vg_replace_malloc.c:207)
+==3350==    by 0x80483EC: f (pgm.c:5)
+==3350==    by 0x804841D: main (pgm.c:11)</code></p>
+
+<p>The above few lines is the code that was generated by memcheck  .</p>
+
+<p>&lsquo;3350&rsquo; is the process id .</p>
+
+<p>The actual error is seen right at the first line .</p>
+
+<p>&lsquo;Invalid write  of size 1&rsquo; .</p>
+
+<p>You get a stack trace right after this line , that</p>
+
+<p>the invalid write has occured at the 6th line as a result of the 12th line . You could see what line numbers &lsquo;6&rsquo; and &lsquo;11&rsquo; do by having a look into our code , its the point of occurence of the error and the function call respectively.</p>
+
+<p>A line showing the the fact that the location you are trying to access ( x[7] ) is 2 bytes after the allocated area can also be seen added with lines that contain information about the main and the function   .These lines provide great help to the programmer especially when the case becomes a lot more complicated .</p>
+
+<p>Now the informations that are displayed about the &lsquo;memory leak problem&rsquo; can also be looked into .</p>
+
+<p><code>==3350== LEAK SUMMARY:
+==3350==    definitely lost: 5 bytes in 1 blocks.
+==3350==    possibly lost: 0 bytes in 0 blocks.
+==3350==    still reachable: 0 bytes in 0 blocks.
+==3350==    suppressed: 0 bytes in 0 blocks.
+</code>
+You could view the lines that provide information about the memory leak problem .
+The first line of the &lsquo;LEAK SUMMARY &rsquo; is the most significant to us . It shows the amount of memory definitely lost ( 5 Bytes ). Changes need to be made in the program so that the memory leak is prevented .</p>
+
+<p>Memcheck produces these result which helps the programmer so as to view and correct the memory related issues rather convincingly . It needs to be noted that Memcheck is a <strong>&lsquo;dynamic instrumentation tool </strong>&rsquo; and not a static tool like &lsquo;lint &rsquo; . Hence to detect the memory leaks in a program , the control actually needs to get transferred to that segment of the program where the issues occur . In short you need to invoke the function &lsquo;f&rsquo; from your &lsquo;main&rsquo; so that Memcheck could detect those memory related issues that exists within the function &lsquo;f&rsquo; .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Common Subexpression elimination by GCC]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2010/10/19/common-subexpression-elimination-cse"/>
+    <updated>2010-10-19T17:12:16+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/10/19/common-subexpression-elimination-cse</id>
+    <content type="html"><![CDATA[<p><strong>Common subexpression elimination</strong> (CSE) is a compiler optimization technique of finding redundant expression evaluations, and replacing them with a single computation . This saves the time overhead resulted by evaluating the expression for more than once . We will have a look into this phenomenon by considering a simple code and again taking a walk through its assembly code .</p>
+
+<p>Consider the code that we have written and saved in file &lsquo; pgm.c &rsquo;</p>
+
+<p><code>main(){
+int i, j, k, r;
+scanf("%d%d", &amp;i, &amp;j);
+k = i + j + 10;
+r = i + j + 30;
+printf("%d %d\n", k, r);
+}</code></p>
+
+<p>Do :</p>
+
+<p><strong>$ : cc -S pgm.c</strong></p>
+
+<p><strong>$ : less pgm.s</strong></p>
+
+<p>Read the assembly code &lsquo; pgm.s &rsquo;</p>
+
+<p>Scan the assembly code and find out the call to the function &lsquo;scanf()&rsquo; . This is where our area of interest begins . This is because its after calling &lsquo;scanf &rsquo; that we load the value of the input variables into the registers .</p>
+
+<p>Right after the call to &lsquo;scanf &rsquo; , i have this in my assembly code ,</p>
+
+<p><strong>movl    -16(%ebp), %edx
+movl    -20(%ebp), %eax</strong> .</p>
+
+<p>Here we move the values of the two variables &lsquo;i &rsquo; and &lsquo;j &rsquo; into registers &lsquo;edx &rsquo; and &lsquo;eax &rsquo; .</p>
+
+<p>Now just have a look into our C code and you will see the two expressions as follows :</p>
+
+<p><code>k = i + j + 10;
+r = i + j + 30;</code></p>
+
+<p>Looking at the two expressions , you would find out the redundant part in the two expressions .</p>
+
+<p>Its that &lsquo;i+j&rsquo; is calculated twice .</p>
+
+<p>Now lets find out what happens in the assembly code :</p>
+
+<p>I had these statements in your assembly code :</p>
+
+<p><strong>movl    -16(%ebp), %edx</strong></p>
+
+<p><strong>movl    -20(%ebp), %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;> We had mentioned these two statements  above .</p>
+
+<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;>  values in edx and eax are added and loaded into eax</p>
+
+<p><strong>addl    $10, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 10 is added with the value in eax</p>
+
+<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;&ndash;>   values in edx and eax are added and loaded into eax</p>
+
+<p><strong>addl    $30, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 30 is added with the value in eax</p>
+
+<p>You could see that there is redundancy in the assembly code .</p>
+
+<p>The statement<strong> &lsquo; leal(%edx,%eax), %eax</strong> &rsquo; performs the evaluation of the subexpression ( &lsquo; i + j &rsquo; ) which is done twice thereby throwing in redundancy and hence creating unnecessary overheads .</p>
+
+<p>Obviously our compiler when asked to perform optimization would avoid this redundancy .This is what is termed as <strong>Common Subexpression Elimination</strong> ,i.e , the subexpression that is common( &lsquo; i + j &rsquo; ) in the two expressions is evaluated only once , in essence the second evaluation is eliminated .  Lets have a look into CSE by again peeping into our assembly code  .</p>
+
+<p>Do</p>
+
+<p><strong>$ : cc &ndash; S &ndash; O3 pgm .c</strong></p>
+
+<p><strong>$ : less pgm.s</strong></p>
+
+<p>Take a look into your assembly code  .</p>
+
+<p>As mentioned above , our area of interest starts from the call to &lsquo;scanf ()&rsquo; .</p>
+
+<p>Instead of those 6 statements that were used to evaluate those two expressions ,</p>
+
+<p>i + j + 10 &amp; i + j + 30 ,</p>
+
+<p>you would find this ,</p>
+
+<p><strong>movl    -12(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  move the value of the variable &lsquo;i&rsquo; into eax</p>
+
+<p><strong>addl    -8(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> add the value of the variable &lsquo;j&rsquo; with &lsquo;i&rsquo; stored in eax .</p>
+
+<p><strong>leal    30(%eax), %edx</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 30 with eax ( contains the sum of i &amp; j ) and stores in edx</p>
+
+<p><strong>addl    $10, %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 10 with eax ( contains the sum of i &amp; j ) and stores in eax .</p>
+
+<p>Here the second statement performs the evaluation of the subexpression , &lsquo; i + j &rsquo; . You could get it quite clearly from the code segment that the redundancy that was found in the unoptimized assembly code has been eliminated by the compiler .</p>
+
+<p>The later 2 statements perform the evaluation of the expressions</p>
+
+<p>( i + j + 30 )   and    ( i + j + 10 ) respectively .</p>
+
+<p>We have just used a very simple case of CSE , but this optimization technique could be used in even more useful cases . Consider :</p>
+
+<p>k = f() + g() + 30</p>
+
+<p>r = f() + g() + 10</p>
+
+<p>where f() and g() are functions . In an unoptimized code , the technique of CSE wouldn&rsquo;t be used and hence there would be overhead due to the redundancy added with the more serious problem of having to call each function twice . The technique of <strong>Common Subexpression Elimination</strong> avoids this very redundancy  .</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Function inlining]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2010/10/19/function-inlining"/>
+    <updated>2010-10-19T15:43:05+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2010/10/19/function-inlining</id>
+    <content type="html"><![CDATA[<p>Function inlining is performed when a request has been made to the compiler to perform optimization on the code . The compiler will try (its important to remember that ,it is a request made to the compiler, not an order) and insert the complete body of the function in every place in the code where that function is used so as to eliminate the time overhead when the function is called . We could get an idea of function inlining by peeping into the assembly code generated by the compiler .</p>
+
+<p>We do this with the help of a small program :</p>
+
+<p><code>int sqr(int x)
+{
+return x*x;
+}</code></p>
+
+<p><code>main()
+{
+printf("%d\n", sqr(10));
+}</code></p>
+
+<p>We have the program written in a file  &lsquo;pgm.c&rsquo;</p>
+
+<p>Do :</p>
+
+<p><strong>$: cc -S pgm.c
+</strong>
+We could now view the assembly code generated by the compiler</p>
+
+<p>Do:</p>
+
+<p><strong>$: less pgm.s</strong></p>
+
+<p>I found out the following lines in the &lsquo;main&rsquo; function of &lsquo; pgm.s &rsquo;</p>
+
+<p><code>movl    $10, (%esp)
+call    sqr
+</code>
+You would have the idea cleared up</p>
+
+<p>The constant &lsquo;10 &#8216;  is stored in the stack , and the call to the function &#8216;sqr &rsquo; is made . The result of squaring up 10 is performed in the function &lsquo;sqr&rsquo; . This obviously would create overheads for invoking the function .</p>
+
+<p>Now consider the case where you have requested the compiler to perform all optimizations on your code .</p>
+
+<p><strong>$ :cc -S -O3 pgm.c</strong></p>
+
+<p>Now have a look into your assembly code .</p>
+
+<p><strong>$ :less pgm.s
+</strong></p>
+
+<p>Now just have a look into the your &lsquo;main&rsquo; function and find out what you see where you had seen the previous two lines that i did mention above .</p>
+
+<p>You would just find a singe line corresponding to those two lines which you had found in your assembly code that was not optimized .</p>
+
+<p>This is what i found ,</p>
+
+<p><code>movl    $100, 4(%esp)
+</code></p>
+
+<p>The final value that you obtain after finding the square of 10 ( i.e 100 ) is has been moved into the stack , but where is the call to the function &lsquo;sqr&rsquo; ?</p>
+
+<p>You have just seen &lsquo; <em><strong>function inlining</strong></em> &rsquo;. The function body had been inserted at the point where the function was used and the value &lsquo;100 &rsquo; calculated at compile time instead of performing the calculation at run time .This saves a lot of time that would have been required to calculate the value of &lsquo;100&rsquo; by making a call to the function at run time .Performing function inlining avoids this .</p>
+]]></content>
+  </entry>
+  
+</feed>
