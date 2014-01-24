@@ -9,9 +9,6 @@ categories: Ruby
 With Rubymotion, there are quite a few methods to indicate activities. What I have used here is the MBProgressBarHud to indicate an ongoing activity ( an http call in progress )
 
 
-    
-The submit button on event 'Touch Up Inside' invokes the action submit_mobile_number. 
-
 ####controller/msisdn_view_controller.rb
 
     outlet :submitButton, UIButton
