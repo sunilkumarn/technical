@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-01-24T20:16:33+05:30</updated>
+  <updated>2014-01-24T20:18:23+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -56,9 +56,11 @@ end
 <h4>models/user.rb</h4>
 
 <pre><code>def self.registration(msisdn, &amp;callback)
+  ...
   url = 'some_url'
   BW::HTTP.get(url) do |response|
     callback.call
+    ...
   end
 end
 </code></pre>
