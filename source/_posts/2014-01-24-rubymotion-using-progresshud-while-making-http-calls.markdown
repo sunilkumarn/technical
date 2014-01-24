@@ -51,7 +51,7 @@ With Rubymotion, there are quite a few methods to indicate activities. What I ha
       end
     end
     
-As you could see from the code above, we initiate an MBProgressHUDV view and add it as a subview of the main UIView. This is done in the viewDidLoad delegate.
+As you could see from the code above, in the viewDidLoad delegate we initiate an MBProgressHUD instance and add it as a subview to the UIView. This is done in the viewDidLoad delegate.
 
 Before the call to **registration** ( the User model method which makes an http connection ) is made, the **prepare_for_submission** method displays the hud. The **after_submission** method is passed as a callback block to the **registration** method. On completion of the http request, this block is executed which hides the hud and performs the segue to present the next controller.
 
