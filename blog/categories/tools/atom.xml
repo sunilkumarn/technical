@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Tools | Scribblings]]></title>
-  <link href="http://tech.sunilnkumar.com//blog/categories/tools/atom.xml" rel="self"/>
-  <link href="http://tech.sunilnkumar.com//"/>
-  <updated>2014-01-24T20:12:58+05:30</updated>
-  <id>http://tech.sunilnkumar.com//</id>
+  <link href="http://tech.sunilnkumar.com/blog/categories/tools/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com/"/>
+  <updated>2014-01-24T20:14:07+05:30</updated>
+  <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Memcheck : A Memory Error Detection Tool]]></title>
-    <link href="http://tech.sunilnkumar.com//2010/10/21/memcheck-a-memory-error-detection-tool"/>
+    <link href="http://tech.sunilnkumar.com/2010/10/21/memcheck-a-memory-error-detection-tool"/>
     <updated>2010-10-21T09:13:49+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2010/10/21/memcheck-a-memory-error-detection-tool</id>
+    <id>http://tech.sunilnkumar.com/2010/10/21/memcheck-a-memory-error-detection-tool</id>
     <content type="html"><![CDATA[<p>Linux distros provide a  tool suite called <strong>&lsquo;Valgrind&rsquo;</strong> that consists of a number of tools that help you make your programs faster and more correct . The most popular tool out of this is called is <strong>memcheck</strong> that is used to detect memory related errors in C and C++ programs that can lead to serious issues like  segfaults and even more grevious issues like unpredictable behaviours .</p>
 
 <p>Lets take a look into how we use the tool &lsquo;memcheck&rsquo; so that we detect , try and avoid the memory related issues in our program.</p>
@@ -107,9 +107,9 @@ The first line of the &lsquo;LEAK SUMMARY &rsquo; is the most significant to us 
   
   <entry>
     <title type="html"><![CDATA[GNU make]]></title>
-    <link href="http://tech.sunilnkumar.com//2010/10/04/280"/>
+    <link href="http://tech.sunilnkumar.com/2010/10/04/280"/>
     <updated>2010-10-04T00:05:22+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2010/10/04/280</id>
+    <id>http://tech.sunilnkumar.com/2010/10/04/280</id>
     <content type="html"><![CDATA[<p>The make utility determines which pieces of the program needs to be recompiled and issues instructions to recompile them.GNU make is the most popular make available. Lets get into the working of make with a simple example but please do read <a href="http://sunilkumarn.wordpress.com/2010/10/03/swigsimplified-wrapper-and-interface-generator/">THIS</a> before moving into further details.</p>
 
 <p>By reading that, you would have understood that our ultimate aim is to produce a file &lsquo;_avl.so&rsquo; so that the C module &lsquo;avl.c&rsquo; could be extended into Python.
@@ -197,9 +197,9 @@ This again shows the recursive nature of the make process. The Makefile is read 
   
   <entry>
     <title type="html"><![CDATA[SWIG(Simplified Wrapper and Interface Generator).]]></title>
-    <link href="http://tech.sunilnkumar.com//2010/10/03/swigsimplified-wrapper-and-interface-generator"/>
+    <link href="http://tech.sunilnkumar.com/2010/10/03/swigsimplified-wrapper-and-interface-generator"/>
     <updated>2010-10-03T21:02:07+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2010/10/03/swigsimplified-wrapper-and-interface-generator</id>
+    <id>http://tech.sunilnkumar.com/2010/10/03/swigsimplified-wrapper-and-interface-generator</id>
     <content type="html"><![CDATA[<pre><code>Scripting languages like python presents a lot of ease to the programmer while coding , but the fact remains that there are certain tasks that would screw you up when attempted in Python. So the coding is done in a more flexible language like C and the modules are imported in Python. **SWIG** is a tool that is used for extending your C programs into python and make the functions callable from Python.
 </code></pre>
 
@@ -278,9 +278,9 @@ avl.traverse(1)</p></blockquote></blockquote></blockquote>
   
   <entry>
     <title type="html"><![CDATA[Debugging with the GDB]]></title>
-    <link href="http://tech.sunilnkumar.com//2010/08/08/debugging-with-the-gdb"/>
+    <link href="http://tech.sunilnkumar.com/2010/08/08/debugging-with-the-gdb"/>
     <updated>2010-08-08T22:35:48+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2010/08/08/debugging-with-the-gdb</id>
+    <id>http://tech.sunilnkumar.com/2010/08/08/debugging-with-the-gdb</id>
     <content type="html"><![CDATA[<p>GNU debugger(GDB) allows you to view the step by step execution of the program code. This proves of great help in executing complex programs(specially the ones involving recursion) to see the exact flow of control. How to debug using the gdb and a few options used are worth notable:
 To debug a program with gdb , steps followed are
 &lsquo;cc -g file.c&rsquo;

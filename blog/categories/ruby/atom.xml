@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Ruby | Scribblings]]></title>
-  <link href="http://tech.sunilnkumar.com//blog/categories/ruby/atom.xml" rel="self"/>
-  <link href="http://tech.sunilnkumar.com//"/>
-  <updated>2014-01-24T20:12:58+05:30</updated>
-  <id>http://tech.sunilnkumar.com//</id>
+  <link href="http://tech.sunilnkumar.com/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com/"/>
+  <updated>2014-01-24T20:14:07+05:30</updated>
+  <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rubymotion: Using ProgressHud while making Http calls]]></title>
-    <link href="http://tech.sunilnkumar.com//2014/01/24/rubymotion-using-progresshud-while-making-http-calls"/>
+    <link href="http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls"/>
     <updated>2014-01-24T20:04:00+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2014/01/24/rubymotion-using-progresshud-while-making-http-calls</id>
+    <id>http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls</id>
     <content type="html"><![CDATA[<p>With Rubymotion, there are quite a few methods to indicate activities including the uiactivityindicators. What I have used here is the MBProgressBarHud to indicate an an ongoing activity ( an http call in progress )</p>
 
 <pre><code>outlet :submitButton, UIButton
@@ -72,9 +72,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Rails admin with authlogic]]></title>
-    <link href="http://tech.sunilnkumar.com//2013/07/06/rails-admin-with-authlogic"/>
+    <link href="http://tech.sunilnkumar.com/2013/07/06/rails-admin-with-authlogic"/>
     <updated>2013-07-06T23:13:31+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2013/07/06/rails-admin-with-authlogic</id>
+    <id>http://tech.sunilnkumar.com/2013/07/06/rails-admin-with-authlogic</id>
     <content type="html"><![CDATA[<p>If you have used the rails_admin gem, you would have noticed that its tightly coupled with Devise. What happens if devise is not the pick and the application is already integrated with authlogic. Lets see,</p>
 
 <p>After installing the rails_admin gem, create a &lsquo;<strong>rails_admin.rb</strong>&rsquo; file in <strong>config/initializers</strong>. Paste the following code,</p>
@@ -117,9 +117,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Mercury: The WYSIWYG html editor]]></title>
-    <link href="http://tech.sunilnkumar.com//2013/05/21/mercury-the-wysiwyg-html-editor"/>
+    <link href="http://tech.sunilnkumar.com/2013/05/21/mercury-the-wysiwyg-html-editor"/>
     <updated>2013-05-21T00:53:48+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2013/05/21/mercury-the-wysiwyg-html-editor</id>
+    <id>http://tech.sunilnkumar.com/2013/05/21/mercury-the-wysiwyg-html-editor</id>
     <content type="html"><![CDATA[<p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
 
 <p>To get started off with mercury, add</p>
@@ -317,9 +317,9 @@ In <code>pages.html.erb </code></p>
   
   <entry>
     <title type="html"><![CDATA[Delayed Jobs in Rails: Adding custom attributes]]></title>
-    <link href="http://tech.sunilnkumar.com//2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
+    <link href="http://tech.sunilnkumar.com/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
     <updated>2013-05-19T11:48:38+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
+    <id>http://tech.sunilnkumar.com/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
     <content type="html"><![CDATA[<p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
 </a></p>
 
@@ -441,9 +441,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[RubyconfIndia 2011]]></title>
-    <link href="http://tech.sunilnkumar.com//2011/07/04/ruby-conf-india-2011"/>
+    <link href="http://tech.sunilnkumar.com/2011/07/04/ruby-conf-india-2011"/>
     <updated>2011-07-04T23:48:37+05:30</updated>
-    <id>http://tech.sunilnkumar.com//2011/07/04/ruby-conf-india-2011</id>
+    <id>http://tech.sunilnkumar.com/2011/07/04/ruby-conf-india-2011</id>
     <content type="html"><![CDATA[<p>May 27,28 &ndash; Attended Rubyconf India 2011 held at Royal Orchid hotel, Bangalore.&lsquo;  For some one who has less than a year of hands on with ruby, it was great hearing from the giants &ndash; the very Matz himself expressed his love for the community(in his own peculiar Japaneese way), Ola bini, Chad Fowler,  Brian and others. What in short ? &ndash; awesome 2 days.</p>
 
 <p><a href="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg" alt="" /></a></p>
