@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Ruby | Scribblings]]></title>
-  <link href="http://tech.sunilnkumar.com/technical/blog/categories/ruby/atom.xml" rel="self"/>
-  <link href="http://tech.sunilnkumar.com/technical/"/>
-  <updated>2014-01-09T16:51:13+05:30</updated>
-  <id>http://tech.sunilnkumar.com/technical/</id>
+  <link href="http://tech.sunilnkumar.com//github/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com//github/"/>
+  <updated>2014-01-24T20:08:26+05:30</updated>
+  <id>http://tech.sunilnkumar.com//github/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -14,10 +14,69 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Rubymotion: Using ProgressHud while making Http calls]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls"/>
+    <updated>2014-01-24T20:04:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls</id>
+    <content type="html"><![CDATA[<p>Rubymotion: Using ProgressHud while making Http calls</p>
+
+<p>With Rubymotion, there are quite a few methods to indicate activities including the uiactivityindicators. What I have used here is the MBProgressBarHud to indicate an an ongoing activity ( an http call in progress )</p>
+
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_mobile_number
+</code></pre>
+
+<p>The submit button on event &lsquo;Touch Up Inside&rsquo; invokes the action submit_mobile_number.</p>
+
+<h4>controller/msisdn_view_controller.rb</h4>
+
+<pre><code>def viewDidLoad
+  @hud = MBProgressHUD.alloc.initWithWindow(UIApplication.sharedApplication.keyWindow)
+  self.view.addSubview(@hud)
+end
+
+def submit_mobile_number(sender)
+  msisdn = self.msisdnTextField.text
+  prepare_for_submission
+  User.registration msisdn, do
+    after_submission
+  end
+end
+
+def prepare_for_submission
+  @hud.labelText = "Provisioning"
+  @hud.show(true)
+  self.view.userInteractionEnabled = false
+end
+
+def after_submission
+  @hud.labelText = "Completed";
+  @hud.hide(true)
+  performSegueWithIdentifier('submission_segue', sender: self)
+end
+</code></pre>
+
+<h4>models/user.rb</h4>
+
+<pre><code>def self.registration(msisdn, &amp;callback)
+  url = 'some_url'
+  BW::HTTP.get(url) do |response|
+    callback.call
+  end
+end
+</code></pre>
+
+<p>As you could see from the code above, we initiate an MBProgressHUDV view and add it as a subview of the main UIView. This is done in the viewDidLoad delegate.</p>
+
+<p>Before the call to <strong>registration</strong> ( the User model method which makes an http connection ) is made, the <strong>prepare_for_submission</strong> method displays the hud. The <strong>after_submission</strong> method is passed as a callback block to the <strong>registration</strong> method. On completion of the http request, this block is executed which hides the hud and performs the segue to present the next controller.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Rails admin with authlogic]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/07/06/rails-admin-with-authlogic"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic"/>
     <updated>2013-07-06T23:13:31+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/07/06/rails-admin-with-authlogic</id>
+    <id>http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic</id>
     <content type="html"><![CDATA[<p>If you have used the rails_admin gem, you would have noticed that its tightly coupled with Devise. What happens if devise is not the pick and the application is already integrated with authlogic. Lets see,</p>
 
 <p>After installing the rails_admin gem, create a &lsquo;<strong>rails_admin.rb</strong>&rsquo; file in <strong>config/initializers</strong>. Paste the following code,</p>
@@ -60,9 +119,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Mercury: The WYSIWYG html editor]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/05/21/mercury-the-wysiwyg-html-editor"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor"/>
     <updated>2013-05-21T00:53:48+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/05/21/mercury-the-wysiwyg-html-editor</id>
+    <id>http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor</id>
     <content type="html"><![CDATA[<p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
 
 <p>To get started off with mercury, add</p>
@@ -106,8 +165,8 @@ end
     &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, maximum-scale=1.0, initial-scale=1.0&quot;&amp;gt;
     &amp;lt;%= csrf_meta_tags %&amp;gt;
     &amp;lt;title&amp;gt;Mercury Editor&amp;lt;/title&amp;gt;
-    &amp;lt;%= stylesheet_link_tag &#39;mercury&#39; %&amp;gt;
-    &amp;lt;%= javascript_include_tag &#39;jquery-1.7&#39;, &#39;mercury&#39; %&amp;gt;
+    &amp;lt;%= stylesheet_link_tag 'mercury' %&amp;gt;
+    &amp;lt;%= javascript_include_tag 'jquery-1.7', 'mercury' %&amp;gt;
 &amp;lt;/head&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -152,7 +211,7 @@ In <code>pages.html.erb </code></p>
 &lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;control-group&quot;&amp;gt;
     &amp;lt;h3 class=&quot;section_header page-header&quot;&amp;gt;Pricing page&amp;lt;/h3&amp;gt;
     &amp;lt;div id=&quot;faq&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&amp;gt;
-        &amp;lt;%= render :file =&amp;gt; file_path(@domain &#39;faq&#39;) %&amp;gt;
+        &amp;lt;%= render :file =&amp;gt; file_path(@domain 'faq') %&amp;gt;
     &amp;lt;/div&amp;gt;
 &amp;lt;/div&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -184,7 +243,7 @@ In <code>pages.html.erb </code></p>
 &lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;control-group&quot;&amp;gt;
     &amp;lt;h3 class=&quot;section_header page-header&quot;&amp;gt;Contact page&amp;lt;/h3&amp;gt;
     &amp;lt;div id=&quot;contact&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&amp;gt;
-        &amp;lt;%= render :file =&amp;gt; file_path(@domain, &#39;contact&#39;) %&amp;gt;
+        &amp;lt;%= render :file =&amp;gt; file_path(@domain, 'contact') %&amp;gt;
     &amp;lt;/div&amp;gt;
 &amp;lt;/div&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -201,7 +260,7 @@ In <code>pages.html.erb </code></p>
   <pre><code class='ruby'>&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;
-    $(window).on(&#39;mercury:ready&#39;, function () {
+    $(window).on('mercury:ready', function () {
         Mercury.saveUrl = &quot;&amp;lt;%= pages_upload_admin_domain_path(@domain) %&amp;gt;&quot;;
     });
 &amp;lt;/script&amp;gt;
@@ -216,8 +275,8 @@ In <code>pages.html.erb </code></p>
 <p><div>
   <pre><code class='ruby'>&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$(window).bind(&#39;mercury:saved&#39;, function() {
-    $(window.location.replace(&#39;/admin/domain&#39;));
+&lt;pre&gt;&lt;code&gt;$(window).bind('mercury:saved', function() {
+    $(window.location.replace('/admin/domain'));
 });
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -260,9 +319,9 @@ In <code>pages.html.erb </code></p>
   
   <entry>
     <title type="html"><![CDATA[Delayed Jobs in Rails: Adding custom attributes]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
     <updated>2013-05-19T11:48:38+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
+    <id>http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
     <content type="html"><![CDATA[<p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
 </a></p>
 
@@ -328,7 +387,7 @@ end
   <pre><code class='ruby'>&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;ActiveModel::MassAssignmentSecurity::Error:
-    Can&#39;t mass-assign protected attributes: job_owner_id, job_owner_type
+    Can't mass-assign protected attributes: job_owner_id, job_owner_type
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;</code></pre>
@@ -342,7 +401,7 @@ and paste in the following code</p>
   <pre><code class='ruby'>&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;class Delayed::Job &amp;lt; ActiveRecord::Base
-  self.attr_protected if self.to_s == &#39;Delayed::Backend::ActiveRecord::Job&#39;   #loads protected attributes for                                                                                        # ActiveRecord instance
+  self.attr_protected if self.to_s == 'Delayed::Backend::ActiveRecord::Job'   #loads protected attributes for                                                                                        # ActiveRecord instance
 end
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -384,9 +443,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[RubyconfIndia 2011]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2011/07/04/ruby-conf-india-2011"/>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011"/>
     <updated>2011-07-04T23:48:37+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2011/07/04/ruby-conf-india-2011</id>
+    <id>http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011</id>
     <content type="html"><![CDATA[<p>May 27,28 &ndash; Attended Rubyconf India 2011 held at Royal Orchid hotel, Bangalore.&lsquo;  For some one who has less than a year of hands on with ruby, it was great hearing from the giants &ndash; the very Matz himself expressed his love for the community(in his own peculiar Japaneese way), Ola bini, Chad Fowler,  Brian and others. What in short ? &ndash; awesome 2 days.</p>
 
 <p><a href="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg" alt="" /></a></p>
@@ -398,115 +457,6 @@ end
 
 <p><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg">
 </a><a href="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/254387_178700232184174_100001325964091_431986_2209738_n.jpg" alt="" /></a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Module functions as class and instance methods]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2011/07/04/module-functions-as-class-and-instance-methods"/>
-    <updated>2011-07-04T10:50:51+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2011/07/04/module-functions-as-class-and-instance-methods</id>
-    <content type="html"><![CDATA[<p>Consider you have a module and a class.</p>
-
-<p>module Mymod and a class Myclass.</p>
-
-<p>The situation in hand is such that certain functions in the module need to end up being instance methods of the class Myclass and certain functions need to be Class methods.  You could very well imagine of such situations. Consider you are using ActiveRecord and have a sub class <strong>Subscription</strong> in correspondence with a DB table. You want to insert logic, within the module, that would work in each of the following case.</p>
-
-<p>1) When a subscription fails or succeeds.</p>
-
-<p>2) When an unsubscription fails or succeeds</p>
-
-<p>You do this.</p>
-
-<p><em>module SubscriptionLogic</em></p>
-
-<p><em>   def  after_sub</em></p>
-
-<p><em>      &hellip;.</em></p>
-
-<p><em>   end</em></p>
-
-<p><em>   def  after_unsub</em></p>
-
-<p><em>     &hellip;.</em></p>
-
-<p><em>   end</em></p>
-
-<p><em>   def  after_sub_fail</em></p>
-
-<p><em>     &hellip;.</em></p>
-
-<p><em>   end</em></p>
-
-<p><em>   def  after_unsub_fail</em></p>
-
-<p><em>      &hellip;.</em></p>
-
-<p><em>    end</em></p>
-
-<p><em>end</em></p>
-
-<p><em>class Subscription</em></p>
-
-<p><em>   include SubscriptionLogic</em></p>
-
-<p><em>   &hellip;..</em></p>
-
-<p><em>end</em></p>
-
-<p>You insert the logic as functions of a module, say <strong>SubscriptionLogic</strong>. Ideally you want the methods containing the logic to be instance methods of the class Subscription. You include the module SubscriptionLogic in the class and you avail all the functions in the module as Instance methods. Now you consider the case when an unsubscription fails &ndash; i.e, there is no existing subscription so that an unsub could take place.  No way is it possible that you could have a function &lsquo;logic_after_unsub_fail'  in the module SubscriptionLogic and use it as an instance method, <em><strong>simply because there is no instance available</strong></em>.  You think and decide to use the function as your class method, but you have &rsquo;<strong>include</strong>d'  the  module in your class and hence its not possible to use it as your class method. You cannot <strong>extend</strong> the entire module coz , ideally you want the logic to be instance methods.</p>
-
-<p>So you could get this solved up by a simple piece of extra coding.</p>
-
-<p>_module SubscriptionLogic _</p>
-
-<p><em>  def  after_sub</em></p>
-
-<p><em>      &hellip;.</em></p>
-
-<p><em>  end</em></p>
-
-<p><em>  def  after_unsub</em></p>
-
-<p><em>      &hellip;.</em></p>
-
-<p><em>  end</em></p>
-
-<p><em>  def  after_sub_fail</em></p>
-
-<p><em>      &hellip;.</em></p>
-
-<p><em>  end</em></p>
-
-<p><em>  module ClassMethods</em></p>
-
-<p><em>      def after_unsub_fail</em></p>
-
-<p><em>           &hellip;.</em></p>
-
-<p><em>      end</em></p>
-
-<p><em>      def self.included(base)</em></p>
-
-<p>_          base.extend(ClassMethods)    # base pertains to the class within which you include the module. _</p>
-
-<p><em>      end</em></p>
-
-<p><em>   end</em></p>
-
-<p><em>end</em></p>
-
-<p>Now within the class insert this line.</p>
-
-<p>_class Subscription _</p>
-
-<p>_   include SubscriptionLogic _</p>
-
-<p><strong><em>   extend SubscriptionLogic::ClassMethods</em></strong></p>
-
-<p><em>   &hellip;..</em></p>
-
-<p><em>end</em></p>
 ]]></content>
   </entry>
   

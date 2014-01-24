@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Scribblings]]></title>
-  <link href="http://tech.sunilnkumar.com/technical/atom.xml" rel="self"/>
-  <link href="http://tech.sunilnkumar.com/technical/"/>
-  <updated>2014-01-09T16:51:13+05:30</updated>
-  <id>http://tech.sunilnkumar.com/technical/</id>
+  <link href="http://tech.sunilnkumar.com//github/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com//github/"/>
+  <updated>2014-01-24T20:08:26+05:30</updated>
+  <id>http://tech.sunilnkumar.com//github/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -14,10 +14,69 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Rubymotion: Using ProgressHud while making Http calls]]></title>
+    <link href="http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls"/>
+    <updated>2014-01-24T20:04:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls</id>
+    <content type="html"><![CDATA[<p>Rubymotion: Using ProgressHud while making Http calls</p>
+
+<p>With Rubymotion, there are quite a few methods to indicate activities including the uiactivityindicators. What I have used here is the MBProgressBarHud to indicate an an ongoing activity ( an http call in progress )</p>
+
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_mobile_number
+</code></pre>
+
+<p>The submit button on event &lsquo;Touch Up Inside&rsquo; invokes the action submit_mobile_number.</p>
+
+<h4>controller/msisdn_view_controller.rb</h4>
+
+<pre><code>def viewDidLoad
+  @hud = MBProgressHUD.alloc.initWithWindow(UIApplication.sharedApplication.keyWindow)
+  self.view.addSubview(@hud)
+end
+
+def submit_mobile_number(sender)
+  msisdn = self.msisdnTextField.text
+  prepare_for_submission
+  User.registration msisdn, do
+    after_submission
+  end
+end
+
+def prepare_for_submission
+  @hud.labelText = "Provisioning"
+  @hud.show(true)
+  self.view.userInteractionEnabled = false
+end
+
+def after_submission
+  @hud.labelText = "Completed";
+  @hud.hide(true)
+  performSegueWithIdentifier('submission_segue', sender: self)
+end
+</code></pre>
+
+<h4>models/user.rb</h4>
+
+<pre><code>def self.registration(msisdn, &amp;callback)
+  url = 'some_url'
+  BW::HTTP.get(url) do |response|
+    callback.call
+  end
+end
+</code></pre>
+
+<p>As you could see from the code above, we initiate an MBProgressHUDV view and add it as a subview of the main UIView. This is done in the viewDidLoad delegate.</p>
+
+<p>Before the call to <strong>registration</strong> ( the User model method which makes an http connection ) is made, the <strong>prepare_for_submission</strong> method displays the hud. The <strong>after_submission</strong> method is passed as a callback block to the <strong>registration</strong> method. On completion of the http request, this block is executed which hides the hud and performs the segue to present the next controller.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Heroku deployment with MongoDB database]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/12/18/heroku-deployment-with-mongodb-database"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/12/18/heroku-deployment-with-mongodb-database"/>
     <updated>2013-12-18T19:01:00+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/12/18/heroku-deployment-with-mongodb-database</id>
+    <id>http://tech.sunilnkumar.com//github/2013/12/18/heroku-deployment-with-mongodb-database</id>
     <content type="html"><![CDATA[<p>Currently, I develop a Rails app with <a href="http://www.mongodb.org/">mongodb</a> as the database.
 When I decided to deploy this in heroku, as per the heroku dev doc, I was asked to simply install the MongoHQ Add-on, and specify the plan that I desire.</p>
 
@@ -76,9 +135,9 @@ Thats it, Mongodb hosted in MongoHQ should be now available for use in the appli
   
   <entry>
     <title type="html"><![CDATA[Migrating from Wordpress to Jekyll in ten steps]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps"/>
     <updated>2013-09-01T13:32:26+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps</id>
+    <id>http://tech.sunilnkumar.com//github/2013/09/01/migrating-from-wordpress-to-jekyll-in-ten-steps</id>
     <content type="html"><![CDATA[<p>Migrating from Wordpress to <a href="http://jekyllrb.com/">Jekyll</a> is not at all a fussy process. Here, I will state down the 10 steps on how I moved my blog from Wordpress to github pages using jekyll.  It would be really good if you could just have a walk through jekyll&rsquo;s home pages to get an idea of the prerequisities and workings.</p>
 
 <p>1) Export your blog from Wordpress and download the exported xml thats generated by Wordpress. Use xmllint for xml validation and correct any errors that might be there.</p>
@@ -151,13 +210,13 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
   
   <entry>
     <title type="html"><![CDATA[Node.js: Event Emitters and Listeners]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners"/>
     <updated>2013-07-07T13:32:26+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners</id>
+    <id>http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners</id>
     <content type="html"><![CDATA[<p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
 
 <div>
-  <pre><code class='javascript'>$(&#39;#toBeClicked&#39;).on(&#39;click&#39;, function() { alert(&#39;clicked&#39;) })</code></pre>
+  <pre><code class='javascript'>$('#toBeClicked').on('click', function() { alert('clicked') })</code></pre>
 </div>
 
 
@@ -168,7 +227,7 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>Lets straight away build a custom event emitter and see whats going on,</p>
 
 <div>
-  <pre><code class='javascript'>EventEmitter = require(&#39;events&#39;).EventEmitter       // The Event Emitter constructor in the events.js module .</code></pre>
+  <pre><code class='javascript'>EventEmitter = require('events').EventEmitter       // The Event Emitter constructor in the events.js module .</code></pre>
 </div>
 
 
@@ -182,7 +241,7 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>We listen for the error event,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.on(&#39;error&#39;, function(msg1, msg2) { console.log(&#39;ERR: &#39; + msg1 + &#39; &#39; + msg2 ) })</code></pre>
+  <pre><code class='javascript'>emitter.on('error', function(msg1, msg2) { console.log('ERR: ' + msg1 + ' ' + msg2 ) })</code></pre>
 </div>
 
 
@@ -193,14 +252,14 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>We could also listen as,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.addListener(&#39;error&#39;, function(msg1, msg2) { console.log(&#39;ERR: &#39; + msg1 + &#39; &#39; + msg2 ) } )</code></pre>
+  <pre><code class='javascript'>emitter.addListener('error', function(msg1, msg2) { console.log('ERR: ' + msg1 + ' ' + msg2 ) } )</code></pre>
 </div>
 
 
 <p>Now we emit the error event,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.emit(&#39;error&#39;, &#39;Bug detected&#39;, &#39;@ Step 4&#39;)</code></pre>
+  <pre><code class='javascript'>emitter.emit('error', 'Bug detected', '@ Step 4')</code></pre>
 </div>
 
 
@@ -212,14 +271,14 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>Now that we have got to know how events are emitted and handled via listeners, lets try out a small server that listens for requests and processes them.</p>
 
 <div>
-  <pre><code class='javascript'>var http = require(&#39;http&#39;),
-    sys = require(&#39;sys&#39;);
+  <pre><code class='javascript'>var http = require('http'),
+    sys = require('sys');
 
 var server = http.createServer(function(request, response) {
-  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
+  request.on('data', function (chunk) { console.log(chunk.toString()); });
 
-  request.on(&#39;end&#39;, function() {
-    response.write(&#39;Request Completed!&#39;);
+  request.on('end', function() {
+    response.write('Request Completed!');
     response.end();
   });
 
@@ -250,7 +309,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>if (requestListener) {
-  this.addListener(&#39;request&#39;, requestListener); // event listener for the server
+  this.addListener('request', requestListener); // event listener for the server
 }</code></pre>
 </div>
 
@@ -261,10 +320,10 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>function(request, response) {
-  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
+  request.on('data', function (chunk) { console.log(chunk.toString()); });
 
-  request.on(&#39;end&#39;, function() {
-    response.write(&#39;Request Completed!&#39;);
+  request.on('end', function() {
+    response.write('Request Completed!');
     response.end();
   });
 }</code></pre>
@@ -276,7 +335,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 <p>Now, further inspecting the <strong>_http_server.js </strong>module<strong>, </strong>we could also see how the request event is emitted,</p>
 
 <div>
-  <pre><code class='javascript'>self.emit(&#39;request&#39;, req, res); // event emitter for the server</code></pre>
+  <pre><code class='javascript'>self.emit('request', req, res); // event emitter for the server</code></pre>
 </div>
 
 
@@ -286,11 +345,11 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>var server = http.createServer()
-server.on(&#39;request&#39;, function(request, response) {
-  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
+server.on('request', function(request, response) {
+  request.on('data', function (chunk) { console.log(chunk.toString()); });
 
-  request.on(&#39;end&#39;, function() {
-    response.write(&#39;Request Completed!&#39;);
+  request.on('end', function() {
+    response.write('Request Completed!');
     response.end();
   })
 });</code></pre>
@@ -300,7 +359,7 @@ server.on(&#39;request&#39;, function(request, response) {
 <p>Here when we create the server instance, we do not pass the requestListener( <em>Do notice that requestListener was only optional in http.createServer([requestListener]) </em>). Instead we attach a listener of our own on the server which listens to the &lsquo;request&rsquo; event and performs the callback function when the request event is emitted, i.e,</p>
 
 <div>
-  <pre><code class='javascript'>server.on(&#39;request&#39;, function(request, response) { ... });</code></pre>
+  <pre><code class='javascript'>server.on('request', function(request, response) { ... });</code></pre>
 </div>
 
 
@@ -310,9 +369,9 @@ server.on(&#39;request&#39;, function(request, response) {
   
   <entry>
     <title type="html"><![CDATA[Rails admin with authlogic]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/07/06/rails-admin-with-authlogic"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic"/>
     <updated>2013-07-06T23:13:31+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/07/06/rails-admin-with-authlogic</id>
+    <id>http://tech.sunilnkumar.com//github/2013/07/06/rails-admin-with-authlogic</id>
     <content type="html"><![CDATA[<p>If you have used the rails_admin gem, you would have noticed that its tightly coupled with Devise. What happens if devise is not the pick and the application is already integrated with authlogic. Lets see,</p>
 
 <p>After installing the rails_admin gem, create a &lsquo;<strong>rails_admin.rb</strong>&rsquo; file in <strong>config/initializers</strong>. Paste the following code,</p>
@@ -339,7 +398,7 @@ server.on(&#39;request&#39;, function(request, response) {
 <p>Also add the rails admin route in the <strong>config/routes.rb</strong> file.</p>
 
 <div>
-  <pre><code class='ruby'>mount RailsAdmin::Engine =&gt; &#39;/admin&#39;, :as =&gt; &#39;rails_admin&#39;</code></pre>
+  <pre><code class='ruby'>mount RailsAdmin::Engine =&gt; '/admin', :as =&gt; 'rails_admin'</code></pre>
 </div>
 
 
@@ -349,9 +408,9 @@ server.on(&#39;request&#39;, function(request, response) {
   
   <entry>
     <title type="html"><![CDATA[Prototypal Inheritance in Javascript]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/06/28/prototypal-inheritance-in-javascript"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/06/28/prototypal-inheritance-in-javascript"/>
     <updated>2013-06-28T14:36:11+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/06/28/prototypal-inheritance-in-javascript</id>
+    <id>http://tech.sunilnkumar.com//github/2013/06/28/prototypal-inheritance-in-javascript</id>
     <content type="html"><![CDATA[<p>When I decided to get my hands on Javascript, the biggest road block for me was to understand and follow the prototypal inheritance model in Javascript. Coming from a Ruby background, the inheritance model I learned and understood was the classical one. The prototypal model had fundamental differences and did run me nuts at times. Here I try to make some note of what its all about going along a few snippets.</p>
 
 <p><strong>What exactly is a prototype?</strong>
@@ -398,7 +457,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 <p>We could specify an object or null as the first argument to the create method. If we pass null as the first argument to create, then the newly created object won&rsquo;t inherit any property.</p>
 
 <div>
-  <pre><code class='javascript'>Mammal = Object.create(null, {knownTime: { value: &#39;infinity&#39; }} )</code></pre>
+  <pre><code class='javascript'>Mammal = Object.create(null, {knownTime: { value: 'infinity' }} )</code></pre>
 </div>
 
 
@@ -413,7 +472,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 
 <div>
   <pre><code class='javascript'>Man.knownTime
-   -&gt; &#39;infinity&#39;</code></pre>
+   -&gt; 'infinity'</code></pre>
 </div>
 
 
@@ -422,7 +481,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 <div>
   <pre><code class='javascript'>John = Object.create(Man)
 John.knownTime
-   -&gt; &#39;infinity&#39;</code></pre>
+   -&gt; 'infinity'</code></pre>
 </div>
 
 
@@ -432,7 +491,7 @@ Try adding new properties to these objects.</p>
 <p>Set a max height of Mammals.</p>
 
 <div>
-  <pre><code class='javascript'>Mammal.maxHeight = &#39;200&#39;</code></pre>
+  <pre><code class='javascript'>Mammal.maxHeight = '200'</code></pre>
 </div>
 
 
@@ -440,9 +499,9 @@ Try adding new properties to these objects.</p>
 
 <div>
   <pre><code class='javascript'>Man.maxHeight
-   -&gt; &#39;200&#39;
+   -&gt; '200'
 John.maxHeight
-   -&gt; &#39;200&#39;</code></pre>
+   -&gt; '200'</code></pre>
 </div>
 
 
@@ -637,28 +696,28 @@ s2.stream()
   
   <entry>
     <title type="html"><![CDATA[Node.js: Streams and pipes.]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/06/23/node-js-streams-and-pipes"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes"/>
     <updated>2013-06-23T00:27:26+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/06/23/node-js-streams-and-pipes</id>
+    <id>http://tech.sunilnkumar.com//github/2013/06/23/node-js-streams-and-pipes</id>
     <content type="html"><![CDATA[<p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
 
 <p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
 
 <div>
-  <pre><code class='javascript'>var http = require(&#39;http&#39;),
-  sys = require(&#39;sys&#39;),
-  fs = require(&#39;fs&#39;);
+  <pre><code class='javascript'>var http = require('http'),
+  sys = require('sys'),
+  fs = require('fs');
 
   var server = http.createServer();
   console.log(&quot;Starting up the server&quot;);
   server.listen(8000);
 
-  server.on(&#39;request&#39;, function(request, response) {
-    var file = fs.createWriteStream(&#39;copy.csv&#39;);
-    var fileSize = request.headers[&#39;content-length&#39;];
+  server.on('request', function(request, response) {
+    var file = fs.createWriteStream('copy.csv');
+    var fileSize = request.headers['content-length'];
     var uploadedSize = 0;
 
-    request.on(&#39;data&#39;, function (chunk) {
+    request.on('data', function (chunk) {
       uploadedSize += chunk.length;
       uploadProgress = (uploadedSize/fileSize) * 100;
       response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
@@ -667,12 +726,12 @@ s2.stream()
         request.pause();
     });
 
-    file.on(&#39;drain&#39;, function() {
+    file.on('drain', function() {
       request.resume();
     })
 
-    request.on(&#39;end&#39;, function() {
-      response.write(&#39;Upload done!&#39;);
+    request.on('end', function() {
+      response.write('Upload done!');
       response.end();
     })
 
@@ -687,14 +746,14 @@ s2.stream()
 <p>A writeStream is created and &lsquo;copy.csv&rsquo; is the destination path to which the received data will be written.</p>
 
 <div>
-  <pre><code class='javascript'>var file = fs.createWriteStream(&#39;copy.csv&#39;);</code></pre>
+  <pre><code class='javascript'>var file = fs.createWriteStream('copy.csv');</code></pre>
 </div>
 
 
 <p>The following piece forms the core of the upload process.</p>
 
 <div>
-  <pre><code class='javascript'>request.on(&#39;data&#39;, function (chunk) {
+  <pre><code class='javascript'>request.on('data', function (chunk) {
     var bufferStore = file.write(chunk);
     if(bufferStore == false)
       request.pause();
@@ -703,7 +762,7 @@ s2.stream()
     response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
   });
 
-  file.on(&#39;drain&#39;, function() {
+  file.on('drain', function() {
     request.resume();
   })</code></pre>
 </div>
@@ -726,7 +785,7 @@ s2.stream()
 <p>Also, we need to re-start streaming data from the read stream once the buffer is drained out. The following lines of code does just that.</p>
 
 <div>
-  <pre><code class='javascript'>file.on(&#39;drain&#39;, function() {
+  <pre><code class='javascript'>file.on('drain', function() {
     request.resume();
   })</code></pre>
 </div>
@@ -744,13 +803,13 @@ s2.stream()
 <p>would be equivalent to</p>
 
 <div>
-  <pre><code class='javascript'>request.on(&#39;data&#39;, function(chunk) {
+  <pre><code class='javascript'>request.on('data', function(chunk) {
     var bufferStore = file.write(chunk);
     if(bufferStore == false)
       request.pause();
   })
 
-  file.on(&#39;drain&#39;, function() {
+  file.on('drain', function() {
     request.resume();
   })</code></pre>
 </div>
@@ -770,7 +829,7 @@ s2.stream()
 <p>Do note that the actual size of the upload file is calculated from the request headers.</p>
 
 <div>
-  <pre><code class='javascript'>var fileSize = request.headers[&#39;content-length&#39;];</code></pre>
+  <pre><code class='javascript'>var fileSize = request.headers['content-length'];</code></pre>
 </div>
 
 
@@ -786,15 +845,15 @@ s2.stream()
   
   <entry>
     <title type="html"><![CDATA[Mercury: The WYSIWYG html editor]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/05/21/mercury-the-wysiwyg-html-editor"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor"/>
     <updated>2013-05-21T00:53:48+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/05/21/mercury-the-wysiwyg-html-editor</id>
+    <id>http://tech.sunilnkumar.com//github/2013/05/21/mercury-the-wysiwyg-html-editor</id>
     <content type="html"><![CDATA[<p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
 
 <p>To get started off with mercury, add</p>
 
 <div>
-  <pre><code class='ruby'>gem &#39;mercury-rails&#39;</code></pre>
+  <pre><code class='ruby'>gem 'mercury-rails'</code></pre>
 </div>
 
 
@@ -822,8 +881,8 @@ s2.stream()
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, maximum-scale=1.0, initial-scale=1.0&quot;&gt;
         &lt;%= csrf_meta_tags %&gt;
         &lt;title&gt;Mercury Editor&lt;/title&gt;
-        &lt;%= stylesheet_link_tag &#39;mercury&#39; %&gt;
-        &lt;%= javascript_include_tag &#39;jquery-1.7&#39;, &#39;mercury&#39; %&gt;
+        &lt;%= stylesheet_link_tag 'mercury' %&gt;
+        &lt;%= javascript_include_tag 'jquery-1.7', 'mercury' %&gt;
     &lt;/head&gt;</code></pre>
 </div>
 
@@ -842,7 +901,7 @@ s2.stream()
 <p>Now peep into the routes file, you could see this extra line,</p>
 
 <div>
-  <pre><code class='ruby'>mount Mercury::Engine =&gt; &#39;/&#39;</code></pre>
+  <pre><code class='ruby'>mount Mercury::Engine =&gt; '/'</code></pre>
 </div>
 
 
@@ -859,7 +918,7 @@ In <code>pages.html.erb </code></p>
   <pre><code class='ruby'>&lt;div class=&quot;control-group&quot;&gt;
         &lt;h3 class=&quot;section_header page-header&quot;&gt;Pricing page&lt;/h3&gt;
         &lt;div id=&quot;faq&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&gt;
-            &lt;%= render :file =&gt; file_path(@domain &#39;faq&#39;) %&gt;
+            &lt;%= render :file =&gt; file_path(@domain 'faq') %&gt;
         &lt;/div&gt;
     &lt;/div&gt;</code></pre>
 </div>
@@ -874,7 +933,7 @@ In <code>pages.html.erb </code></p>
 <p>This following line in above piece of code</p>
 
 <div>
-  <pre><code class='ruby'>&lt;%= render :file =&gt; file_path(@domain, &#39;faq&#39;) %&gt;</code></pre>
+  <pre><code class='ruby'>&lt;%= render :file =&gt; file_path(@domain, 'faq') %&gt;</code></pre>
 </div>
 
 
@@ -886,7 +945,7 @@ In <code>pages.html.erb </code></p>
   <pre><code class='ruby'>&lt;div class=&quot;control-group&quot;&gt;
         &lt;h3 class=&quot;section_header page-header&quot;&gt;Contact page&lt;/h3&gt;
         &lt;div id=&quot;contact&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&gt;
-            &lt;%= render :file =&gt; file_path(@domain, &#39;contact&#39;) %&gt;
+            &lt;%= render :file =&gt; file_path(@domain, 'contact') %&gt;
         &lt;/div&gt;
     &lt;/div&gt;</code></pre>
 </div>
@@ -898,7 +957,7 @@ In <code>pages.html.erb </code></p>
 
 <div>
   <pre><code class='ruby'>&lt;script&gt;
-        $(window).on(&#39;mercury:ready&#39;, function () {
+        $(window).on('mercury:ready', function () {
             Mercury.saveUrl = &quot;&lt;%= pages_upload_admin_domain_path(@domain) %&gt;&quot;;
         });
     &lt;/script&gt;</code></pre>
@@ -908,8 +967,8 @@ In <code>pages.html.erb </code></p>
 <p>You might also want to change the page thats to be redirected to once we are done with editing using mercury. We could bind on mercury&rsquo;s save event to get this done.</p>
 
 <div>
-  <pre><code class='ruby'>$(window).bind(&#39;mercury:saved&#39;, function() {
-        $(window.location.replace(&#39;/admin/domain&#39;));
+  <pre><code class='ruby'>$(window).bind('mercury:saved', function() {
+        $(window.location.replace('/admin/domain'));
     });</code></pre>
 </div>
 
@@ -949,9 +1008,9 @@ In <code>pages.html.erb </code></p>
   
   <entry>
     <title type="html"><![CDATA[Delayed Jobs in Rails: Adding custom attributes]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
+    <link href="http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes"/>
     <updated>2013-05-19T11:48:38+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
+    <id>http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes</id>
     <content type="html"><![CDATA[<p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
 </a></p>
 
@@ -1005,7 +1064,7 @@ In <code>pages.html.erb </code></p>
 
 <div>
   <pre><code class='ruby'>ActiveModel::MassAssignmentSecurity::Error:
-        Can&#39;t mass-assign protected attributes: job_owner_id, job_owner_type</code></pre>
+        Can't mass-assign protected attributes: job_owner_id, job_owner_type</code></pre>
 </div>
 
 
@@ -1014,7 +1073,7 @@ and paste in the following code</p>
 
 <div>
   <pre><code class='ruby'>class Delayed::Job &lt; ActiveRecord::Base
-      self.attr_protected if self.to_s == &#39;Delayed::Backend::ActiveRecord::Job&#39;   #loads protected attributes for                                                                                        # ActiveRecord instance
+      self.attr_protected if self.to_s == 'Delayed::Backend::ActiveRecord::Job'   #loads protected attributes for                                                                                        # ActiveRecord instance
     end</code></pre>
 </div>
 
@@ -1050,9 +1109,9 @@ and paste in the following code</p>
   
   <entry>
     <title type="html"><![CDATA[Git Reset, Revert, Merge Conflicts and the Faulty Merge]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts"/>
+    <link href="http://tech.sunilnkumar.com//github/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts"/>
     <updated>2011-12-18T14:13:37+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts</id>
+    <id>http://tech.sunilnkumar.com//github/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts</id>
     <content type="html"><![CDATA[<p style="text-align: left;">As a developer, I find <a title="Git" href="http://git-scm.com/" target="_blank">Git</a> both powerful and amazing. It tracks changes to source code and enables collaboration between developers. This post shows you how to easily fix wrong commits that are commonly made in development.</p>
 
 
@@ -1268,9 +1327,9 @@ and paste in the following code</p>
   
   <entry>
     <title type="html"><![CDATA[Solution to 'Wireless disabled by Hardware switch']]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2011/07/12/solution-to-wireless-disabled-by-hardware-switch"/>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/12/solution-to-wireless-disabled-by-hardware-switch"/>
     <updated>2011-07-12T19:05:52+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2011/07/12/solution-to-wireless-disabled-by-hardware-switch</id>
+    <id>http://tech.sunilnkumar.com//github/2011/07/12/solution-to-wireless-disabled-by-hardware-switch</id>
     <content type="html"><![CDATA[<p>Ohhh &hellip; Suddenly my wifi goes off( a combination of DELL with Ubuntu natty) and got a display &ndash; <strong>wireless disabled by hardware switch</strong>. Got down to googling and finally got this.</p>
 
 <p>To get back your wifi to start working, type in the following:</p>
@@ -1308,9 +1367,9 @@ and paste in the following code</p>
   
   <entry>
     <title type="html"><![CDATA[RubyconfIndia 2011]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2011/07/04/ruby-conf-india-2011"/>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011"/>
     <updated>2011-07-04T23:48:37+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2011/07/04/ruby-conf-india-2011</id>
+    <id>http://tech.sunilnkumar.com//github/2011/07/04/ruby-conf-india-2011</id>
     <content type="html"><![CDATA[<p>May 27,28 &ndash; Attended Rubyconf India 2011 held at Royal Orchid hotel, Bangalore.&lsquo;  For some one who has less than a year of hands on with ruby, it was great hearing from the giants &ndash; the very Matz himself expressed his love for the community(in his own peculiar Japaneese way), Ola bini, Chad Fowler,  Brian and others. What in short ? &ndash; awesome 2 days.</p>
 
 <p><a href="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg"><img src="http://sunilkumarn.files.wordpress.com/2011/07/255789_178700702184127_100001325964091_432000_4010094_n.jpg" alt="" /></a></p>
@@ -1327,9 +1386,9 @@ and paste in the following code</p>
   
   <entry>
     <title type="html"><![CDATA[Module functions as class and instance methods]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2011/07/04/module-functions-as-class-and-instance-methods"/>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/04/module-functions-as-class-and-instance-methods"/>
     <updated>2011-07-04T10:50:51+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2011/07/04/module-functions-as-class-and-instance-methods</id>
+    <id>http://tech.sunilnkumar.com//github/2011/07/04/module-functions-as-class-and-instance-methods</id>
     <content type="html"><![CDATA[<p>Consider you have a module and a class.</p>
 
 <p>module Mymod and a class Myclass.</p>
@@ -1436,18 +1495,18 @@ and paste in the following code</p>
   
   <entry>
     <title type="html"><![CDATA[Back after a Long Gap...]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2011/07/03/back-after-a-long-gap"/>
+    <link href="http://tech.sunilnkumar.com//github/2011/07/03/back-after-a-long-gap"/>
     <updated>2011-07-03T15:26:25+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2011/07/03/back-after-a-long-gap</id>
+    <id>http://tech.sunilnkumar.com//github/2011/07/03/back-after-a-long-gap</id>
     <content type="html"><![CDATA[<p>Haven&rsquo;t Written any thing for  quite some time now. It was last november that i actually sat down to write something. Started off my professional career then and obviously was busy with work and stuff. Need to get back to writing stuff, little and bigger stuffs that i have learnt while working. In between i have fallen in love with a a new language &ndash; Ruby, the popular choice for web apps these days.  From a person who never had any kind of fondness for OOP, i have started loving to talk about about objects and classes. Learnt the difference between fun coding and professional coding. These 6-8 months has really been a learning curve for me and i really do hope that my following posts would reflect that.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Getting started with PHP and apache]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/11/27/getting-started-with-php-and-apache"/>
+    <link href="http://tech.sunilnkumar.com//github/2010/11/27/getting-started-with-php-and-apache"/>
     <updated>2010-11-27T14:44:10+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/11/27/getting-started-with-php-and-apache</id>
+    <id>http://tech.sunilnkumar.com//github/2010/11/27/getting-started-with-php-and-apache</id>
     <content type="html"><![CDATA[<p>Someone who gives it a thought of using PHP , apache and stuff for the first time will be faced up with a few number of fixed problems . Configuring your apache server , establishing a connection between PHP and apache , stuffs like that . Here is a basic introduction to start using these things and kick off as a web programmer .</p>
 
 <p>Obviously you need to have PHP and apache installed on your system .</p>
@@ -1484,9 +1543,9 @@ and paste in the following code</p>
   
   <entry>
     <title type="html"><![CDATA[GreaseMonkey : Customizing your webpages ]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/11/24/greasemonkey-customizing-your-webpages"/>
+    <link href="http://tech.sunilnkumar.com//github/2010/11/24/greasemonkey-customizing-your-webpages"/>
     <updated>2010-11-24T22:04:29+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/11/24/greasemonkey-customizing-your-webpages</id>
+    <id>http://tech.sunilnkumar.com//github/2010/11/24/greasemonkey-customizing-your-webpages</id>
     <content type="html"><![CDATA[<p>There would have been times when you would have felt if the web page in front of you behaved a bit more according to your like . This might specially happen if the page consists of forms that you fill with data directed to live servers .  In such cases you wouldn&rsquo;t mind customizing the page to suit your needs so that you don&rsquo;t do some nonsense that would result in chaos .</p>
 
 <p>Firefox , i see many using it as their default browser , offers a plugin called &lsquo;<strong>Grease monkey</strong>&#8216;  that allows you to do just that . All you need to is to install the plugin , write your own javascripts , install them ( thats pretty easy to do ) and start using them  .</p>
@@ -1521,9 +1580,9 @@ and paste in the following code</p>
   
   <entry>
     <title type="html"><![CDATA[Using Screens]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/11/24/using-screens"/>
+    <link href="http://tech.sunilnkumar.com//github/2010/11/24/using-screens"/>
     <updated>2010-11-24T20:43:00+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/11/24/using-screens</id>
+    <id>http://tech.sunilnkumar.com//github/2010/11/24/using-screens</id>
     <content type="html"><![CDATA[<p>You might have often had the experience where you would have had to open quite a few terminals on your screen simultaneously . This might often be the case when you are doing stuffs like data processing on particular files and you intend not to sit idle during that particular time . What you do is to keep unnecessary number of terminals open on your screen .</p>
 
 <p>You could get rid of this by using the &lsquo;screens&rsquo; option in Linux . This allows you to enter a new screen where you could perform time consuming processes like a data processing operation using the  &lsquo;awk&#8217;  command . Start the process in the screen , exit the screen and now do your own stuff in the main console , go back to your screen after a while and view the results of  whatever operations you had performed . You could do all this stuff without the necessity of opening terminals again and again .</p>
@@ -1550,9 +1609,9 @@ and paste in the following code</p>
   
   <entry>
     <title type="html"><![CDATA[Semaphores and Synchronization Patterns]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/10/26/semaphores-and-synchronization-patterns"/>
+    <link href="http://tech.sunilnkumar.com//github/2010/10/26/semaphores-and-synchronization-patterns"/>
     <updated>2010-10-26T09:20:46+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/10/26/semaphores-and-synchronization-patterns</id>
+    <id>http://tech.sunilnkumar.com//github/2010/10/26/semaphores-and-synchronization-patterns</id>
     <content type="html"><![CDATA[<p>Semaphores as we know is a mechanism that is used to solve the issue of synchronization . The concept and use of semaphores is a bit more than what you normally call &lsquo; tricky &rsquo; .Here we try and analyze a basic synchronization pattern and solve the issue with semaphores  .</p>
 
 <p>Have a look into the pattern given below .</p>
@@ -1603,9 +1662,9 @@ The &lsquo;<strong>down</strong> &rsquo; operation just before the two statement
   
   <entry>
     <title type="html"><![CDATA[Memcheck : A Memory Error Detection Tool]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/10/21/memcheck-a-memory-error-detection-tool"/>
+    <link href="http://tech.sunilnkumar.com//github/2010/10/21/memcheck-a-memory-error-detection-tool"/>
     <updated>2010-10-21T09:13:49+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/10/21/memcheck-a-memory-error-detection-tool</id>
+    <id>http://tech.sunilnkumar.com//github/2010/10/21/memcheck-a-memory-error-detection-tool</id>
     <content type="html"><![CDATA[<p>Linux distros provide a  tool suite called <strong>&lsquo;Valgrind&rsquo;</strong> that consists of a number of tools that help you make your programs faster and more correct . The most popular tool out of this is called is <strong>memcheck</strong> that is used to detect memory related errors in C and C++ programs that can lead to serious issues like  segfaults and even more grevious issues like unpredictable behaviours .</p>
 
 <p>Lets take a look into how we use the tool &lsquo;memcheck&rsquo; so that we detect , try and avoid the memory related issues in our program.</p>
@@ -1695,9 +1754,9 @@ The first line of the &lsquo;LEAK SUMMARY &rsquo; is the most significant to us 
   
   <entry>
     <title type="html"><![CDATA[Common Subexpression elimination by GCC]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/10/19/common-subexpression-elimination-cse"/>
+    <link href="http://tech.sunilnkumar.com//github/2010/10/19/common-subexpression-elimination-cse"/>
     <updated>2010-10-19T17:12:16+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/10/19/common-subexpression-elimination-cse</id>
+    <id>http://tech.sunilnkumar.com//github/2010/10/19/common-subexpression-elimination-cse</id>
     <content type="html"><![CDATA[<p><strong>Common subexpression elimination</strong> (CSE) is a compiler optimization technique of finding redundant expression evaluations, and replacing them with a single computation . This saves the time overhead resulted by evaluating the expression for more than once . We will have a look into this phenomenon by considering a simple code and again taking a walk through its assembly code .</p>
 
 <p>Consider the code that we have written and saved in file &lsquo; pgm.c &rsquo;</p>
@@ -1795,70 +1854,6 @@ r = i + j + 30;</code></p>
 <p>r = f() + g() + 10</p>
 
 <p>where f() and g() are functions . In an unoptimized code , the technique of CSE wouldn&rsquo;t be used and hence there would be overhead due to the redundancy added with the more serious problem of having to call each function twice . The technique of <strong>Common Subexpression Elimination</strong> avoids this very redundancy  .</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Function inlining]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/10/19/function-inlining"/>
-    <updated>2010-10-19T15:43:05+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/10/19/function-inlining</id>
-    <content type="html"><![CDATA[<p>Function inlining is performed when a request has been made to the compiler to perform optimization on the code . The compiler will try (its important to remember that ,it is a request made to the compiler, not an order) and insert the complete body of the function in every place in the code where that function is used so as to eliminate the time overhead when the function is called . We could get an idea of function inlining by peeping into the assembly code generated by the compiler .</p>
-
-<p>We do this with the help of a small program :</p>
-
-<p><code>int sqr(int x)
-{
-return x*x;
-}</code></p>
-
-<p><code>main()
-{
-printf("%d\n", sqr(10));
-}</code></p>
-
-<p>We have the program written in a file  &lsquo;pgm.c&rsquo;</p>
-
-<p>Do :</p>
-
-<p><strong>$: cc -S pgm.c
-</strong>
-We could now view the assembly code generated by the compiler</p>
-
-<p>Do:</p>
-
-<p><strong>$: less pgm.s</strong></p>
-
-<p>I found out the following lines in the &lsquo;main&rsquo; function of &lsquo; pgm.s &rsquo;</p>
-
-<p><code>movl    $10, (%esp)
-call    sqr
-</code>
-You would have the idea cleared up</p>
-
-<p>The constant &lsquo;10 &#8216;  is stored in the stack , and the call to the function &#8216;sqr &rsquo; is made . The result of squaring up 10 is performed in the function &lsquo;sqr&rsquo; . This obviously would create overheads for invoking the function .</p>
-
-<p>Now consider the case where you have requested the compiler to perform all optimizations on your code .</p>
-
-<p><strong>$ :cc -S -O3 pgm.c</strong></p>
-
-<p>Now have a look into your assembly code .</p>
-
-<p><strong>$ :less pgm.s
-</strong></p>
-
-<p>Now just have a look into the your &lsquo;main&rsquo; function and find out what you see where you had seen the previous two lines that i did mention above .</p>
-
-<p>You would just find a singe line corresponding to those two lines which you had found in your assembly code that was not optimized .</p>
-
-<p>This is what i found ,</p>
-
-<p><code>movl    $100, 4(%esp)
-</code></p>
-
-<p>The final value that you obtain after finding the square of 10 ( i.e 100 ) is has been moved into the stack , but where is the call to the function &lsquo;sqr&rsquo; ?</p>
-
-<p>You have just seen &lsquo; <em><strong>function inlining</strong></em> &rsquo;. The function body had been inserted at the point where the function was used and the value &lsquo;100 &rsquo; calculated at compile time instead of performing the calculation at run time .This saves a lot of time that would have been required to calculate the value of &lsquo;100&rsquo; by making a call to the function at run time .Performing function inlining avoids this .</p>
 ]]></content>
   </entry>
   

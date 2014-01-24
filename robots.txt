@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://tech.sunilnkumar.com/technical/sitemap.xml 
+Sitemap: http://tech.sunilnkumar.com//github/sitemap.xml 

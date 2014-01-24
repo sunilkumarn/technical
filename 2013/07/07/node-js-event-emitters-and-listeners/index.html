@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="When building client side applications with Javascript, events and handling them are quite common. Consider, for example, $(&#39;#toBeClicked&#39;). &hellip;">
+  <meta name="description" content="When building client side applications with Javascript, events and handling them are quite common. Consider, for example, $('#toBeClicked').on('click &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners">
+  <link rel="canonical" href="http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -50,7 +50,7 @@
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:tech.sunilnkumar.com/technical" />
+    <input type="hidden" name="q" value="site:tech.sunilnkumar.com//github" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -97,7 +97,7 @@
 <div class="entry-content"><p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
 
 <div>
-  <pre><code class='javascript'>$(&#39;#toBeClicked&#39;).on(&#39;click&#39;, function() { alert(&#39;clicked&#39;) })</code></pre>
+  <pre><code class='javascript'>$('#toBeClicked').on('click', function() { alert('clicked') })</code></pre>
 </div>
 
 
@@ -108,7 +108,7 @@
 <p>Lets straight away build a custom event emitter and see whats going on,</p>
 
 <div>
-  <pre><code class='javascript'>EventEmitter = require(&#39;events&#39;).EventEmitter       // The Event Emitter constructor in the events.js module .</code></pre>
+  <pre><code class='javascript'>EventEmitter = require('events').EventEmitter       // The Event Emitter constructor in the events.js module .</code></pre>
 </div>
 
 
@@ -122,7 +122,7 @@
 <p>We listen for the error event,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.on(&#39;error&#39;, function(msg1, msg2) { console.log(&#39;ERR: &#39; + msg1 + &#39; &#39; + msg2 ) })</code></pre>
+  <pre><code class='javascript'>emitter.on('error', function(msg1, msg2) { console.log('ERR: ' + msg1 + ' ' + msg2 ) })</code></pre>
 </div>
 
 
@@ -133,14 +133,14 @@
 <p>We could also listen as,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.addListener(&#39;error&#39;, function(msg1, msg2) { console.log(&#39;ERR: &#39; + msg1 + &#39; &#39; + msg2 ) } )</code></pre>
+  <pre><code class='javascript'>emitter.addListener('error', function(msg1, msg2) { console.log('ERR: ' + msg1 + ' ' + msg2 ) } )</code></pre>
 </div>
 
 
 <p>Now we emit the error event,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.emit(&#39;error&#39;, &#39;Bug detected&#39;, &#39;@ Step 4&#39;)</code></pre>
+  <pre><code class='javascript'>emitter.emit('error', 'Bug detected', '@ Step 4')</code></pre>
 </div>
 
 
@@ -152,14 +152,14 @@
 <p>Now that we have got to know how events are emitted and handled via listeners, lets try out a small server that listens for requests and processes them.</p>
 
 <div>
-  <pre><code class='javascript'>var http = require(&#39;http&#39;),
-    sys = require(&#39;sys&#39;);
+  <pre><code class='javascript'>var http = require('http'),
+    sys = require('sys');
 
 var server = http.createServer(function(request, response) {
-  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
+  request.on('data', function (chunk) { console.log(chunk.toString()); });
 
-  request.on(&#39;end&#39;, function() {
-    response.write(&#39;Request Completed!&#39;);
+  request.on('end', function() {
+    response.write('Request Completed!');
     response.end();
   });
 
@@ -190,7 +190,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>if (requestListener) {
-  this.addListener(&#39;request&#39;, requestListener); // event listener for the server
+  this.addListener('request', requestListener); // event listener for the server
 }</code></pre>
 </div>
 
@@ -201,10 +201,10 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>function(request, response) {
-  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
+  request.on('data', function (chunk) { console.log(chunk.toString()); });
 
-  request.on(&#39;end&#39;, function() {
-    response.write(&#39;Request Completed!&#39;);
+  request.on('end', function() {
+    response.write('Request Completed!');
     response.end();
   });
 }</code></pre>
@@ -216,7 +216,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 <p>Now, further inspecting the <strong>_http_server.js </strong>module<strong>, </strong>we could also see how the request event is emitted,</p>
 
 <div>
-  <pre><code class='javascript'>self.emit(&#39;request&#39;, req, res); // event emitter for the server</code></pre>
+  <pre><code class='javascript'>self.emit('request', req, res); // event emitter for the server</code></pre>
 </div>
 
 
@@ -226,11 +226,11 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>var server = http.createServer()
-server.on(&#39;request&#39;, function(request, response) {
-  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
+server.on('request', function(request, response) {
+  request.on('data', function (chunk) { console.log(chunk.toString()); });
 
-  request.on(&#39;end&#39;, function() {
-    response.write(&#39;Request Completed!&#39;);
+  request.on('end', function() {
+    response.write('Request Completed!');
     response.end();
   })
 });</code></pre>
@@ -240,7 +240,7 @@ server.on(&#39;request&#39;, function(request, response) {
 <p>Here when we create the server instance, we do not pass the requestListener( <em>Do notice that requestListener was only optional in http.createServer([requestListener]) </em>). Instead we attach a listener of our own on the server which listens to the &lsquo;request&rsquo; event and performs the callback function when the request event is emitted, i.e,</p>
 
 <div>
-  <pre><code class='javascript'>server.on(&#39;request&#39;, function(request, response) { ... });</code></pre>
+  <pre><code class='javascript'>server.on('request', function(request, response) { ... });</code></pre>
 </div>
 
 
@@ -281,7 +281,7 @@ server.on(&#39;request&#39;, function(request, response) {
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners" >Tweet</a>
   
   
   
@@ -312,6 +312,10 @@ server.on(&#39;request&#39;, function(request, response) {
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/01/24/rubymotion-using-progresshud-while-making-http-calls">Rubymotion: Using ProgressHud While Making Http Calls</a>
+      </li>
     
       <li class="post">
         <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
@@ -347,10 +351,6 @@ server.on(&#39;request&#39;, function(request, response) {
     
       <li class="post">
         <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to 'Wireless Disabled by Hardware Switch'</a>
       </li>
     
   </ul>
@@ -390,8 +390,8 @@ server.on(&#39;request&#39;, function(request, response) {
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners';
-        var disqus_url = 'http://tech.sunilnkumar.com/technical/2013/07/07/node-js-event-emitters-and-listeners';
+        var disqus_identifier = 'http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners';
+        var disqus_url = 'http://tech.sunilnkumar.com//github/2013/07/07/node-js-event-emitters-and-listeners';
         var disqus_script = 'embed.js';
       
     (function () {

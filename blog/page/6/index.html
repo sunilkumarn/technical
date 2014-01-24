@@ -9,7 +9,8 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="The static declaration can be applied to both external and internal variables. The static declaration if applied to external variables limits the &hellip;">
+  <meta name="description" content="Segmentation fault occurs when an attempt is made to access unallocated memory.
+Segmentation faults with pointers might prove to be a task to deal &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tech.sunilnkumar.com/technical/blog/page/6">
+  <link rel="canonical" href="http://tech.sunilnkumar.com//github/blog/page/6">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -50,7 +51,7 @@
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:tech.sunilnkumar.com/technical" />
+    <input type="hidden" name="q" value="site:tech.sunilnkumar.com//github" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -66,6 +67,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/11/segmentation-faults-with-pointers-in-c">Segmentation Faults With Pointers in C&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-11T01:17:48+05:30" pubdate data-updated="true">Aug 11<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/11/segmentation-faults-with-pointers-in-c#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Segmentation fault occurs when an attempt is made to access unallocated memory.
+Segmentation faults with pointers might prove to be a task to deal with .This is mainly because of the fact that the actual area of the fault has to be identified and then the fault cleared. This might sometimes leave you in a pondering state. If the reasons that cause the segmentation faults are known , then it might help us to get rid of it quite quickly&hellip;
+The major reasons for the segmentation fault to occur while using pointers might be the following..
+Dereferencing NULL
+and dereferencing an uninitialized pointer.
+Both these cases would result in segmentation fault.</p>
+
+<p>Whenever a segmentation fault occurs-the best way to deal with it is to find out the point of occurrence at first and then find out exactly why it happened..
+The best way to spot a segmentation fault is to install gdb on your system.
+This would enable you to find out the point of occurrence of the fault and the fault can be cleared.
+The best practice while using pointers is always to<strong> initialize the pointer to NULL at first</strong>. Therefore when using the gdb you can see the null value( as 0x0 in systems)
+<em><em>/</em>  consider a section of the debugging process</em>/</p>
+
+<p>51  <em>dayofmonth=yearday;
+(gdb) s
+Program received signal SIGSEGV, Segmentation fault.
+0x0804862f in year_day (year=12, yearday=15, <em>dayofmonth=0x0, month=0x0</em>) at pmonthday.c:51
+51  </em>dayofmonth=yearday;</p>
+
+<p>*/**</p>
+
+<p>Here my pointers are &lsquo;dayofmonth&rsquo; and &lsquo;month&rsquo;..Hence from the debugging process its clear that the pointers have been set to NULL which indicates that we have not initialized the pointer to a legal memory address.
+Again there are other methods identify the problem. Print all the values of pointers used in the program and see if any value differs from the others by a far long distance. If yes,this address space might be illegal. But theres no guarantee that this would be a solution.
+Of course it may happen that sometimes you might get lucky with uninitialized pointers and there might be no segmentation fault, but its better not to make a habit of that because you might a segfault anytime. Hence its always better to initialize the pointer to NULL at first and then to a legal address.
+A segmentation fault could be cleared by just setting the pointer to some legal address.
+For an eg..
+&lsquo;p&rsquo; is the uninitialized pointer that has caused the fault, just set it to the base address of an array as
+char array[1000];
+char *p=array;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -683,69 +750,6 @@ In case you find that the output you obtain has got some definite value but is m
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/08/01/local-and-external-variables">Local and External Variables</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-01T19:55:02+05:30" pubdate data-updated="true">Aug 1<span>st</span>, 2010</time>
-        
-         | <a href="/2010/08/01/local-and-external-variables#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Local variables are variables that come into existence only when the function is called and disappears thereafter whereas external variables are accessible to all functions of the program.
-To illustrate the difference between these two kinds of variables ,consider a function <strong>‘getline()’ </strong>
-At first we consider the case where local variables are used. The call and the function definition in this case would be as follows:
-Function call:
-<strong>getline(line,MAXLENGTH);</strong>
-Function definition:
-<strong>int getline(char s[],int lim)
-{
-}
-</strong>Here there is a requirement to pass the arguments from the caller function to the called function through the parenthesis as the variables used are local to the function. The value of the variable &lsquo;line&rsquo; is internal to the caller function.
-Whereas when we consider the case of external variables ,the situation changes. Consider the case of declaring variables externally:
-**#include</p>
-
-<h1>define MAXLINE 100</h1>
-
-<p>char line[MAXLINE];<em><em>       /</em>external variable declaration/</em></p>
-
-<p>The variables line has been declared externally.
-Hence the call and definition of the function ‘getline()’ could be modified as follows:
-Function call:
-<strong>getline()</strong>
-Function definition:
-<strong>int getline(void)
-{
-}</strong>
-The modified values of the variables would be available to all the functions.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -761,6 +765,10 @@ The modified values of the variables would be available to all the functions.</p
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/01/24/rubymotion-using-progresshud-while-making-http-calls">Rubymotion: Using ProgressHud While Making Http Calls</a>
+      </li>
     
       <li class="post">
         <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
@@ -796,10 +804,6 @@ The modified values of the variables would be available to all the functions.</p
     
       <li class="post">
         <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to &#8216;Wireless Disabled by Hardware Switch&#8217;</a>
       </li>
     
   </ul>

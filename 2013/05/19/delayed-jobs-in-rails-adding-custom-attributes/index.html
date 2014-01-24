@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">
+  <link rel="canonical" href="http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -50,7 +50,7 @@
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:tech.sunilnkumar.com/technical" />
+    <input type="hidden" name="q" value="site:tech.sunilnkumar.com//github" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -147,7 +147,7 @@
 
 <div>
   <pre><code class='ruby'>ActiveModel::MassAssignmentSecurity::Error:
-        Can&#39;t mass-assign protected attributes: job_owner_id, job_owner_type</code></pre>
+        Can't mass-assign protected attributes: job_owner_id, job_owner_type</code></pre>
 </div>
 
 
@@ -156,7 +156,7 @@ and paste in the following code</p>
 
 <div>
   <pre><code class='ruby'>class Delayed::Job &lt; ActiveRecord::Base
-      self.attr_protected if self.to_s == &#39;Delayed::Backend::ActiveRecord::Job&#39;   #loads protected attributes for                                                                                        # ActiveRecord instance
+      self.attr_protected if self.to_s == 'Delayed::Backend::ActiveRecord::Job'   #loads protected attributes for                                                                                        # ActiveRecord instance
     end</code></pre>
 </div>
 
@@ -223,7 +223,7 @@ and paste in the following code</p>
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes" >Tweet</a>
   
   
   
@@ -254,6 +254,10 @@ and paste in the following code</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/01/24/rubymotion-using-progresshud-while-making-http-calls">Rubymotion: Using ProgressHud While Making Http Calls</a>
+      </li>
     
       <li class="post">
         <a href="/2013/12/18/heroku-deployment-with-mongodb-database">Heroku Deployment With MongoDB Database</a>
@@ -289,10 +293,6 @@ and paste in the following code</p>
     
       <li class="post">
         <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/07/12/solution-to-wireless-disabled-by-hardware-switch">Solution to 'Wireless Disabled by Hardware Switch'</a>
       </li>
     
   </ul>
@@ -332,8 +332,8 @@ and paste in the following code</p>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes';
-        var disqus_url = 'http://tech.sunilnkumar.com/technical/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes';
+        var disqus_identifier = 'http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes';
+        var disqus_url = 'http://tech.sunilnkumar.com//github/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes';
         var disqus_script = 'embed.js';
       
     (function () {

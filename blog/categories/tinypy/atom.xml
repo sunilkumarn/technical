@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Tinypy | Scribblings]]></title>
-  <link href="http://tech.sunilnkumar.com/technical/blog/categories/tinypy/atom.xml" rel="self"/>
-  <link href="http://tech.sunilnkumar.com/technical/"/>
-  <updated>2014-01-09T16:51:13+05:30</updated>
-  <id>http://tech.sunilnkumar.com/technical/</id>
+  <link href="http://tech.sunilnkumar.com//github/blog/categories/tinypy/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com//github/"/>
+  <updated>2014-01-24T20:08:26+05:30</updated>
+  <id>http://tech.sunilnkumar.com//github/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Analyzing the Tinypy Virtual Machine ]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/09/24/analyzing-the-tinypy-virtual-machine"/>
+    <link href="http://tech.sunilnkumar.com//github/2010/09/24/analyzing-the-tinypy-virtual-machine"/>
     <updated>2010-09-24T02:22:00+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/09/24/analyzing-the-tinypy-virtual-machine</id>
+    <id>http://tech.sunilnkumar.com//github/2010/09/24/analyzing-the-tinypy-virtual-machine</id>
     <content type="html"><![CDATA[<p>The major task in tinypy is to analyze the working of the virtual machine. Analyzing and understanding its source code is, obviously, the major challenge that is faced. The code itself is not well arranged and the lack of proper documentation makes the challenge even bigger. Proper use of the GNU debugger, &lsquo;gdb&rsquo;, and the indexing tool, Ctags makes the process of analysis of the VM a lot simpler. Perhaps the best way to understand the working of the VM is to use the VM to execute the byte code of a simple python program and see and understand the actual flow of control. Here a sample program &lsquo;sample.py&rsquo; is used:</p>
 
 <p><code>def add(a,b):
@@ -104,9 +104,9 @@ would give you the union that stores the next element of the list . The size of 
   
   <entry>
     <title type="html"><![CDATA[An Overview of TinyPy]]></title>
-    <link href="http://tech.sunilnkumar.com/technical/2010/09/24/an-overview-of-tinypy"/>
+    <link href="http://tech.sunilnkumar.com//github/2010/09/24/an-overview-of-tinypy"/>
     <updated>2010-09-24T02:19:32+05:30</updated>
-    <id>http://tech.sunilnkumar.com/technical/2010/09/24/an-overview-of-tinypy</id>
+    <id>http://tech.sunilnkumar.com//github/2010/09/24/an-overview-of-tinypy</id>
     <content type="html"><![CDATA[<p>TinyPython is a minimalist implementation of Python in 64K code. It is a parser and byte-code compiler written in TinyPython itself. It is also fully bootstrapped in the sense that initially, TinyPython converts a Python script (.py) into a special TinyPy byte-code format (.tpc), and this generated code is then passed into a  subset of the TinyPython source code called the Virtual Machine, where the actual execution takes place.</p>
 
 <p>One can even extend the idea that if the VM is compiled into a low-level format adaptable to a particular micro controller, then the VM will reside inside that chip, and any .tpc files can be downloaded into the chip as its input.</p>

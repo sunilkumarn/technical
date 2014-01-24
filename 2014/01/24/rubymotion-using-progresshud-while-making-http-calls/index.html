@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Recursion in C.. - Scribblings</title>
+  <title>Rubymotion: Using ProgressHud while making Http calls - Scribblings</title>
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Recursion may be used in C programs, where one function may be called within itself. The method of recursion will be simpler to understand with a &hellip;">
+  <meta name="description" content="Rubymotion: Using ProgressHud while making Http calls With Rubymotion, there are quite a few methods to indicate activities including the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tech.sunilnkumar.com//github/2010/08/08/recursion-in-c">
+  <link rel="canonical" href="http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -69,7 +69,7 @@
   
   <header>
     
-      <h1 class="entry-title">Recursion in C..</h1>
+      <h1 class="entry-title">Rubymotion: Using ProgressHud While Making Http Calls</h1>
     
     
       <p class="meta">
@@ -85,7 +85,7 @@
   
 
 
-<time datetime="2010-08-08T22:17:39+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+<time datetime="2014-01-24T20:04:00+05:30" pubdate data-updated="true">Jan 24<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -94,53 +94,57 @@
   </header>
 
 
-<div class="entry-content"><p>Recursion may be used in C programs, where one function may be called within itself. The method of recursion will be simpler to understand with a small program code. The code is as follows.</p>
+<div class="entry-content"><p>Rubymotion: Using ProgressHud while making Http calls</p>
 
-<h1>include</h1>
+<p>With Rubymotion, there are quite a few methods to indicate activities including the uiactivityindicators. What I have used here is the MBProgressBarHud to indicate an an ongoing activity ( an http call in progress )</p>
 
-<p>void printd(int n)
-{</p>
-
-<pre><code>if (n &lt; 0) { 
-    putchar('-'); 
-    n = -n; 
-} 
-if (n / 10) 
-    printd(n / 10); 
-putchar(n % 10 + '0'); 
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_mobile_number
 </code></pre>
 
-<p>}</p>
+<p>The submit button on event &lsquo;Touch Up Inside&rsquo; invokes the action submit_mobile_number.</p>
 
-<p>The program is used to convert an integer decimal into its character digits.i.e 123 will be converted into 1
-2
-3
-&hellip;.the digits of the integer.
-Lets see how the code works.
-Consider the initial value of n as 123.
-printd(123)             //level 1
-123/10 is true:Hence
-printd(123/10);</p>
+<h4>controller/msisdn_view_controller.rb</h4>
 
-<p>printd(12)              //level 2
-12/10 is true:Hence
-printd(12/10);</p>
+<pre><code>def viewDidLoad
+  @hud = MBProgressHUD.alloc.initWithWindow(UIApplication.sharedApplication.keyWindow)
+  self.view.addSubview(@hud)
+end
 
-<p>printd(1)               //level 3
-1/10 is not true;
-hence putchar(1%10+&lsquo;0&rsquo;);        //1 is printed
-}</p>
+def submit_mobile_number(sender)
+  msisdn = self.msisdnTextField.text
+  prepare_for_submission
+  User.registration msisdn, do
+    after_submission
+  end
+end
 
-<p>Now the call to the completed function printd(1) came from the function printd(12/10)(level 2)  and the control returns to the end of the function printd(12/10) (n being 12)
-The next statement is
-hence putchar(12%10+&lsquo;0&rsquo;);       // 2 is printed</p>
+def prepare_for_submission
+  @hud.labelText = "Provisioning"
+  @hud.show(true)
+  self.view.userInteractionEnabled = false
+end
 
-<p>Again the call to the completed function .i.e (printd(12)) is not from the main, but its from the function printd(123/10)(level 3) and hence the control is returned to the end of the function(n being 123).
-The next statement is
-hence putchar(123%10+&lsquo;0&rsquo;);      // 3 is printed
-Now the call to completed function(printd(123)) came from the main() and the control is returned there and the program proceeds.</p>
+def after_submission
+  @hud.labelText = "Completed";
+  @hud.hide(true)
+  performSegueWithIdentifier('submission_segue', sender: self)
+end
+</code></pre>
 
-<p>Hope this gives a basic idea of the working of recursive functions. The function used in quick sort algorithm for sorting would be a good way to understand the working of recursion in a better way.</p>
+<h4>models/user.rb</h4>
+
+<pre><code>def self.registration(msisdn, &amp;callback)
+  url = 'some_url'
+  BW::HTTP.get(url) do |response|
+    callback.call
+  end
+end
+</code></pre>
+
+<p>As you could see from the code above, we initiate an MBProgressHUDV view and add it as a subview of the main UIView. This is done in the viewDidLoad delegate.</p>
+
+<p>Before the call to <strong>registration</strong> ( the User model method which makes an http connection ) is made, the <strong>prepare_for_submission</strong> method displays the hud. The <strong>after_submission</strong> method is passed as a callback block to the <strong>registration</strong> method. On completion of the http request, this block is executed which hides the hud and performs the segue to present the next controller.</p>
 </div>
 
 
@@ -149,7 +153,7 @@ Now the call to completed function(printd(123)) came from the main() and the con
       
   
 
-<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Sunil Kumar</span></span>
 
       
 
@@ -163,12 +167,12 @@ Now the call to completed function(printd(123)) came from the main() and the con
   
 
 
-<time datetime="2010-08-08T22:17:39+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+<time datetime="2014-01-24T20:04:00+05:30" pubdate data-updated="true">Jan 24<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/c/'>C</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -177,7 +181,7 @@ Now the call to completed function(printd(123)) came from the main() and the con
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com//github/2010/08/08/recursion-in-c" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com//github/2010/08/08/recursion-in-c" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls" >Tweet</a>
   
   
   
@@ -186,10 +190,8 @@ Now the call to completed function(printd(123)) came from the main() and the con
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/2010/08/08/a-bit-about-bitwise-operators" title="Previous Post: A bit about bitwise operators....">&laquo; A bit about bitwise operators....</a>
+        <a class="basic-alignment left" href="/2013/12/18/heroku-deployment-with-mongodb-database" title="Previous Post: Heroku deployment with MongoDB database">&laquo; Heroku deployment with MongoDB database</a>
       
-      
-        <a class="basic-alignment right" href="/2010/08/08/debugging-with-the-gdb" title="Next Post: Debugging with the GDB">Debugging with the GDB &raquo;</a>
       
     </p>
   </footer>
@@ -286,8 +288,8 @@ Now the call to completed function(printd(123)) came from the main() and the con
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://tech.sunilnkumar.com//github/2010/08/08/recursion-in-c';
-        var disqus_url = 'http://tech.sunilnkumar.com//github/2010/08/08/recursion-in-c';
+        var disqus_identifier = 'http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls';
+        var disqus_url = 'http://tech.sunilnkumar.com//github/2014/01/24/rubymotion-using-progresshud-while-making-http-calls';
         var disqus_script = 'embed.js';
       
     (function () {
