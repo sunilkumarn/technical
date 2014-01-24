@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="With Rubymotion, there are quite a few methods to indicate activities including the uiactivityindicators. What I have used here is the &hellip;">
+  <meta name="description" content="With Rubymotion, there are quite a few methods to indicate activities. What I have used here is the MBProgressBarHud to indicate an ongoing activity &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -94,17 +94,16 @@
   </header>
 
 
-<div class="entry-content"><p>With Rubymotion, there are quite a few methods to indicate activities including the uiactivityindicators. What I have used here is the MBProgressBarHud to indicate an an ongoing activity ( an http call in progress )</p>
-
-<pre><code>outlet :submitButton, UIButton
-ib_action :submit_mobile_number
-</code></pre>
+<div class="entry-content"><p>With Rubymotion, there are quite a few methods to indicate activities. What I have used here is the MBProgressBarHud to indicate an ongoing activity ( an http call in progress )</p>
 
 <p>The submit button on event &lsquo;Touch Up Inside&rsquo; invokes the action submit_mobile_number.</p>
 
 <h4>controller/msisdn_view_controller.rb</h4>
 
-<pre><code>def viewDidLoad
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_mobile_number  #The submit button on event ‘Touch Up Inside’ invokes the action submit_mobile_number
+
+def viewDidLoad
   @hud = MBProgressHUD.alloc.initWithWindow(UIApplication.sharedApplication.keyWindow)
   self.view.addSubview(@hud)
 end

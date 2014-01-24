@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-01-24T20:14:07+05:30</updated>
+  <updated>2014-01-24T20:16:33+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -18,17 +18,16 @@
     <link href="http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls"/>
     <updated>2014-01-24T20:04:00+05:30</updated>
     <id>http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls</id>
-    <content type="html"><![CDATA[<p>With Rubymotion, there are quite a few methods to indicate activities including the uiactivityindicators. What I have used here is the MBProgressBarHud to indicate an an ongoing activity ( an http call in progress )</p>
-
-<pre><code>outlet :submitButton, UIButton
-ib_action :submit_mobile_number
-</code></pre>
+    <content type="html"><![CDATA[<p>With Rubymotion, there are quite a few methods to indicate activities. What I have used here is the MBProgressBarHud to indicate an ongoing activity ( an http call in progress )</p>
 
 <p>The submit button on event &lsquo;Touch Up Inside&rsquo; invokes the action submit_mobile_number.</p>
 
 <h4>controller/msisdn_view_controller.rb</h4>
 
-<pre><code>def viewDidLoad
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_mobile_number  #The submit button on event ‘Touch Up Inside’ invokes the action submit_mobile_number
+
+def viewDidLoad
   @hud = MBProgressHUD.alloc.initWithWindow(UIApplication.sharedApplication.keyWindow)
   self.view.addSubview(@hud)
 end
