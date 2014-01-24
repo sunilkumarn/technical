@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-01-24T20:18:23+05:30</updated>
+  <updated>2014-01-24T20:46:53+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -19,8 +19,6 @@
     <updated>2014-01-24T20:04:00+05:30</updated>
     <id>http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls</id>
     <content type="html"><![CDATA[<p>With Rubymotion, there are quite a few methods to indicate activities. What I have used here is the MBProgressBarHud to indicate an ongoing activity ( an http call in progress )</p>
-
-<p>The submit button on event &lsquo;Touch Up Inside&rsquo; invokes the action submit_mobile_number.</p>
 
 <h4>controller/msisdn_view_controller.rb</h4>
 
