@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-02-06T19:10:21+05:30</updated>
+  <updated>2014-02-06T19:16:31+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -43,7 +43,7 @@
 
 <p>Now in the viewDidAppear delegate of the master controller, we have this check to present the appropriate controller. The details entered by the user in the registration process are saved( we use <strong>motion model</strong> to store the details of the user ). Ofcourse, we dont want a user who has entered his mobile number once to enter it again even if he has opted to quit the app after entering the mobile number. Similarly we dont want him to select his language for the second time during the registration process. We consider all this in the viewDidAppear delegate and decide which contoller to load.</p>
 
-<p>master_view_controller</p>
+<p>master_view_controller.rb ( This obviously can be implemented better :) )</p>
 
 <pre><code>def viewDidAppear(animated)
   super
