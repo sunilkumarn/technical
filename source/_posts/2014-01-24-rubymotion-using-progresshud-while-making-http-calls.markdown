@@ -3,7 +3,7 @@ layout: post
 title: "Rubymotion: Using ProgressHud while making Http calls"
 date: 2014-01-24 20:04
 comments: true
-categories: Ruby 
+categories: RubyMotion, iOS, Ruby
 ---
 
 With Rubymotion, there are quite a few methods to indicate activities. What I have used here is the MBProgressBarHud to indicate an ongoing activity ( an http call in progress )
