@@ -28,7 +28,7 @@ On the left we have the contoller and on the right we have the segue identifier 
 
 Now in the viewDidAppear delegate of the master controller, we have this check to present the appropriate controller. The details entered by the user in the registration process are saved( we use **motion model** to store the details of the user ). Ofcourse, we dont want a user who has entered his mobile number once to enter it again even if he has opted to quit the app after entering the mobile number. Similarly we dont want him to select his language for the second time during the registration process. We consider all this in the viewDidAppear delegate and decide which contoller to load.
 
-master_view_controller
+master_view_controller.rb ( This obviously can be implemented better :) )
 
     def viewDidAppear(animated)
       super
