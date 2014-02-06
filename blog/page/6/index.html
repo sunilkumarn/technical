@@ -9,8 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Segmentation fault occurs when an attempt is made to access unallocated memory.
-Segmentation faults with pointers might prove to be a task to deal &hellip;">
+  <meta name="description" content="While writing C programs using the &lsquo;vi&rsquo; editor ,you might find a frustrating task of handling with line numbers ,setting up the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +66,51 @@ Segmentation faults with pointers might prove to be a task to deal &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/12/125">Setting Up the Vim Configuration.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-12T00:35:56+05:30" pubdate data-updated="true">Aug 12<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/12/125#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>While writing C programs using the &lsquo;vi&rsquo; editor ,you might find a frustrating task of handling with line numbers ,setting up the indentation properly and of course you might never mind if some indications are given about the keywords using colors. There fore we set up the vim configuration and automate the above said tasks by doing the following.
+Create a file .exrc in your home directory..
+vi .exrc   &hellip;.filename ending with rc indicates that you can configure them the way you want it to be.
+Now type the following:
+<strong>set nu</strong>             /<em>to set up line numbers properly</em>/
+<strong>set cindent </strong>     /<em>to set up the indentation(for the better clarity of the program)</em>/
+<strong>syntax on</strong>        /<em>this sets the coloring &lsquo;on&rsquo; for the program according to the C syntax </em>/
+Now save the file and start writing your programs more comfortably.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -691,65 +735,6 @@ The type is converted from double into int. Now since pop returns a double value
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/08/04/errorswarnings-and-unexpected-results">Errors,warnings and Unexpected Results&#8230;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-04T08:45:14+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
-        
-         | <a href="/2010/08/04/errorswarnings-and-unexpected-results#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>While compiling C programs we might often come across errors,messages and unexpected results as our output.. The following shows a few of those :
-Sometimes u might get certain unexpected values like -1098763408 as your result.
-This might be due to the fact that u may not have initialized the variable used in the expression producing the result to a starting value(say i=0).
-The same doing (i.e a variable not set to its initial value) might produce a &lsquo;segmentation fault&rsquo; in the program. Segmentation fault may also be produced due to the fact that the alloted size for the particular string array is less than what you have just tried to fill in.
-For eg. If</p>
-
-<h1>define MAX 10</h1>
-
-<p>char string[MAX];
-The size is 10.Now if u try to fill in more than 10 characters a case of segmentation fault might occur.
-Another case exists where you might get an error as the following one:
- error: conflicting types for ‘some_function_name’
-This might be because of the fact that the function name that you have used is the name of the function that is already present in one of the header files.
-For common functions like &lsquo;strlen&rsquo; ,&lsquo;strcat&rsquo; etc this might not occur because we wont use them as our function names. But this might occur sometimes for certain function names that we may not be familiar with.
-For eg. The error message would be displayed when you use function names as
-&lsquo;index&rsquo; or &lsquo;remove&rsquo; etc&hellip;even if your declaration,definition and the call might be correct.
-Don&rsquo;t keep pondering over it,you just need to change your function name to another one that does not exist in the system&rsquo;s headers. For eg..change &lsquo;the name index&rsquo; to &lsquo;ind&rsquo; or something else.</p>
-
-<p>Another common case where you may not obtain the result might be because of an error in the &lsquo;printf&rsquo; statement. For eg you may have used “%d” to print a float value even though “%f”should have been be used.</p>
-
-<p>It is important to check that the type of 1)the called function and 2) the variable that is used in the calling function in order to receive the value returned from the called function has to be same .If this is not the case ,an error would be produced (that would happen only if both the functions are in the same source file. But if the functions are in different source files, then the case becomes more complicated because the error would not be displayed.
-In case you find that the output you obtain has got some definite value but is meaningless according to the problem, then a solution might to have a look through all the data types used in the program and see if its appropriate and matching. Such cases might occur in programs involving many functions</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -765,6 +750,10 @@ In case you find that the output you obtain has got some definite value but is m
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/02/06/rubymotion-chain-of-modal-segues">Rubymotion: Chain of Modal Segues</a>
+      </li>
     
       <li class="post">
         <a href="/2014/01/24/rubymotion-using-progresshud-while-making-http-calls">Rubymotion: Using ProgressHud While Making Http Calls</a>
@@ -800,10 +789,6 @@ In case you find that the output you obtain has got some definite value but is m
     
       <li class="post">
         <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
       </li>
     
   </ul>

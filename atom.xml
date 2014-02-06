@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-01-24T20:46:53+05:30</updated>
+  <updated>2014-02-06T19:06:16+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -12,6 +12,86 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rubymotion: Chain of Modal segues]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues"/>
+    <updated>2014-02-06T19:02:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues</id>
+    <content type="html"><![CDATA[<p>While building my iOS application, I had a user registration process to be implemented. This included the user entering his mobile number, his language details and a few other ( say, miscellaneous ) details. Once he has registered himself he is presented with a table view where a few movies in the language he chose are shown.</p>
+
+<p>The way I went about implementing is that I had a <strong>master_view_controller</strong> which is the initial view controller. The other controllers are</p>
+
+<ul>
+<li><strong>mobile_number_view_controller</strong></li>
+<li><strong>language_view_controller</strong></li>
+<li><strong>miscellaneous_view_controller</strong></li>
+<li><strong>movies_view_controller</strong></li>
+</ul>
+
+
+<p>I have segues, <strong>all of type modal</strong>, from the master controller to all other controllers I mentioned above. The segues are of modal type because once the user has submitted each of his details, he doesnt have to care about the particluar detail and is given no option to go back to his previous screen. Its not a like a dig deep type of chain where we could implement the navigation controller. The segues are the follows.</p>
+
+<p>On the left we have the contoller and on the right we have the segue identifier to that controller from the master controller.</p>
+
+<pre><code>master_view_controller:
+  mobile_number_view_controller -&gt; msisdnSegue
+  language_view_controller -&gt; languageSegue
+  miscellaneous_view_controller -&gt; miscellaneousSegue
+  movies_view_controller -&gt; moviesSegue
+</code></pre>
+
+<p>Now in the viewDidAppear delegate of the master controller, we have this check to present the appropriate controller. The details entered by the user in the registration process are saved( we use <strong>motion model</strong> to store the details of the user ). Ofcourse, we dont want a user who has entered his mobile number once to enter it again even if he has opted to quit the app after entering the mobile number. Similarly we dont want him to select his language for the second time during the registration process. We consider all this in the viewDidAppear delegate and decide which contoller to load.</p>
+
+<p>master_view_controller</p>
+
+<pre><code>def viewDidAppear(animated)
+  super
+  perform_criteria_based_segue
+end
+
+def perform_criteria_based_segue
+  @user = User.first
+
+  if (not @user) or (not @user.verified_mobile_number)
+    performSegueWithIdentifier('msisdnSegue', sender: self)
+  end
+
+  elsif not @user.language
+    performSegueWithIdentifier('languageSegue', sender: self)
+  end
+
+  elsif not @user.miscellaneous_details
+    performSegueWithIdentifier('miscellaneousSegue', sender: self)
+  end
+
+  else
+    performSegueWithIdentifier('moviesSegue', sender: self)
+  end
+end
+</code></pre>
+
+<p>Now, suppose the user reached the view where he has to enter his misellaneous details. Once he entered them all he now has to be be shown the table view which list the movies in his language. We have implemented this segue to the movies_view_controller in <strong>viewDidAppear</strong> delegate in the <strong>master_view_controller</strong>. Hence for this to work, the master_view_controller&rsquo;s view will have to appear. For this to happen, the current controller( the i.e, <strong>miscellaneous_view_controller</strong> ) along with all controllers in between the current controller and the master view controller will have to be dismissed ( in our case, its only the <strong>language_view_controller</strong> ).</p>
+
+<p>For this to be done, we have the <strong>dismissViewControllerAnimated(flag, completion:completion_block)</strong> method.</p>
+
+<p>We implement this method in the presented view controller. Here, <strong>miscellaneous_view_controller</strong> is the current presented view controller.</p>
+
+<p>miscellaneous_view_controller.rb</p>
+
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_miscellanous_details
+
+def submit_miscellanous_details
+  # Do something here...
+
+  self.view.window.rootViewController.dismissViewControllerAnimated(true, completion:nil)
+end
+</code></pre>
+
+<p>So in the <strong>miscellaneous_view_controller</strong> controller we have a <em>submitButton</em> which is tied to an ib_action <em>submit_miscellanous_details</em>. On submitting the button, the ib_action is invoked. We do whatever necessary steps is required in the ib_action and then <strong>invoke dismissViewControllerAnimated on the rootViewController( i.e, the master_view_controller )</strong>. When this is done, the presented controllers and all other controllers in the chain of controllers until the presenting controller on whom the dismissViewControllerAnimated method is called ( here, the rootViewController) is also dismissed. The rootViewController or the master_view_controller view appears on screen and the viewDiDAppear delegate will process the rest.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubymotion: Using ProgressHud while making Http calls]]></title>
@@ -63,7 +143,7 @@ end
 end
 </code></pre>
 
-<p>As you could see from the code above, we initiate an MBProgressHUDV view and add it as a subview of the main UIView. This is done in the viewDidLoad delegate.</p>
+<p>As you could see from the code above, in the viewDidLoad delegate we initiate an MBProgressHUD instance and add it as a subview to the UIView. This is done in the viewDidLoad delegate.</p>
 
 <p>Before the call to <strong>registration</strong> ( the User model method which makes an http connection ) is made, the <strong>prepare_for_submission</strong> method displays the hud. The <strong>after_submission</strong> method is passed as a callback block to the <strong>registration</strong> method. On completion of the http request, this block is executed which hides the hud and performs the segue to present the next controller.</p>
 ]]></content>
@@ -1746,111 +1826,6 @@ You could view the lines that provide information about the memory leak problem 
 The first line of the &lsquo;LEAK SUMMARY &rsquo; is the most significant to us . It shows the amount of memory definitely lost ( 5 Bytes ). Changes need to be made in the program so that the memory leak is prevented .</p>
 
 <p>Memcheck produces these result which helps the programmer so as to view and correct the memory related issues rather convincingly . It needs to be noted that Memcheck is a <strong>&lsquo;dynamic instrumentation tool </strong>&rsquo; and not a static tool like &lsquo;lint &rsquo; . Hence to detect the memory leaks in a program , the control actually needs to get transferred to that segment of the program where the issues occur . In short you need to invoke the function &lsquo;f&rsquo; from your &lsquo;main&rsquo; so that Memcheck could detect those memory related issues that exists within the function &lsquo;f&rsquo; .</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Common Subexpression elimination by GCC]]></title>
-    <link href="http://tech.sunilnkumar.com/2010/10/19/common-subexpression-elimination-cse"/>
-    <updated>2010-10-19T17:12:16+05:30</updated>
-    <id>http://tech.sunilnkumar.com/2010/10/19/common-subexpression-elimination-cse</id>
-    <content type="html"><![CDATA[<p><strong>Common subexpression elimination</strong> (CSE) is a compiler optimization technique of finding redundant expression evaluations, and replacing them with a single computation . This saves the time overhead resulted by evaluating the expression for more than once . We will have a look into this phenomenon by considering a simple code and again taking a walk through its assembly code .</p>
-
-<p>Consider the code that we have written and saved in file &lsquo; pgm.c &rsquo;</p>
-
-<p><code>main(){
-int i, j, k, r;
-scanf("%d%d", &amp;i, &amp;j);
-k = i + j + 10;
-r = i + j + 30;
-printf("%d %d\n", k, r);
-}</code></p>
-
-<p>Do :</p>
-
-<p><strong>$ : cc -S pgm.c</strong></p>
-
-<p><strong>$ : less pgm.s</strong></p>
-
-<p>Read the assembly code &lsquo; pgm.s &rsquo;</p>
-
-<p>Scan the assembly code and find out the call to the function &lsquo;scanf()&rsquo; . This is where our area of interest begins . This is because its after calling &lsquo;scanf &rsquo; that we load the value of the input variables into the registers .</p>
-
-<p>Right after the call to &lsquo;scanf &rsquo; , i have this in my assembly code ,</p>
-
-<p><strong>movl    -16(%ebp), %edx
-movl    -20(%ebp), %eax</strong> .</p>
-
-<p>Here we move the values of the two variables &lsquo;i &rsquo; and &lsquo;j &rsquo; into registers &lsquo;edx &rsquo; and &lsquo;eax &rsquo; .</p>
-
-<p>Now just have a look into our C code and you will see the two expressions as follows :</p>
-
-<p><code>k = i + j + 10;
-r = i + j + 30;</code></p>
-
-<p>Looking at the two expressions , you would find out the redundant part in the two expressions .</p>
-
-<p>Its that &lsquo;i+j&rsquo; is calculated twice .</p>
-
-<p>Now lets find out what happens in the assembly code :</p>
-
-<p>I had these statements in your assembly code :</p>
-
-<p><strong>movl    -16(%ebp), %edx</strong></p>
-
-<p><strong>movl    -20(%ebp), %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;> We had mentioned these two statements  above .</p>
-
-<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;>  values in edx and eax are added and loaded into eax</p>
-
-<p><strong>addl    $10, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 10 is added with the value in eax</p>
-
-<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;&ndash;>   values in edx and eax are added and loaded into eax</p>
-
-<p><strong>addl    $30, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 30 is added with the value in eax</p>
-
-<p>You could see that there is redundancy in the assembly code .</p>
-
-<p>The statement<strong> &lsquo; leal(%edx,%eax), %eax</strong> &rsquo; performs the evaluation of the subexpression ( &lsquo; i + j &rsquo; ) which is done twice thereby throwing in redundancy and hence creating unnecessary overheads .</p>
-
-<p>Obviously our compiler when asked to perform optimization would avoid this redundancy .This is what is termed as <strong>Common Subexpression Elimination</strong> ,i.e , the subexpression that is common( &lsquo; i + j &rsquo; ) in the two expressions is evaluated only once , in essence the second evaluation is eliminated .  Lets have a look into CSE by again peeping into our assembly code  .</p>
-
-<p>Do</p>
-
-<p><strong>$ : cc &ndash; S &ndash; O3 pgm .c</strong></p>
-
-<p><strong>$ : less pgm.s</strong></p>
-
-<p>Take a look into your assembly code  .</p>
-
-<p>As mentioned above , our area of interest starts from the call to &lsquo;scanf ()&rsquo; .</p>
-
-<p>Instead of those 6 statements that were used to evaluate those two expressions ,</p>
-
-<p>i + j + 10 &amp; i + j + 30 ,</p>
-
-<p>you would find this ,</p>
-
-<p><strong>movl    -12(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  move the value of the variable &lsquo;i&rsquo; into eax</p>
-
-<p><strong>addl    -8(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> add the value of the variable &lsquo;j&rsquo; with &lsquo;i&rsquo; stored in eax .</p>
-
-<p><strong>leal    30(%eax), %edx</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 30 with eax ( contains the sum of i &amp; j ) and stores in edx</p>
-
-<p><strong>addl    $10, %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 10 with eax ( contains the sum of i &amp; j ) and stores in eax .</p>
-
-<p>Here the second statement performs the evaluation of the subexpression , &lsquo; i + j &rsquo; . You could get it quite clearly from the code segment that the redundancy that was found in the unoptimized assembly code has been eliminated by the compiler .</p>
-
-<p>The later 2 statements perform the evaluation of the expressions</p>
-
-<p>( i + j + 30 )   and    ( i + j + 10 ) respectively .</p>
-
-<p>We have just used a very simple case of CSE , but this optimization technique could be used in even more useful cases . Consider :</p>
-
-<p>k = f() + g() + 30</p>
-
-<p>r = f() + g() + 10</p>
-
-<p>where f() and g() are functions . In an unoptimized code , the technique of CSE wouldn&rsquo;t be used and hence there would be overhead due to the redundancy added with the more serious problem of having to call each function twice . The technique of <strong>Common Subexpression Elimination</strong> avoids this very redundancy  .</p>
 ]]></content>
   </entry>
   

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: iOS, | Scribblings]]></title>
+  <link href="http://tech.sunilnkumar.com/blog/categories/ios/atom.xml" rel="self"/>
+  <link href="http://tech.sunilnkumar.com/"/>
+  <updated>2014-02-06T19:06:16+05:30</updated>
+  <id>http://tech.sunilnkumar.com/</id>
+  <author>
+    <name><![CDATA[Sunil Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rubymotion: Chain of Modal segues]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues"/>
+    <updated>2014-02-06T19:02:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues</id>
+    <content type="html"><![CDATA[<p>While building my iOS application, I had a user registration process to be implemented. This included the user entering his mobile number, his language details and a few other ( say, miscellaneous ) details. Once he has registered himself he is presented with a table view where a few movies in the language he chose are shown.</p>
+
+<p>The way I went about implementing is that I had a <strong>master_view_controller</strong> which is the initial view controller. The other controllers are</p>
+
+<ul>
+<li><strong>mobile_number_view_controller</strong></li>
+<li><strong>language_view_controller</strong></li>
+<li><strong>miscellaneous_view_controller</strong></li>
+<li><strong>movies_view_controller</strong></li>
+</ul>
+
+
+<p>I have segues, <strong>all of type modal</strong>, from the master controller to all other controllers I mentioned above. The segues are of modal type because once the user has submitted each of his details, he doesnt have to care about the particluar detail and is given no option to go back to his previous screen. Its not a like a dig deep type of chain where we could implement the navigation controller. The segues are the follows.</p>
+
+<p>On the left we have the contoller and on the right we have the segue identifier to that controller from the master controller.</p>
+
+<pre><code>master_view_controller:
+  mobile_number_view_controller -&gt; msisdnSegue
+  language_view_controller -&gt; languageSegue
+  miscellaneous_view_controller -&gt; miscellaneousSegue
+  movies_view_controller -&gt; moviesSegue
+</code></pre>
+
+<p>Now in the viewDidAppear delegate of the master controller, we have this check to present the appropriate controller. The details entered by the user in the registration process are saved( we use <strong>motion model</strong> to store the details of the user ). Ofcourse, we dont want a user who has entered his mobile number once to enter it again even if he has opted to quit the app after entering the mobile number. Similarly we dont want him to select his language for the second time during the registration process. We consider all this in the viewDidAppear delegate and decide which contoller to load.</p>
+
+<p>master_view_controller</p>
+
+<pre><code>def viewDidAppear(animated)
+  super
+  perform_criteria_based_segue
+end
+
+def perform_criteria_based_segue
+  @user = User.first
+
+  if (not @user) or (not @user.verified_mobile_number)
+    performSegueWithIdentifier('msisdnSegue', sender: self)
+  end
+
+  elsif not @user.language
+    performSegueWithIdentifier('languageSegue', sender: self)
+  end
+
+  elsif not @user.miscellaneous_details
+    performSegueWithIdentifier('miscellaneousSegue', sender: self)
+  end
+
+  else
+    performSegueWithIdentifier('moviesSegue', sender: self)
+  end
+end
+</code></pre>
+
+<p>Now, suppose the user reached the view where he has to enter his misellaneous details. Once he entered them all he now has to be be shown the table view which list the movies in his language. We have implemented this segue to the movies_view_controller in <strong>viewDidAppear</strong> delegate in the <strong>master_view_controller</strong>. Hence for this to work, the master_view_controller&rsquo;s view will have to appear. For this to happen, the current controller( the i.e, <strong>miscellaneous_view_controller</strong> ) along with all controllers in between the current controller and the master view controller will have to be dismissed ( in our case, its only the <strong>language_view_controller</strong> ).</p>
+
+<p>For this to be done, we have the <strong>dismissViewControllerAnimated(flag, completion:completion_block)</strong> method.</p>
+
+<p>We implement this method in the presented view controller. Here, <strong>miscellaneous_view_controller</strong> is the current presented view controller.</p>
+
+<p>miscellaneous_view_controller.rb</p>
+
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_miscellanous_details
+
+def submit_miscellanous_details
+  # Do something here...
+
+  self.view.window.rootViewController.dismissViewControllerAnimated(true, completion:nil)
+end
+</code></pre>
+
+<p>So in the <strong>miscellaneous_view_controller</strong> controller we have a <em>submitButton</em> which is tied to an ib_action <em>submit_miscellanous_details</em>. On submitting the button, the ib_action is invoked. We do whatever necessary steps is required in the ib_action and then <strong>invoke dismissViewControllerAnimated on the rootViewController( i.e, the master_view_controller )</strong>. When this is done, the presented controllers and all other controllers in the chain of controllers until the presenting controller on whom the dismissViewControllerAnimated method is called ( here, the rootViewController) is also dismissed. The rootViewController or the master_view_controller view appears on screen and the viewDiDAppear delegate will process the rest.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rubymotion: Using ProgressHud while making Http calls]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls"/>
+    <updated>2014-01-24T20:04:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls</id>
+    <content type="html"><![CDATA[<p>With Rubymotion, there are quite a few methods to indicate activities. What I have used here is the MBProgressBarHud to indicate an ongoing activity ( an http call in progress )</p>
+
+<h4>controller/msisdn_view_controller.rb</h4>
+
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_mobile_number  #The submit button on event ‘Touch Up Inside’ invokes the action submit_mobile_number
+
+def viewDidLoad
+  @hud = MBProgressHUD.alloc.initWithWindow(UIApplication.sharedApplication.keyWindow)
+  self.view.addSubview(@hud)
+end
+
+def submit_mobile_number(sender)
+  msisdn = self.msisdnTextField.text
+  prepare_for_submission
+  User.registration msisdn, do
+    after_submission
+  end
+end
+
+def prepare_for_submission
+  @hud.labelText = "Provisioning"
+  @hud.show(true)
+  self.view.userInteractionEnabled = false
+end
+
+def after_submission
+  @hud.labelText = "Completed";
+  @hud.hide(true)
+  performSegueWithIdentifier('submission_segue', sender: self)
+end
+</code></pre>
+
+<h4>models/user.rb</h4>
+
+<pre><code>def self.registration(msisdn, &amp;callback)
+  ...
+  url = 'some_url'
+  BW::HTTP.get(url) do |response|
+    callback.call
+    ...
+  end
+end
+</code></pre>
+
+<p>As you could see from the code above, in the viewDidLoad delegate we initiate an MBProgressHUD instance and add it as a subview to the UIView. This is done in the viewDidLoad delegate.</p>
+
+<p>Before the call to <strong>registration</strong> ( the User model method which makes an http connection ) is made, the <strong>prepare_for_submission</strong> method displays the hud. The <strong>after_submission</strong> method is passed as a callback block to the <strong>registration</strong> method. On completion of the http request, this block is executed which hides the hud and performs the segue to present the next controller.</p>
+]]></content>
+  </entry>
+  
+</feed>

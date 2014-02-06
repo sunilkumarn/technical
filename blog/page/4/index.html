@@ -9,7 +9,8 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Causing a python virtual machine to crash is not what I intended but it just happened so. But since this happened , I would just like to give an &hellip;">
+  <meta name="description" content="Your processors can be of two types:
+1)Little Endian : Little Endian means that the low-order byte of the number is stored in memory at the lowest &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +67,82 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/23/find-the-endianity-of-your-processor">Find the Endianity of Your Processor:</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-23T03:23:24+05:30" pubdate data-updated="true">Sep 23<span>rd</span>, 2010</time>
+        
+         | <a href="/2010/09/23/find-the-endianity-of-your-processor#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Your processors can be of two types:
+1)<em>Little Endian</em> : Little Endian means that the low-order byte of the number is stored in memory at the lowest address.For example, a two byte short int would be stored in memory as:
+<strong>Base address + 0 : Byte 1
+Base address + 1:  Byte 0</strong></p>
+
+<p>2)<em>Big Endian</em> : &lsquo;Big Endian means that the high-order byte of the number is stored in memory at the lowest address. The &#8216;short int&rsquo; above would be stored
+<strong>Base address + 0 :  Byte 0
+Base address + 1 :  Byte 1</strong></p>
+
+<p>where Byte 0 and Byte 1 are the first and second  bytes of the short integer.</p>
+
+<p>You could verify the endianity of your processors by writing a short and sweet C code as follows:</p>
+
+<pre><code>        `{  
+            unsigned char *p;
+
+            short int i=0x1234;
+
+            p=&amp;i;
+
+            printf("%x\n",*p);
+
+        }`
+The result you obtain would show you the endianity of your processor.
+</code></pre>
+
+<p>Lets give a thought on what actually happens.</p>
+
+<p>0x1234 is a hexadecimal number and is stored in a variable &lsquo;i&rsquo; of type short int ( occupies 2 bytes of memory space ).</p>
+
+<p>Address of variable &lsquo;i&rsquo; is stored in a pointer of type unsigned char &lsquo;*p&rsquo; ( I.e &lsquo;p&rsquo; points to an object of type &lsquo;unsigned char&rsquo;).</p>
+
+<p>Dereferencing the pointer p would result in the access of just a single byte . This obviously would be the lower of the two bytes. <strong>This shows the fact that accessing a memory location with a pointer is purely dependent on the type of the pointer and not on the type of the actual value stored in the address being accessed. </strong>Note that the types of the&#8217; pointer to the memory location&#8217; and the &lsquo;actual value being stored in the location&rsquo; differ.</p>
+
+<p>You obtain the value that is stored in the lower byte of the two bytes that is allocated for the <strong>&lsquo;short integer</strong>&rsquo; with the use of a pointer of type &lsquo;<strong>unsigned char</strong>&rsquo; ( size = 1 byte). The value stored at the lower byte would indicate to you the endianity.</p>
+
+<p>From our sample program,and from what we know about little and big endians , an output of 34 indicates that your processor is &lsquo;little endian&rsquo; and an output of 12 indicates that its big endian.</p>
+
+<p>Just to mention &ndash; &lsquo;Intel x86&rsquo; processors are one common example for little endian processors whereas &lsquo;Motorola 6800&rsquo; is big endian.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -662,78 +739,6 @@ yvec=[30,40,50]
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/09/02/garbage-collection-in-python">Garbage Collection in Python.</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-02T08:37:12+05:30" pubdate data-updated="true">Sep 2<span>nd</span>, 2010</time>
-        
-         | <a href="/2010/09/02/garbage-collection-in-python#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In C, once the memory allocated becomes garbage , that chunk of memory is gone wasted. Nothing more is possible on it.
-Consider
-<strong>int a[10];</strong>
-Some amount of memory would be allocated for the array &lsquo;a&rsquo;. Now if do a=&lsquo;some value&rsquo; , the memory that was allocated to the array becomes garbage because &lsquo;a&rsquo; no longer uses it as it is pointing to something else now. The memory is gone wasted and is no more usable.
-The bugs that create loss of memory are hard to detect as well ,simply because of the fact that they cannot be seen. Its only after executing the particular code for some amount of times that you might actually get to see the effects of the bug .By the time your system may have crashed.</p>
-
-<p>In python ,the interpreter is smart enough to do &lsquo;garbage collection&rsquo;. That is the memory which is unused is collected by the interpreter and is not gone wasted. The process of garbage collection is done by using a method called ref counting. Understand ref counting as :
-<strong>Consider a=[1,2,3]</strong>
-&lsquo;a&rsquo; points to a particular block of memory. At the end of the block of memory ,there would be a count that indicates the number of variables that point to the same block of memory. So now the count would be 1.</p>
-
-<p>Now if we do,</p>
-
-<p>b=a&hellip;&hellip;means that now b points to same block of memory. Therefore the count becomes 2.</p>
-
-<p>Now consider doing</p>
-
-<p>b=0.</p>
-
-<p>The count in the block of memory where b was pointing earlier reduces by 1. , hence count is now 1.
-Do</p>
-
-<p>&lsquo;a=0&rsquo;</p>
-
-<p>and the count in that block becomes 0.Now the python interpreter can allot the chunk of memory to some other variable as it may feel. The significant thing that you need to understand is the fact that the memory is not gone wasted as in C .</p>
-
-<p>Garbage collection keeps track of the variables that point to a block of memory and collects the unused memory accordingly. There is never a shortage of memory space. But there are obvious disadvantages with the process of garbage collection.</p>
-
-<p>One drawback , as you would except would be the matter of speed which would decrease.
-But the more significant drawback would be the <strong>non-deterministic behavior</strong> of the interpreter.
-Consider the two statements.
- .i=0
- .j=0
-You would expect the statement j=0 to be executed immediately after the statement i=0 has been executed. But as a result of this process of garbage collection ,this is not a guarantee. There might be a certain time delay in executing the second statement if the interpreter feels like doing some &lsquo;garbage collection&rsquo; after the first statement has been executed . This results in the delay.</p>
-
-<p>Therefore its clear that its not best to use python over languages like C when it comes to real time systems.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -749,6 +754,10 @@ You would expect the statement j=0 to be executed immediately after the statemen
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/02/06/rubymotion-chain-of-modal-segues">Rubymotion: Chain of Modal Segues</a>
+      </li>
     
       <li class="post">
         <a href="/2014/01/24/rubymotion-using-progresshud-while-making-http-calls">Rubymotion: Using ProgressHud While Making Http Calls</a>
@@ -784,10 +793,6 @@ You would expect the statement j=0 to be executed immediately after the statemen
     
       <li class="post">
         <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
       </li>
     
   </ul>

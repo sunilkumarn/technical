@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>The shell-Basic facilities offered - Scribblings</title>
+  <title>Rubymotion: Chain of Modal segues - Scribblings</title>
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Shell -the command interpreter.
-There are many basic facilities offered by the shell.They include 1)Using shorthands for files(use of the asterisk & &hellip;">
+  <meta name="description" content="While building my iOS application, I had a user registration process to be implemented. This included the user entering his mobile number, his &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ There are many basic facilities offered by the shell.They include 1)Using shorth
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tech.sunilnkumar.com/2010/07/30/the-shell-basic-facilities-offered">
+  <link rel="canonical" href="http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -70,7 +69,7 @@ There are many basic facilities offered by the shell.They include 1)Using shorth
   
   <header>
     
-      <h1 class="entry-title">The shell-Basic facilities offered</h1>
+      <h1 class="entry-title">Rubymotion: Chain of Modal Segues</h1>
     
     
       <p class="meta">
@@ -86,7 +85,7 @@ There are many basic facilities offered by the shell.They include 1)Using shorth
   
 
 
-<time datetime="2010-07-30T16:26:41+05:30" pubdate data-updated="true">Jul 30<span>th</span>, 2010</time>
+<time datetime="2014-02-06T19:02:00+05:30" pubdate data-updated="true">Feb 6<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -95,52 +94,78 @@ There are many basic facilities offered by the shell.They include 1)Using shorth
   </header>
 
 
-<div class="entry-content"><p>Shell -the command interpreter.
-There are many basic facilities offered by the shell.They include</p>
+<div class="entry-content"><p>While building my iOS application, I had a user registration process to be implemented. This included the user entering his mobile number, his language details and a few other ( say, miscellaneous ) details. Once he has registered himself he is presented with a table view where a few movies in the language he chose are shown.</p>
 
-<p>1)Using shorthands for files(use of the asterisk &lsquo;<em>&rsquo;)
-For example the command
-<strong>pr temp</strong></em>
-would print the contents of all files beginning with &lsquo;temp&rsquo;
-Similarly the echo command
-<strong>echo </strong>*
-will list all the files in the current directory</p>
+<p>The way I went about implementing is that I had a <strong>master_view_controller</strong> which is the initial view controller. The other controllers are</p>
 
-<p>2)Input-Output redirection
-Consider the case where we want to list the files of the directory but not in the terminal
-So we redirect it to a file using the &lsquo;>&rsquo; operator
-<strong>ls > filename
-</strong>If the file &lsquo;filename &rsquo; is not already created it will be so,or else it will be overwritten.
-Counting the number of lines in a particular directory is done as
-<strong>ls >filename
-wc -l&lt;tfilename</strong></p>
+<ul>
+<li><strong>mobile_number_view_controller</strong></li>
+<li><strong>language_view_controller</strong></li>
+<li><strong>miscellaneous_view_controller</strong></li>
+<li><strong>movies_view_controller</strong></li>
+</ul>
 
-<p>3)Inorder to avoid the creation of a temporary file,PIPES are used for the input-output redirection
-The vertical bar &lsquo;|&rsquo; is the pipe.
-Instead of using
-ls>filename
-wc -l&lt;filename
-we use
-<strong>ls|wc -l </strong>
-for the redirection to be possible.</p>
 
-<p>4)Tailoring the environment
-As a user of UNIX,we could customize it in the way comfortable to us.
-The &lsquo;stty&rsquo; command helps us do that
-for eg:
-<strong>stty erase &lsquo;^h&rsquo;
-</strong>enables the user to use ctrl-h for erasing a particluar character.
-By storing it in the file .profile (present in the home directory),we need not type it each time we login
-One of the most important tailoring comes during the setting up of paths
-Again this could be made changed in the <strong>&lsquo;.profile&rsquo; </strong>file.
-The current path would enable searches in the directories /usr/bin and /bin.
-If we did want to augment another directory to the search path we do it as follows:
-<strong>PATH=export $PATH:/usr/games</strong>
-where usr/games would be the newly added search directory.
-The augmented path would be obtained using the &lsquo;echo&rsquo; command
-<strong>echo $PATH
-:/usr/bin:/bin:/usr/games</strong>
-All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
+<p>I have segues, <strong>all of type modal</strong>, from the master controller to all other controllers I mentioned above. The segues are of modal type because once the user has submitted each of his details, he doesnt have to care about the particluar detail and is given no option to go back to his previous screen. Its not a like a dig deep type of chain where we could implement the navigation controller. The segues are the follows.</p>
+
+<p>On the left we have the contoller and on the right we have the segue identifier to that controller from the master controller.</p>
+
+<pre><code>master_view_controller:
+  mobile_number_view_controller -&gt; msisdnSegue
+  language_view_controller -&gt; languageSegue
+  miscellaneous_view_controller -&gt; miscellaneousSegue
+  movies_view_controller -&gt; moviesSegue
+</code></pre>
+
+<p>Now in the viewDidAppear delegate of the master controller, we have this check to present the appropriate controller. The details entered by the user in the registration process are saved( we use <strong>motion model</strong> to store the details of the user ). Ofcourse, we dont want a user who has entered his mobile number once to enter it again even if he has opted to quit the app after entering the mobile number. Similarly we dont want him to select his language for the second time during the registration process. We consider all this in the viewDidAppear delegate and decide which contoller to load.</p>
+
+<p>master_view_controller</p>
+
+<pre><code>def viewDidAppear(animated)
+  super
+  perform_criteria_based_segue
+end
+
+def perform_criteria_based_segue
+  @user = User.first
+
+  if (not @user) or (not @user.verified_mobile_number)
+    performSegueWithIdentifier('msisdnSegue', sender: self)
+  end
+
+  elsif not @user.language
+    performSegueWithIdentifier('languageSegue', sender: self)
+  end
+
+  elsif not @user.miscellaneous_details
+    performSegueWithIdentifier('miscellaneousSegue', sender: self)
+  end
+
+  else
+    performSegueWithIdentifier('moviesSegue', sender: self)
+  end
+end
+</code></pre>
+
+<p>Now, suppose the user reached the view where he has to enter his misellaneous details. Once he entered them all he now has to be be shown the table view which list the movies in his language. We have implemented this segue to the movies_view_controller in <strong>viewDidAppear</strong> delegate in the <strong>master_view_controller</strong>. Hence for this to work, the master_view_controller&rsquo;s view will have to appear. For this to happen, the current controller( the i.e, <strong>miscellaneous_view_controller</strong> ) along with all controllers in between the current controller and the master view controller will have to be dismissed ( in our case, its only the <strong>language_view_controller</strong> ).</p>
+
+<p>For this to be done, we have the <strong>dismissViewControllerAnimated(flag, completion:completion_block)</strong> method.</p>
+
+<p>We implement this method in the presented view controller. Here, <strong>miscellaneous_view_controller</strong> is the current presented view controller.</p>
+
+<p>miscellaneous_view_controller.rb</p>
+
+<pre><code>outlet :submitButton, UIButton
+ib_action :submit_miscellanous_details
+
+def submit_miscellanous_details
+  # Do something here...
+
+  self.view.window.rootViewController.dismissViewControllerAnimated(true, completion:nil)
+end
+</code></pre>
+
+<p>So in the <strong>miscellaneous_view_controller</strong> controller we have a <em>submitButton</em> which is tied to an ib_action <em>submit_miscellanous_details</em>. On submitting the button, the ib_action is invoked. We do whatever necessary steps is required in the ib_action and then <strong>invoke dismissViewControllerAnimated on the rootViewController( i.e, the master_view_controller )</strong>. When this is done, the presented controllers and all other controllers in the chain of controllers until the presenting controller on whom the dismissViewControllerAnimated method is called ( here, the rootViewController) is also dismissed. The rootViewController or the master_view_controller view appears on screen and the viewDiDAppear delegate will process the rest.</p>
 </div>
 
 
@@ -149,7 +174,7 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
       
   
 
-<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Sunil Kumar</span></span>
 
       
 
@@ -163,12 +188,12 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
   
 
 
-<time datetime="2010-07-30T16:26:41+05:30" pubdate data-updated="true">Jul 30<span>th</span>, 2010</time>
+<time datetime="2014-02-06T19:02:00+05:30" pubdate data-updated="true">Feb 6<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/unix/'>UNIX</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>, <a class='category' href='/blog/categories/rubymotion/'>RubyMotion,</a>, <a class='category' href='/blog/categories/ios/'>iOS,</a>
   
 </span>
 
@@ -177,7 +202,7 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/2010/07/30/the-shell-basic-facilities-offered" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/2010/07/30/the-shell-basic-facilities-offered" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues" >Tweet</a>
   
   
   
@@ -186,8 +211,8 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/2014/01/24/rubymotion-using-progresshud-while-making-http-calls" title="Previous Post: Rubymotion: Using ProgressHud while making Http calls">&laquo; Rubymotion: Using ProgressHud while making Http calls</a>
       
-        <a class="basic-alignment right" href="/2010/07/30/a-few-basic-commands-in-linux" title="Next Post: A few basic commands in Linux">A few basic commands in Linux &raquo;</a>
       
     </p>
   </footer>
@@ -284,8 +309,8 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://tech.sunilnkumar.com/2010/07/30/the-shell-basic-facilities-offered';
-        var disqus_url = 'http://tech.sunilnkumar.com/2010/07/30/the-shell-basic-facilities-offered';
+        var disqus_identifier = 'http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues';
+        var disqus_url = 'http://tech.sunilnkumar.com/2014/02/06/rubymotion-chain-of-modal-segues';
         var disqus_script = 'embed.js';
       
     (function () {

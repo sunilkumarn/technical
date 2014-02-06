@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Function inlining is performed when a request has been made to the compiler to perform optimization on the code . The compiler will try (its &hellip;">
+  <meta name="description" content="Common subexpression elimination (CSE) is a compiler optimization technique of finding redundant expression evaluations, and replacing them with a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,140 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/10/19/common-subexpression-elimination-cse">Common Subexpression Elimination by GCC</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-19T17:12:16+05:30" pubdate data-updated="true">Oct 19<span>th</span>, 2010</time>
+        
+         | <a href="/2010/10/19/common-subexpression-elimination-cse#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Common subexpression elimination</strong> (CSE) is a compiler optimization technique of finding redundant expression evaluations, and replacing them with a single computation . This saves the time overhead resulted by evaluating the expression for more than once . We will have a look into this phenomenon by considering a simple code and again taking a walk through its assembly code .</p>
+
+<p>Consider the code that we have written and saved in file &lsquo; pgm.c &rsquo;</p>
+
+<p><code>main(){
+int i, j, k, r;
+scanf("%d%d", &amp;i, &amp;j);
+k = i + j + 10;
+r = i + j + 30;
+printf("%d %d\n", k, r);
+}</code></p>
+
+<p>Do :</p>
+
+<p><strong>$ : cc -S pgm.c</strong></p>
+
+<p><strong>$ : less pgm.s</strong></p>
+
+<p>Read the assembly code &lsquo; pgm.s &rsquo;</p>
+
+<p>Scan the assembly code and find out the call to the function &lsquo;scanf()&rsquo; . This is where our area of interest begins . This is because its after calling &lsquo;scanf &rsquo; that we load the value of the input variables into the registers .</p>
+
+<p>Right after the call to &lsquo;scanf &rsquo; , i have this in my assembly code ,</p>
+
+<p><strong>movl    -16(%ebp), %edx
+movl    -20(%ebp), %eax</strong> .</p>
+
+<p>Here we move the values of the two variables &lsquo;i &rsquo; and &lsquo;j &rsquo; into registers &lsquo;edx &rsquo; and &lsquo;eax &rsquo; .</p>
+
+<p>Now just have a look into our C code and you will see the two expressions as follows :</p>
+
+<p><code>k = i + j + 10;
+r = i + j + 30;</code></p>
+
+<p>Looking at the two expressions , you would find out the redundant part in the two expressions .</p>
+
+<p>Its that &lsquo;i+j&rsquo; is calculated twice .</p>
+
+<p>Now lets find out what happens in the assembly code :</p>
+
+<p>I had these statements in your assembly code :</p>
+
+<p><strong>movl    -16(%ebp), %edx</strong></p>
+
+<p><strong>movl    -20(%ebp), %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;> We had mentioned these two statements  above .</p>
+
+<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;>  values in edx and eax are added and loaded into eax</p>
+
+<p><strong>addl    $10, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 10 is added with the value in eax</p>
+
+<p><strong>leal   (%edx,%eax), %eax</strong> &mdash;&mdash;&mdash;&mdash;&ndash;>   values in edx and eax are added and loaded into eax</p>
+
+<p><strong>addl    $30, %eax</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  the constant 30 is added with the value in eax</p>
+
+<p>You could see that there is redundancy in the assembly code .</p>
+
+<p>The statement<strong> &lsquo; leal(%edx,%eax), %eax</strong> &rsquo; performs the evaluation of the subexpression ( &lsquo; i + j &rsquo; ) which is done twice thereby throwing in redundancy and hence creating unnecessary overheads .</p>
+
+<p>Obviously our compiler when asked to perform optimization would avoid this redundancy .This is what is termed as <strong>Common Subexpression Elimination</strong> ,i.e , the subexpression that is common( &lsquo; i + j &rsquo; ) in the two expressions is evaluated only once , in essence the second evaluation is eliminated .  Lets have a look into CSE by again peeping into our assembly code  .</p>
+
+<p>Do</p>
+
+<p><strong>$ : cc &ndash; S &ndash; O3 pgm .c</strong></p>
+
+<p><strong>$ : less pgm.s</strong></p>
+
+<p>Take a look into your assembly code  .</p>
+
+<p>As mentioned above , our area of interest starts from the call to &lsquo;scanf ()&rsquo; .</p>
+
+<p>Instead of those 6 statements that were used to evaluate those two expressions ,</p>
+
+<p>i + j + 10 &amp; i + j + 30 ,</p>
+
+<p>you would find this ,</p>
+
+<p><strong>movl    -12(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;>  move the value of the variable &lsquo;i&rsquo; into eax</p>
+
+<p><strong>addl    -8(%ebp), %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> add the value of the variable &lsquo;j&rsquo; with &lsquo;i&rsquo; stored in eax .</p>
+
+<p><strong>leal    30(%eax), %edx</strong> &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 30 with eax ( contains the sum of i &amp; j ) and stores in edx</p>
+
+<p><strong>addl    $10, %eax </strong>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;> adds 10 with eax ( contains the sum of i &amp; j ) and stores in eax .</p>
+
+<p>Here the second statement performs the evaluation of the subexpression , &lsquo; i + j &rsquo; . You could get it quite clearly from the code segment that the redundancy that was found in the unoptimized assembly code has been eliminated by the compiler .</p>
+
+<p>The later 2 statements perform the evaluation of the expressions</p>
+
+<p>( i + j + 30 )   and    ( i + j + 10 ) respectively .</p>
+
+<p>We have just used a very simple case of CSE , but this optimization technique could be used in even more useful cases . Consider :</p>
+
+<p>k = f() + g() + 30</p>
+
+<p>r = f() + g() + 10</p>
+
+<p>where f() and g() are functions . In an unoptimized code , the technique of CSE wouldn&rsquo;t be used and hence there would be overhead due to the redundancy added with the more serious problem of having to call each function twice . The technique of <strong>Common Subexpression Elimination</strong> avoids this very redundancy  .</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1248,82 +1382,6 @@ Or logically,
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/09/23/find-the-endianity-of-your-processor">Find the Endianity of Your Processor:</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-23T03:23:24+05:30" pubdate data-updated="true">Sep 23<span>rd</span>, 2010</time>
-        
-         | <a href="/2010/09/23/find-the-endianity-of-your-processor#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Your processors can be of two types:
-1)<em>Little Endian</em> : Little Endian means that the low-order byte of the number is stored in memory at the lowest address.For example, a two byte short int would be stored in memory as:
-<strong>Base address + 0 : Byte 1
-Base address + 1:  Byte 0</strong></p>
-
-<p>2)<em>Big Endian</em> : &lsquo;Big Endian means that the high-order byte of the number is stored in memory at the lowest address. The &#8216;short int&rsquo; above would be stored
-<strong>Base address + 0 :  Byte 0
-Base address + 1 :  Byte 1</strong></p>
-
-<p>where Byte 0 and Byte 1 are the first and second  bytes of the short integer.</p>
-
-<p>You could verify the endianity of your processors by writing a short and sweet C code as follows:</p>
-
-<pre><code>        `{  
-            unsigned char *p;
-
-            short int i=0x1234;
-
-            p=&amp;i;
-
-            printf("%x\n",*p);
-
-        }`
-The result you obtain would show you the endianity of your processor.
-</code></pre>
-
-<p>Lets give a thought on what actually happens.</p>
-
-<p>0x1234 is a hexadecimal number and is stored in a variable &lsquo;i&rsquo; of type short int ( occupies 2 bytes of memory space ).</p>
-
-<p>Address of variable &lsquo;i&rsquo; is stored in a pointer of type unsigned char &lsquo;*p&rsquo; ( I.e &lsquo;p&rsquo; points to an object of type &lsquo;unsigned char&rsquo;).</p>
-
-<p>Dereferencing the pointer p would result in the access of just a single byte . This obviously would be the lower of the two bytes. <strong>This shows the fact that accessing a memory location with a pointer is purely dependent on the type of the pointer and not on the type of the actual value stored in the address being accessed. </strong>Note that the types of the&#8217; pointer to the memory location&#8217; and the &lsquo;actual value being stored in the location&rsquo; differ.</p>
-
-<p>You obtain the value that is stored in the lower byte of the two bytes that is allocated for the <strong>&lsquo;short integer</strong>&rsquo; with the use of a pointer of type &lsquo;<strong>unsigned char</strong>&rsquo; ( size = 1 byte). The value stored at the lower byte would indicate to you the endianity.</p>
-
-<p>From our sample program,and from what we know about little and big endians , an output of 34 indicates that your processor is &lsquo;little endian&rsquo; and an output of 12 indicates that its big endian.</p>
-
-<p>Just to mention &ndash; &lsquo;Intel x86&rsquo; processors are one common example for little endian processors whereas &lsquo;Motorola 6800&rsquo; is big endian.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1339,6 +1397,10 @@ The result you obtain would show you the endianity of your processor.
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/02/06/rubymotion-chain-of-modal-segues">Rubymotion: Chain of Modal Segues</a>
+      </li>
     
       <li class="post">
         <a href="/2014/01/24/rubymotion-using-progresshud-while-making-http-calls">Rubymotion: Using ProgressHud While Making Http Calls</a>
@@ -1374,10 +1436,6 @@ The result you obtain would show you the endianity of your processor.
     
       <li class="post">
         <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/12/18/git-a-brief-on-reverts-resets-merges-and-conflicts">Git Reset, Revert, Merge Conflicts and the Faulty Merge</a>
       </li>
     
   </ul>
