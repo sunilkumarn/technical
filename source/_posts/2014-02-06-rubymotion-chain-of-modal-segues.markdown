@@ -3,7 +3,7 @@ layout: post
 title: "Rubymotion: Chain of Modal segues"
 date: 2014-02-06 19:02
 comments: true
-categories: RubyMotion, iOS, Ruby
+categories: RubyMotion iOS Ruby
 ---
 
 While building my iOS application, I had a user registration process to be implemented. This included the user entering his mobile number, his language details and a few other ( say, miscellaneous ) details. Once he has registered himself he is presented with a table view where a few movies in the language he chose are shown.
