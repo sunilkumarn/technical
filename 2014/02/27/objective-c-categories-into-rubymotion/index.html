@@ -104,7 +104,7 @@
 
 <p><em>app/categories/ui_bar_button_item.rb</em></p>
 
-<pre><code>def self.backArrowButtonWithTarget(target, action)
+<pre><code>def self.customBackButton(target, action)
   buttonImage = UIImage.imageNamed('arrow.jpeg')
   button = UIButton.buttonWithType(UIButtonTypeCustom)
   button.setImage(buttonImage, forState:UIControlStateNormal)
@@ -119,7 +119,7 @@ end
 
 <pre><code>def viewDidAppear(animated)
   super
-  self.navigationItem.leftBarButtonItem = UIBarButtonItem.backArrowButtonWithTarget(self.navigationController, 'popViewControllerAnimated:')
+  self.navigationItem.leftBarButtonItem = UIBarButtonItem.customBackButton(self.navigationController, 'popViewControllerAnimated:')
 end
 </code></pre>
 

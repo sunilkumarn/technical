@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-02-27T14:12:29+05:30</updated>
+  <updated>2014-02-27T14:17:17+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -28,7 +28,7 @@
 
 <p><em>app/categories/ui_bar_button_item.rb</em></p>
 
-<pre><code>def self.backArrowButtonWithTarget(target, action)
+<pre><code>def self.customBackButton(target, action)
   buttonImage = UIImage.imageNamed('arrow.jpeg')
   button = UIButton.buttonWithType(UIButtonTypeCustom)
   button.setImage(buttonImage, forState:UIControlStateNormal)
@@ -43,7 +43,7 @@ end
 
 <pre><code>def viewDidAppear(animated)
   super
-  self.navigationItem.leftBarButtonItem = UIBarButtonItem.backArrowButtonWithTarget(self.navigationController, 'popViewControllerAnimated:')
+  self.navigationItem.leftBarButtonItem = UIBarButtonItem.customBackButton(self.navigationController, 'popViewControllerAnimated:')
 end
 </code></pre>
 
