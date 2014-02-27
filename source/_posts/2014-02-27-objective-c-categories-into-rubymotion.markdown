@@ -16,7 +16,7 @@ Below is an example where I need to add a customized back button for the UINavig
 
 *app/categories/ui_bar_button_item.rb*
 
-    def self.backArrowButtonWithTarget(target, action)
+    def self.customBackButton(target, action)
       buttonImage = UIImage.imageNamed('arrow.jpeg')
       button = UIButton.buttonWithType(UIButtonTypeCustom)
       button.setImage(buttonImage, forState:UIControlStateNormal)
@@ -31,7 +31,7 @@ The view controller which needs to have this customized back button will have th
 
     def viewDidAppear(animated)
       super
-      self.navigationItem.leftBarButtonItem = UIBarButtonItem.backArrowButtonWithTarget(self.navigationController, 'popViewControllerAnimated:')
+      self.navigationItem.leftBarButtonItem = UIBarButtonItem.customBackButton(self.navigationController, 'popViewControllerAnimated:')
     end
 
-This would use Ruby's monkey patching power to create create elements in Rubymotion which could be used in the entire application as & when needed.
+This would use Ruby's monkey patching power to create elements in Rubymotion which could be used in the entire application as & when needed.
