@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="While building my iOS application, I had a user registration process to be implemented. This included the user entering his mobile number, his &hellip;">
+  <meta name="description" content="People familiar with developing Ios applications with Objective-C would be quite familiar with using categories I suppose. An Objective-C category &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-27T14:04:00+05:30" pubdate data-updated="true">Feb 27<span>th</span>, 2014</time>
+        
+         | <a href="/2014/02/27/objective-c-categories-into-rubymotion#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>People familiar with developing Ios applications with Objective-C would be quite familiar with using <strong>categories</strong> I suppose.</p>
+
+<p>An Objective-C category allows you to add methods to an existing class — effectively subclassing it without having to deal with the possible complexities of subclassing.</p>
+
+<p>Moving into Rubymotion and using the power of categories is quite well possible for people who have been working with Ruby. <strong>Monkey Patching</strong> ( open an existing class and add your custom code within it ) it quite a familiar task with Rubyists.</p>
+
+<p>Below is an example where I need to add a customized back button for the UINavigationController navigation bar. I need this to be the back button in quite a few View controllers. It would be quite a tedious task to create a button in each VC, hence I create a category file and monkey patch the UIBarButtonItem class to add a new method which returns the customized back button.</p>
+
+<p>app/categories/ui_bar_button_item.rb</p>
+
+<pre><code>def self.backArrowButtonWithTarget(target, action)
+  buttonImage = UIImage.imageNamed('arrow.jpeg')
+  button = UIButton.buttonWithType(UIButtonTypeCustom)
+  button.setImage(buttonImage, forState:UIControlStateNormal)
+  button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height)
+  button.addTarget(target, action:action, forControlEvents:UIControlEventTouchUpInside)
+  customBarItem = UIBarButtonItem.alloc.initWithCustomView(button)
+  customBarItem
+end
+</code></pre>
+
+<p>The view controller which needs to have this customized back button will have this</p>
+
+<pre><code>def viewDidAppear(animated)
+  super
+  self.navigationItem.leftBarButtonItem = UIBarButtonItem.backArrowButtonWithTarget(self.navigationController, 'popViewControllerAnimated:')
+end
+</code></pre>
+
+<p>This would use Ruby&rsquo;s monkey patching power to create create elements in Rubymotion which could be used in the entire application as &amp; when needed.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1403,136 +1470,6 @@ In <code>pages.html.erb </code></p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-19T11:48:38+05:30" pubdate data-updated="true">May 19<span>th</span>, 2013</time>
-        
-         | <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
-</a></p>
-
-<div>
-  <pre><code class='ruby'>@mail_group.delay.save_group_contacts</code></pre>
-</div>
-
-
-<p>where @mail_group is the active record group to which the mails_ids being uploaded and saved belong.</p>
-
-<p>The requirement was to show a progress bar for the process of the mail_ids being saved to the the mail group. To handle this, I decided to add custom attributes to the delayed jobs table so as to identify the owner of the delayed job and also find the progress of the job.</p>
-
-<p>To do this,</p>
-
-<p>1) DB migration to add the custom attributes</p>
-
-<div>
-  <pre><code class='ruby'>class AddColumnToDelayedJob &lt; ActiveRecord::Migration
-      def change
-        add_column :delayed_jobs, :job_process_status, :integer, :default =&gt; 0
-        add_column :delayed_jobs, :job_owner_id, :integer
-        add_column :delayed_jobs, :job_owner_type, :string
-      end
-    end</code></pre>
-</div>
-
-
-<p>2) A model for the delayed jobs table.</p>
-
-<div>
-  <pre><code class='ruby'>module Delayed
-      class Job &lt; ActiveRecord::Base
-        self.table_name = &quot;delayed_jobs&quot;
-        attr_accessible :job_owner_id, :job_process_status, :job_owner_type
-        belongs_to :job_owner, :polymorphic =&gt; true
-      end
-    end</code></pre>
-</div>
-
-
-<p>As seen, three extra attributes (job_owner_id, job_owner_type attributes for establishing a polymorphic association with the job owner of the delayed job and a job_process_status attribute for updating the progress of the job) were added to the delayed jobs table.</p>
-
-<p>Delayed jobs were then created with the job_owner_id and job_owner_type.</p>
-
-<div>
-  <pre><code class='ruby'>@mail_group.delay(job_owner_id: @mail_group.id, job_owner_type: @mail_group.class.name).save_group_contacts</code></pre>
-</div>
-
-
-<p>However this would not be enough to update the custom attributes. An attempt to create a delayed job would produce this</p>
-
-<div>
-  <pre><code class='ruby'>ActiveModel::MassAssignmentSecurity::Error:
-        Can't mass-assign protected attributes: job_owner_id, job_owner_type</code></pre>
-</div>
-
-
-<p>As a quick fix, add a <code>config/initializers/delayed_job.rb</code>
-and paste in the following code</p>
-
-<div>
-  <pre><code class='ruby'>class Delayed::Job &lt; ActiveRecord::Base
-      self.attr_protected if self.to_s == 'Delayed::Backend::ActiveRecord::Job'   #loads protected attributes for                                                                                        # ActiveRecord instance
-    end</code></pre>
-</div>
-
-
-<p>Now the delayed job would get saved with the job_owner_id and job_owner_type.</p>
-
-<p>Also, in the mail_group model, set an association to the delayed jobs table.</p>
-
-<div>
-  <pre><code class='ruby'>class MailGroup &lt; ActiveRecord::Base
-      has_many :deferred_jobs, :as =&gt; :job_owner, :class_name =&gt; &quot;::Delayed::Job&quot;
-    end</code></pre>
-</div>
-
-
-<p>Now you can access all the delayed jobs of a particular @mail_group as</p>
-
-<div>
-  <pre><code class='ruby'>@mail_group.deferred_jobs</code></pre>
-</div>
-
-
-<p>The job process status which is updated by the running job can also be accessed as</p>
-
-<div>
-  <pre><code class='ruby'>@mail_group.deferred_jobs.job_process_status</code></pre>
-</div>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1546,6 +1483,10 @@ and paste in the following code</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
+      </li>
     
       <li class="post">
         <a href="/2014/02/06/rubymotion-chain-of-modal-segues">Rubymotion: Chain of Modal Segues</a>
@@ -1581,10 +1522,6 @@ and paste in the following code</p>
     
       <li class="post">
         <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
       </li>
     
   </ul>

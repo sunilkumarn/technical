@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="While compiling C programs we might often come across errors,messages and unexpected results as our output.. The following shows a few of those : &hellip;">
+  <meta name="description" content="Some of the most common errors that are produced in a program are caused due to the lack of interest ensuring that the data types used are correct. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,79 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/04/ensuring-the-correct-data-types-while-using-functions">Ensuring the Correct Data Types While Using Functions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T11:48:52+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/04/ensuring-the-correct-data-types-while-using-functions#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Some of the most common errors that are produced in a program are caused due to the lack of interest ensuring that the data types used are correct. Some of these errors will be displayed while some will not and its up to the user to search the program and find out whats wrong with it. Therefore the user must be very careful while using the type of the functions, the variables that are used etc&hellip;An example below shows the use of the data type of the functions and variables&hellip;
+Consider a program which is used perform the functions of a calculator: The functions that are used in the program are the follows:
+push(),pop(),getop(),atof(),main()(These are just the function names)
+ Now each of these functions have got a specific task.
+The &lsquo;getop&rsquo; function is used to get the character that is entered by the user. The value that will be returned by the function would be of an integer type:
+hence <strong>&lsquo;Int getop( char []);&rsquo;</strong> (A string is passed as the parameter)
+&lsquo;push&rsquo; is used to enter a value into the stack. The value would be of type &lsquo;double&rsquo;. Hence the argument that is passed to the function &lsquo;push&rsquo; would be of type &lsquo;double&rsquo;. Nothing is returned by &lsquo;push&rsquo;.
+Hence &lsquo;<strong>void push(double);</strong>&rsquo;
+&lsquo;pop&rsquo; returns a double value and nothing is passed to the &lsquo;pop&rsquo; as an argument because it just takes up the value from the array(array[] ,declared externally).
+Hence<strong> &lsquo;double pop(void)&rsquo;</strong>
+&lsquo;atof&rsquo; takes the string as the argument and returns a double value:
+hence &lsquo;<strong>double atof(char[]);&rsquo;</strong>
+The data type of &lsquo;array[]&rsquo; should again be double because it handles &lsquo;double&rsquo; values.
+Now the program looks like this:</p>
+
+<p> #include
+ #define MAX 50
+ int getop(char s[]);
+ double atof(char s[]);
+ void push(double);
+ double pop(void);
+ double arr[MAX];
+ int top=0;
+ main()</p>
+
+<p> Now if the data types of any of the above declarations are not according to the problem you wouldn&rsquo;t get the expected results.
+For example if the data type of array[] is not double(say integer) , you would get the result as some meaningless value. Same is the case with all of the above functions and variables declared.
+For the purpose of add,subtract,multiply and divide the use of &lsquo;double&rsquo; values is good(infact a necessity if you want the exact output).
+But when the &lsquo;%&rsquo;(modulus) operator is used ,then the problem arises. If the modulus operator is used with two double values the resulting error would be as follows:
+<strong> error: invalid operands to binary % (have ‘double’ and ‘double’) :</strong>
+Hence the values needs to be converted to type &lsquo;int&rsquo;.
+Int op=pop();
+push((int)pop()%op);
+The type is converted from double into int. Now since pop returns a double value, this will again be converted back to a double value.</p>
+
+<p>A note on External variables: Here array[] and top are declared as external variables and so can be accessed by the functions that are mentioned. Hence these values need not be passed as an argument to the functions. The fact that is to be taken into account that is that when external variables are used , the variable names cannot be changed within a function as is the case while passing arguments.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -563,6 +636,10 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/02/06/rubymotion-chain-of-modal-segues">Rubymotion: Chain of Modal Segues</a>
       </li>
     
@@ -596,10 +673,6 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
     
       <li class="post">
         <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
       </li>
     
   </ul>

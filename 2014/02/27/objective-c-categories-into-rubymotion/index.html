@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>A bit about bitwise operators.... - Scribblings</title>
+  <title>Objective-C Categories into Rubymotion - Scribblings</title>
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Before we get a view of the bitwise operators , its important to have an idea of sizes of different types that are used in C.
-Since most of the &hellip;">
+  <meta name="description" content="People familiar with developing Ios applications with Objective-C would be quite familiar with using categories I suppose. An Objective-C category &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ Since most of the &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tech.sunilnkumar.com/2010/08/08/a-bit-about-bitwise-operators">
+  <link rel="canonical" href="http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -70,7 +69,7 @@ Since most of the &hellip;">
   
   <header>
     
-      <h1 class="entry-title">A Bit About Bitwise Operators....</h1>
+      <h1 class="entry-title">Objective-C Categories Into Rubymotion</h1>
     
     
       <p class="meta">
@@ -86,7 +85,7 @@ Since most of the &hellip;">
   
 
 
-<time datetime="2010-08-08T00:09:59+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+<time datetime="2014-02-27T14:04:00+05:30" pubdate data-updated="true">Feb 27<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -95,39 +94,36 @@ Since most of the &hellip;">
   </header>
 
 
-<div class="entry-content"><p>Before we get a view of the bitwise operators , its important to have an idea of  sizes of different types that are used in C.
-Since most of the values that are entered by us can be accommodated by the ‘type float’ we consider the int , short and char types.
-The data type char occupies a space of minimum of 8 bits(1 byte).The maximum value that can be placed in an unsigned char without the problem of truncation is 255. In case of unsigned char, this value moves to 127.The minimum value in signed char is -128.
-The type int stores a maximum value of 65,635 for unsigned type and a maximum of 32767 for the signed type(these are the minimum values offered by any system, the actual limits may change on different systems). The minimum for the signed type would be -32768.The minimum number of bits required for storage would be 16. These values are the same for the type ‘short’.
-These were some of the basics that were needed to get an idea about the bitwise operators. Obviously playing with the bits is a bit more difficult task than the higher level.
-The bitwise operators are
-&amp;-bitwise AND
-|-bitwise OR
-&lt;>-right shift
-^-exclusive or
-~-bitwise complement.</p>
+<div class="entry-content"><p>People familiar with developing Ios applications with Objective-C would be quite familiar with using <strong>categories</strong> I suppose.</p>
 
-<p>&lt;&lt;-left shift operators would be the best way to get an idea about the bitwise operators.
-Consider doing the following
-255&lt;&lt;2….the result would be 1020….255&lt;<3 would give you 2040…255<<4….would give you 4080….and so….
-Lets see how this works….doing 255<<2 is equivalent to doing 255*2^2(here the ^ symbol stands for the ‘raise to’ operator….Similarly 255<<3 is equivalent to doing 255*2^3….
-A smaller number would  help in understanding this.
-Left shift operator shifts each bit of the character 2 places to the left. In the case 1<<2…would give 4 as the answer…
-1(00000001)<<2=00000100(4)….This is how you obtain 4 as the answer.
-Now the importance of the knowing the bit size of different types comes in here…
-Suppose that the character 255 has been stored using variable of the type ‘char’…Now it is obvious that after shifting it to left, the result cannot be held by the type ‘char’ because the maximum value that can be stored in ‘type char’ is 255..Therefore it will have to be stored in the type whose size is greater then that of ‘char’.
-.unsigned char s=255;
-.s=s<<2;  wouldn't be correct.
-We use the type 'int' to store the result...
-.unsigned char s=255;
-.int i=s<<2; is the right way to do it..
-Similarly its also important to consider the limits of the signed and unsigned values when using the shift operators.
-The attempt to shift more bits than is allotted would produce in a message as ‘>=width of the type’.
-The other bitwise operators work on the bits as follows….</p>
+<p>An Objective-C category allows you to add methods to an existing class — effectively subclassing it without having to deal with the possible complexities of subclassing.</p>
 
-<blockquote><blockquote><p>p  &mdash;&ndash;  shifts the bits p positions to the right…equivalent to dividing with 2<sup>p</sup>.
-&lsquo;&amp;&rsquo;  &mdash;-result is 1 when any of the bits are 1…
-^,|,~ all work in their own way….</p></blockquote></blockquote>
+<p>Moving into Rubymotion and using the power of categories is quite well possible for people who have been working with Ruby. <strong>Monkey Patching</strong> ( open an existing class and add your custom code within it ) it quite a familiar task with Rubyists.</p>
+
+<p>Below is an example where I need to add a customized back button for the UINavigationController navigation bar. I need this to be the back button in quite a few View controllers. It would be quite a tedious task to create a button in each VC, hence I create a category file and monkey patch the UIBarButtonItem class to add a new method which returns the customized back button.</p>
+
+<p>app/categories/ui_bar_button_item.rb</p>
+
+<pre><code>def self.backArrowButtonWithTarget(target, action)
+  buttonImage = UIImage.imageNamed('arrow.jpeg')
+  button = UIButton.buttonWithType(UIButtonTypeCustom)
+  button.setImage(buttonImage, forState:UIControlStateNormal)
+  button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height)
+  button.addTarget(target, action:action, forControlEvents:UIControlEventTouchUpInside)
+  customBarItem = UIBarButtonItem.alloc.initWithCustomView(button)
+  customBarItem
+end
+</code></pre>
+
+<p>The view controller which needs to have this customized back button will have this</p>
+
+<pre><code>def viewDidAppear(animated)
+  super
+  self.navigationItem.leftBarButtonItem = UIBarButtonItem.backArrowButtonWithTarget(self.navigationController, 'popViewControllerAnimated:')
+end
+</code></pre>
+
+<p>This would use Ruby&rsquo;s monkey patching power to create create elements in Rubymotion which could be used in the entire application as &amp; when needed.</p>
 </div>
 
 
@@ -136,7 +132,7 @@ The other bitwise operators work on the bits as follows….</p>
       
   
 
-<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Sunil Kumar</span></span>
 
       
 
@@ -150,21 +146,15 @@ The other bitwise operators work on the bits as follows….</p>
   
 
 
-<time datetime="2010-08-08T00:09:59+05:30" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+<time datetime="2014-02-27T14:04:00+05:30" pubdate data-updated="true">Feb 27<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/c/'>C</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/2010/08/08/a-bit-about-bitwise-operators" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/2010/08/08/a-bit-about-bitwise-operators" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion" >Tweet</a>
   
   
   
@@ -173,10 +163,8 @@ The other bitwise operators work on the bits as follows….</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/2010/08/07/the-lm-command" title="Previous Post: The 'lm' option.">&laquo; The 'lm' option.</a>
+        <a class="basic-alignment left" href="/2014/02/06/rubymotion-chain-of-modal-segues" title="Previous Post: Rubymotion: Chain of Modal segues">&laquo; Rubymotion: Chain of Modal segues</a>
       
-      
-        <a class="basic-alignment right" href="/2010/08/08/recursion-in-c" title="Next Post: Recursion in C..">Recursion in C.. &raquo;</a>
       
     </p>
   </footer>
@@ -273,8 +261,8 @@ The other bitwise operators work on the bits as follows….</p>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://tech.sunilnkumar.com/2010/08/08/a-bit-about-bitwise-operators';
-        var disqus_url = 'http://tech.sunilnkumar.com/2010/08/08/a-bit-about-bitwise-operators';
+        var disqus_identifier = 'http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion';
+        var disqus_url = 'http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion';
         var disqus_script = 'embed.js';
       
     (function () {

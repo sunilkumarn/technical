@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="As a developer, I find Git both powerful and amazing. It tracks changes to source code and enables collaboration between developers. This post shows &hellip;">
+  <meta name="description" content="Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,136 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-19T11:48:38+05:30" pubdate data-updated="true">May 19<span>th</span>, 2013</time>
+        
+         | <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ok, so this was my exact scenario. When I was doing a bulk emailing application,  there was the need for the client to upload his set of email ids as a file and then save it to the database. The process of saving these contact mail_ids for a particular mail group was a delayed process, handled by<a href="https://github.com/collectiveidea/delayed_job"> Rails delayed job</a> . <a href="https://github.com/collectiveidea/delayed_job">
+</a></p>
+
+<div>
+  <pre><code class='ruby'>@mail_group.delay.save_group_contacts</code></pre>
+</div>
+
+
+<p>where @mail_group is the active record group to which the mails_ids being uploaded and saved belong.</p>
+
+<p>The requirement was to show a progress bar for the process of the mail_ids being saved to the the mail group. To handle this, I decided to add custom attributes to the delayed jobs table so as to identify the owner of the delayed job and also find the progress of the job.</p>
+
+<p>To do this,</p>
+
+<p>1) DB migration to add the custom attributes</p>
+
+<div>
+  <pre><code class='ruby'>class AddColumnToDelayedJob &lt; ActiveRecord::Migration
+      def change
+        add_column :delayed_jobs, :job_process_status, :integer, :default =&gt; 0
+        add_column :delayed_jobs, :job_owner_id, :integer
+        add_column :delayed_jobs, :job_owner_type, :string
+      end
+    end</code></pre>
+</div>
+
+
+<p>2) A model for the delayed jobs table.</p>
+
+<div>
+  <pre><code class='ruby'>module Delayed
+      class Job &lt; ActiveRecord::Base
+        self.table_name = &quot;delayed_jobs&quot;
+        attr_accessible :job_owner_id, :job_process_status, :job_owner_type
+        belongs_to :job_owner, :polymorphic =&gt; true
+      end
+    end</code></pre>
+</div>
+
+
+<p>As seen, three extra attributes (job_owner_id, job_owner_type attributes for establishing a polymorphic association with the job owner of the delayed job and a job_process_status attribute for updating the progress of the job) were added to the delayed jobs table.</p>
+
+<p>Delayed jobs were then created with the job_owner_id and job_owner_type.</p>
+
+<div>
+  <pre><code class='ruby'>@mail_group.delay(job_owner_id: @mail_group.id, job_owner_type: @mail_group.class.name).save_group_contacts</code></pre>
+</div>
+
+
+<p>However this would not be enough to update the custom attributes. An attempt to create a delayed job would produce this</p>
+
+<div>
+  <pre><code class='ruby'>ActiveModel::MassAssignmentSecurity::Error:
+        Can't mass-assign protected attributes: job_owner_id, job_owner_type</code></pre>
+</div>
+
+
+<p>As a quick fix, add a <code>config/initializers/delayed_job.rb</code>
+and paste in the following code</p>
+
+<div>
+  <pre><code class='ruby'>class Delayed::Job &lt; ActiveRecord::Base
+      self.attr_protected if self.to_s == 'Delayed::Backend::ActiveRecord::Job'   #loads protected attributes for                                                                                        # ActiveRecord instance
+    end</code></pre>
+</div>
+
+
+<p>Now the delayed job would get saved with the job_owner_id and job_owner_type.</p>
+
+<p>Also, in the mail_group model, set an association to the delayed jobs table.</p>
+
+<div>
+  <pre><code class='ruby'>class MailGroup &lt; ActiveRecord::Base
+      has_many :deferred_jobs, :as =&gt; :job_owner, :class_name =&gt; &quot;::Delayed::Job&quot;
+    end</code></pre>
+</div>
+
+
+<p>Now you can access all the delayed jobs of a particular @mail_group as</p>
+
+<div>
+  <pre><code class='ruby'>@mail_group.deferred_jobs</code></pre>
+</div>
+
+
+<p>The job process status which is updated by the running job can also be accessed as</p>
+
+<div>
+  <pre><code class='ruby'>@mail_group.deferred_jobs.job_process_status</code></pre>
+</div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -881,127 +1011,6 @@ The &lsquo;<strong>down</strong> &rsquo; operation just before the two statement
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/10/21/memcheck-a-memory-error-detection-tool">Memcheck : A Memory Error Detection Tool</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-10-21T09:13:49+05:30" pubdate data-updated="true">Oct 21<span>st</span>, 2010</time>
-        
-         | <a href="/2010/10/21/memcheck-a-memory-error-detection-tool#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Linux distros provide a  tool suite called <strong>&lsquo;Valgrind&rsquo;</strong> that consists of a number of tools that help you make your programs faster and more correct . The most popular tool out of this is called is <strong>memcheck</strong> that is used to detect memory related errors in C and C++ programs that can lead to serious issues like  segfaults and even more grevious issues like unpredictable behaviours .</p>
-
-<p>Lets take a look into how we use the tool &lsquo;memcheck&rsquo; so that we detect , try and avoid the memory related issues in our program.</p>
-
-<p>First of all we need to create a memory leak so that we have something to detect .</p>
-
-<p>We write a program that consists of a memory leak . Here is one such in a file &lsquo; pgm.c&rsquo;</p>
-
-<p><code>1 #include &lt;stdlib.h&gt;
-2 #include &lt;string.h&gt;
-3 void f(char *s)
-4 {
-5 char *x = malloc(strlen(s));
-6 x[7] = 0;
-7 }</code></p>
-
-<p><code>8 int  main()
-9 {
-10 char *s="Hello";
-11 f(s);
-12 }</code></p>
-
-<p>As you could see , there are two major memory related bugs in this code:</p>
-
-<p>1) Trying to write in the location x[7] which is out of the allocated memory space .This will lead to what is called a <strong>&lsquo;heap block overrun</strong>&rsquo; .</p>
-
-<p>2) The memory that is allocated to x remains unused . This memory becomes garbage on returning from the function . In short , you have seen a <strong>&lsquo;memory leak</strong> &rsquo;.</p>
-
-<p>Now lets try and detect the two problems using memcheck :</p>
-
-<p>You need to have valgrind installed in your system .
-<strong>$ : apt-get install valgrind</strong>
-if you don&rsquo;t have it already .</p>
-
-<p>Do</p>
-
-<p><strong>$: cc -g pgm.c</strong></p>
-
-<p>We  compile the program using the -g option so that the line number informations are displayed when using memcheck .</p>
-
-<p>Do</p>
-
-<p><strong>$: valgrind  &mdash;leak-check = yes a.out</strong></p>
-
-<p>the option  &lsquo; &mdash;leak-check &rsquo; being set equal to yes displays the informations on memory leak issues .</p>
-
-<p>Now lets look out what are the informations that are being displayed when the memcheck tool is used .</p>
-
-<p>First lets have a look into the &lsquo;heap block overrun&rsquo; problem :</p>
-
-<p><code>==3350== Invalid write of size 1
-==3350==    at 0x80483F6: f (pgm.c:6)
-==3350==    by 0x804841D: main (pgm.c:11)
-==3350==  Address 0x419102f is 2 bytes after a block of size 5 alloc'd
-==3350==    at 0x4023D6E: malloc (vg_replace_malloc.c:207)
-==3350==    by 0x80483EC: f (pgm.c:5)
-==3350==    by 0x804841D: main (pgm.c:11)</code></p>
-
-<p>The above few lines is the code that was generated by memcheck  .</p>
-
-<p>&lsquo;3350&rsquo; is the process id .</p>
-
-<p>The actual error is seen right at the first line .</p>
-
-<p>&lsquo;Invalid write  of size 1&rsquo; .</p>
-
-<p>You get a stack trace right after this line , that</p>
-
-<p>the invalid write has occured at the 6th line as a result of the 12th line . You could see what line numbers &lsquo;6&rsquo; and &lsquo;11&rsquo; do by having a look into our code , its the point of occurence of the error and the function call respectively.</p>
-
-<p>A line showing the the fact that the location you are trying to access ( x[7] ) is 2 bytes after the allocated area can also be seen added with lines that contain information about the main and the function   .These lines provide great help to the programmer especially when the case becomes a lot more complicated .</p>
-
-<p>Now the informations that are displayed about the &lsquo;memory leak problem&rsquo; can also be looked into .</p>
-
-<p><code>==3350== LEAK SUMMARY:
-==3350==    definitely lost: 5 bytes in 1 blocks.
-==3350==    possibly lost: 0 bytes in 0 blocks.
-==3350==    still reachable: 0 bytes in 0 blocks.
-==3350==    suppressed: 0 bytes in 0 blocks.
-</code>
-You could view the lines that provide information about the memory leak problem .
-The first line of the &lsquo;LEAK SUMMARY &rsquo; is the most significant to us . It shows the amount of memory definitely lost ( 5 Bytes ). Changes need to be made in the program so that the memory leak is prevented .</p>
-
-<p>Memcheck produces these result which helps the programmer so as to view and correct the memory related issues rather convincingly . It needs to be noted that Memcheck is a <strong>&lsquo;dynamic instrumentation tool </strong>&rsquo; and not a static tool like &lsquo;lint &rsquo; . Hence to detect the memory leaks in a program , the control actually needs to get transferred to that segment of the program where the issues occur . In short you need to invoke the function &lsquo;f&rsquo; from your &lsquo;main&rsquo; so that Memcheck could detect those memory related issues that exists within the function &lsquo;f&rsquo; .</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1017,6 +1026,10 @@ The first line of the &lsquo;LEAK SUMMARY &rsquo; is the most significant to us 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
+      </li>
     
       <li class="post">
         <a href="/2014/02/06/rubymotion-chain-of-modal-segues">Rubymotion: Chain of Modal Segues</a>
@@ -1052,10 +1065,6 @@ The first line of the &lsquo;LEAK SUMMARY &rsquo; is the most significant to us 
     
       <li class="post">
         <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
       </li>
     
   </ul>

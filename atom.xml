@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-02-06T19:40:45+05:30</updated>
+  <updated>2014-02-27T14:10:38+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Objective-C Categories into Rubymotion]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion"/>
+    <updated>2014-02-27T14:04:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion</id>
+    <content type="html"><![CDATA[<p>People familiar with developing Ios applications with Objective-C would be quite familiar with using <strong>categories</strong> I suppose.</p>
+
+<p>An Objective-C category allows you to add methods to an existing class — effectively subclassing it without having to deal with the possible complexities of subclassing.</p>
+
+<p>Moving into Rubymotion and using the power of categories is quite well possible for people who have been working with Ruby. <strong>Monkey Patching</strong> ( open an existing class and add your custom code within it ) it quite a familiar task with Rubyists.</p>
+
+<p>Below is an example where I need to add a customized back button for the UINavigationController navigation bar. I need this to be the back button in quite a few View controllers. It would be quite a tedious task to create a button in each VC, hence I create a category file and monkey patch the UIBarButtonItem class to add a new method which returns the customized back button.</p>
+
+<p>app/categories/ui_bar_button_item.rb</p>
+
+<pre><code>def self.backArrowButtonWithTarget(target, action)
+  buttonImage = UIImage.imageNamed('arrow.jpeg')
+  button = UIButton.buttonWithType(UIButtonTypeCustom)
+  button.setImage(buttonImage, forState:UIControlStateNormal)
+  button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height)
+  button.addTarget(target, action:action, forControlEvents:UIControlEventTouchUpInside)
+  customBarItem = UIBarButtonItem.alloc.initWithCustomView(button)
+  customBarItem
+end
+</code></pre>
+
+<p>The view controller which needs to have this customized back button will have this</p>
+
+<pre><code>def viewDidAppear(animated)
+  super
+  self.navigationItem.leftBarButtonItem = UIBarButtonItem.backArrowButtonWithTarget(self.navigationController, 'popViewControllerAnimated:')
+end
+</code></pre>
+
+<p>This would use Ruby&rsquo;s monkey patching power to create create elements in Rubymotion which could be used in the entire application as &amp; when needed.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubymotion: Chain of Modal segues]]></title>
@@ -1739,98 +1777,6 @@ The &lsquo;<strong>down</strong> &rsquo; operation just before the two statement
 <p>This synchronization pattern as been solved using semaphores .</p>
 
 <p>You could find the solution to these and more such patterns from <a href="http://github.com/sunilkumarn/Synchroniation_patterns">here</a> .</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Memcheck : A Memory Error Detection Tool]]></title>
-    <link href="http://tech.sunilnkumar.com/2010/10/21/memcheck-a-memory-error-detection-tool"/>
-    <updated>2010-10-21T09:13:49+05:30</updated>
-    <id>http://tech.sunilnkumar.com/2010/10/21/memcheck-a-memory-error-detection-tool</id>
-    <content type="html"><![CDATA[<p>Linux distros provide a  tool suite called <strong>&lsquo;Valgrind&rsquo;</strong> that consists of a number of tools that help you make your programs faster and more correct . The most popular tool out of this is called is <strong>memcheck</strong> that is used to detect memory related errors in C and C++ programs that can lead to serious issues like  segfaults and even more grevious issues like unpredictable behaviours .</p>
-
-<p>Lets take a look into how we use the tool &lsquo;memcheck&rsquo; so that we detect , try and avoid the memory related issues in our program.</p>
-
-<p>First of all we need to create a memory leak so that we have something to detect .</p>
-
-<p>We write a program that consists of a memory leak . Here is one such in a file &lsquo; pgm.c&rsquo;</p>
-
-<p><code>1 #include &lt;stdlib.h&gt;
-2 #include &lt;string.h&gt;
-3 void f(char *s)
-4 {
-5 char *x = malloc(strlen(s));
-6 x[7] = 0;
-7 }</code></p>
-
-<p><code>8 int  main()
-9 {
-10 char *s="Hello";
-11 f(s);
-12 }</code></p>
-
-<p>As you could see , there are two major memory related bugs in this code:</p>
-
-<p>1) Trying to write in the location x[7] which is out of the allocated memory space .This will lead to what is called a <strong>&lsquo;heap block overrun</strong>&rsquo; .</p>
-
-<p>2) The memory that is allocated to x remains unused . This memory becomes garbage on returning from the function . In short , you have seen a <strong>&lsquo;memory leak</strong> &rsquo;.</p>
-
-<p>Now lets try and detect the two problems using memcheck :</p>
-
-<p>You need to have valgrind installed in your system .
-<strong>$ : apt-get install valgrind</strong>
-if you don&rsquo;t have it already .</p>
-
-<p>Do</p>
-
-<p><strong>$: cc -g pgm.c</strong></p>
-
-<p>We  compile the program using the -g option so that the line number informations are displayed when using memcheck .</p>
-
-<p>Do</p>
-
-<p><strong>$: valgrind  &mdash;leak-check = yes a.out</strong></p>
-
-<p>the option  &lsquo; &mdash;leak-check &rsquo; being set equal to yes displays the informations on memory leak issues .</p>
-
-<p>Now lets look out what are the informations that are being displayed when the memcheck tool is used .</p>
-
-<p>First lets have a look into the &lsquo;heap block overrun&rsquo; problem :</p>
-
-<p><code>==3350== Invalid write of size 1
-==3350==    at 0x80483F6: f (pgm.c:6)
-==3350==    by 0x804841D: main (pgm.c:11)
-==3350==  Address 0x419102f is 2 bytes after a block of size 5 alloc'd
-==3350==    at 0x4023D6E: malloc (vg_replace_malloc.c:207)
-==3350==    by 0x80483EC: f (pgm.c:5)
-==3350==    by 0x804841D: main (pgm.c:11)</code></p>
-
-<p>The above few lines is the code that was generated by memcheck  .</p>
-
-<p>&lsquo;3350&rsquo; is the process id .</p>
-
-<p>The actual error is seen right at the first line .</p>
-
-<p>&lsquo;Invalid write  of size 1&rsquo; .</p>
-
-<p>You get a stack trace right after this line , that</p>
-
-<p>the invalid write has occured at the 6th line as a result of the 12th line . You could see what line numbers &lsquo;6&rsquo; and &lsquo;11&rsquo; do by having a look into our code , its the point of occurence of the error and the function call respectively.</p>
-
-<p>A line showing the the fact that the location you are trying to access ( x[7] ) is 2 bytes after the allocated area can also be seen added with lines that contain information about the main and the function   .These lines provide great help to the programmer especially when the case becomes a lot more complicated .</p>
-
-<p>Now the informations that are displayed about the &lsquo;memory leak problem&rsquo; can also be looked into .</p>
-
-<p><code>==3350== LEAK SUMMARY:
-==3350==    definitely lost: 5 bytes in 1 blocks.
-==3350==    possibly lost: 0 bytes in 0 blocks.
-==3350==    still reachable: 0 bytes in 0 blocks.
-==3350==    suppressed: 0 bytes in 0 blocks.
-</code>
-You could view the lines that provide information about the memory leak problem .
-The first line of the &lsquo;LEAK SUMMARY &rsquo; is the most significant to us . It shows the amount of memory definitely lost ( 5 Bytes ). Changes need to be made in the program so that the memory leak is prevented .</p>
-
-<p>Memcheck produces these result which helps the programmer so as to view and correct the memory related issues rather convincingly . It needs to be noted that Memcheck is a <strong>&lsquo;dynamic instrumentation tool </strong>&rsquo; and not a static tool like &lsquo;lint &rsquo; . Hence to detect the memory leaks in a program , the control actually needs to get transferred to that segment of the program where the issues occur . In short you need to invoke the function &lsquo;f&rsquo; from your &lsquo;main&rsquo; so that Memcheck could detect those memory related issues that exists within the function &lsquo;f&rsquo; .</p>
 ]]></content>
   </entry>
   

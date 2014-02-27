@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="While writing C programs using the &lsquo;vi&rsquo; editor ,you might find a frustrating task of handling with line numbers ,setting up the &hellip;">
+  <meta name="description" content="When a particular sequence of commands is repeated time after ,it might be better if we create a shorter command of our own. These command creation &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,98 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/12/creating-new-commands-and-passing-arguments-in-unix">UNIX - Create New Commands and Pass Arguments</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-12T01:20:44+05:30" pubdate data-updated="true">Aug 12<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/12/creating-new-commands-and-passing-arguments-in-unix#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When a particular sequence of commands is repeated time after ,it might be better if we create a shorter command of our own. These command creation mentioned may not be suitable for public use but would be helpful for private use.</p>
+
+<p>Consider suppose that we intend to count the number of users quite frequently:
+<strong>$ who|wc -l</strong></p>
+
+<p>We can make a small command of ours named &lsquo;count&rsquo; that does the same work.
+So we do
+<strong>$echo &lsquo;who|wc -l&rsquo;>count</strong> (A file named &lsquo;count&rsquo; is created).</p>
+
+<p>Now we run the shell program with its input coming from the file &lsquo;count&rsquo;.
+<strong>$ sh&lt;count</strong>
+this is same as
+<strong>$ sh count</strong></p>
+
+<p>Now to type sh all the time wouldn&rsquo;t be such a great thing. So we make the file &lsquo;count&rsquo; executable by
+<strong>$ chmod +x count</strong>
+Now the result of doing &lsquo;who|wc -l&rsquo; can be produced by doing &lsquo;count&rsquo;.
+<strong>$ count</strong>
+Install count ,place it in the /usr/bin directory. Set the path appropriately and start using the command
+created.</p>
+
+<p>Now again when we begin to create executable commands of our own, we will have to make it executable . So it would be better if we create a shorter command for <strong>chmod +x filename</strong>.
+The problem here would be that the filename that is passed to &lsquo;chmod&rsquo; may change every time.
+Therefore we do
+<strong>$ echo &lsquo;chmod +x $1&rsquo;>cx</strong> (cx would be the file created).</p>
+
+<p>Here $1-indicates that only 1 argument can be passed to the command at a time</p>
+
+<pre><code>     $2 would make it 2 and $9 would make it 9.
+</code></pre>
+
+<p>So to enable any number of arguments we do
+<strong>$ echo &lsquo;chmod +x $*&rsquo;>cx</strong></p>
+
+<p>Now we need to make cx executable.
+This can be done either by doing
+<strong>$ chmod +x cx</strong>       or else
+<strong>$ sh cx cx </strong>             because sh cx is equivalent to doing chmod +x $*.
+Now test it by creating a test command &lsquo;test&rsquo; ,install it and run the command. &lsquo;Permission denied&rsquo; will be the message. Now do
+<strong>$ cx test</strong>
+<strong>$ test</strong>
+The command &lsquo;test&rsquo; will run and the result will be produced.</p>
+
+<p>Now suppose we have a file &lsquo;class&rsquo; consisting of some information about the students of our class and consider a case where we need information about certain students  and  we need it quite frequently. This can be done with the help of the &lsquo;grep&rsquo; command.
+<strong>$ echo &lsquo;grep $* /root/new/class&rsquo;> find</strong>
+install the command.
+<strong>$ cx find</strong>              /* makes the file executable
+<strong>$ find</strong></p>
+
+<p>Now a possible would arise when the following case is given as the argument:
+$ find sunil kumar
+This is because the words sunil and kumar will be seen as two different arguments.
+Hence do
+<strong>$ echo &lsquo;grep “$*” /root/new/class&rsquo;> find</strong>
+This would solve the problem.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -662,79 +754,6 @@ The result would be an error as such:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/08/04/ensuring-the-correct-data-types-while-using-functions">Ensuring the Correct Data Types While Using Functions</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-04T11:48:52+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
-        
-         | <a href="/2010/08/04/ensuring-the-correct-data-types-while-using-functions#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Some of the most common errors that are produced in a program are caused due to the lack of interest ensuring that the data types used are correct. Some of these errors will be displayed while some will not and its up to the user to search the program and find out whats wrong with it. Therefore the user must be very careful while using the type of the functions, the variables that are used etc&hellip;An example below shows the use of the data type of the functions and variables&hellip;
-Consider a program which is used perform the functions of a calculator: The functions that are used in the program are the follows:
-push(),pop(),getop(),atof(),main()(These are just the function names)
- Now each of these functions have got a specific task.
-The &lsquo;getop&rsquo; function is used to get the character that is entered by the user. The value that will be returned by the function would be of an integer type:
-hence <strong>&lsquo;Int getop( char []);&rsquo;</strong> (A string is passed as the parameter)
-&lsquo;push&rsquo; is used to enter a value into the stack. The value would be of type &lsquo;double&rsquo;. Hence the argument that is passed to the function &lsquo;push&rsquo; would be of type &lsquo;double&rsquo;. Nothing is returned by &lsquo;push&rsquo;.
-Hence &lsquo;<strong>void push(double);</strong>&rsquo;
-&lsquo;pop&rsquo; returns a double value and nothing is passed to the &lsquo;pop&rsquo; as an argument because it just takes up the value from the array(array[] ,declared externally).
-Hence<strong> &lsquo;double pop(void)&rsquo;</strong>
-&lsquo;atof&rsquo; takes the string as the argument and returns a double value:
-hence &lsquo;<strong>double atof(char[]);&rsquo;</strong>
-The data type of &lsquo;array[]&rsquo; should again be double because it handles &lsquo;double&rsquo; values.
-Now the program looks like this:</p>
-
-<p> #include
- #define MAX 50
- int getop(char s[]);
- double atof(char s[]);
- void push(double);
- double pop(void);
- double arr[MAX];
- int top=0;
- main()</p>
-
-<p> Now if the data types of any of the above declarations are not according to the problem you wouldn&rsquo;t get the expected results.
-For example if the data type of array[] is not double(say integer) , you would get the result as some meaningless value. Same is the case with all of the above functions and variables declared.
-For the purpose of add,subtract,multiply and divide the use of &lsquo;double&rsquo; values is good(infact a necessity if you want the exact output).
-But when the &lsquo;%&rsquo;(modulus) operator is used ,then the problem arises. If the modulus operator is used with two double values the resulting error would be as follows:
-<strong> error: invalid operands to binary % (have ‘double’ and ‘double’) :</strong>
-Hence the values needs to be converted to type &lsquo;int&rsquo;.
-Int op=pop();
-push((int)pop()%op);
-The type is converted from double into int. Now since pop returns a double value, this will again be converted back to a double value.</p>
-
-<p>A note on External variables: Here array[] and top are declared as external variables and so can be accessed by the functions that are mentioned. Hence these values need not be passed as an argument to the functions. The fact that is to be taken into account that is that when external variables are used , the variable names cannot be changed within a function as is the case while passing arguments.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -750,6 +769,10 @@ The type is converted from double into int. Now since pop returns a double value
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
+      </li>
     
       <li class="post">
         <a href="/2014/02/06/rubymotion-chain-of-modal-segues">Rubymotion: Chain of Modal Segues</a>
@@ -785,10 +808,6 @@ The type is converted from double into int. Now since pop returns a double value
     
       <li class="post">
         <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
       </li>
     
   </ul>

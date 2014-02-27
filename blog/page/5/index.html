@@ -9,10 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="In C, once the memory allocated becomes garbage , that chunk of memory is gone wasted. Nothing more is possible on it.
-Consider
-int a[10];
-Some &hellip;">
+  <meta name="description" content="Compare python with some of the other languages that are familiar to many of you. The obvious difference that will be caught by you , is the fact &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +66,96 @@ Some &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/02/optimizing-your-python-code">Optimizing Your Python Code.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-02T08:40:43+05:30" pubdate data-updated="true">Sep 2<span>nd</span>, 2010</time>
+        
+         | <a href="/2010/09/02/optimizing-your-python-code#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>    Compare python with some of the other languages that are familiar to many of you. The obvious difference that will be caught by you , is the fact that python code, for the same program ,is much shorter than codes written in some of your favorite languages like C ,Java etc.
+</code></pre>
+
+<p>Understanding the essence of python programming would help you write shorter and interesting codes  and are easier to understand. Lets just have a look into some of the core points that need to be followed so that your python program becomes short and effective.</p>
+
+<pre><code>    First and foremost, you need to understand the fact that python has got a huge library with functions for almost every activity you would need frequently. The only thing you need to do is to identify whether a function is present that would handle your case and then call the function .There are lots of built in functions that we could call. Other functions that reside in certain modules can also be invoked after the module containing the function has been imported.
+</code></pre>
+
+<p> As an example , consider the following:</p>
+
+<pre><code>        **map(sqr,range(1,100)):**
+
+    'map' is a built -in higher order function that takes two or more arguments and returns you a list,'range' is another built-in which would return a list containing all the elements from the starting element up to the ending element.
+
+    This particular function returns a list of squares of all numbers from 1 up to 99 using a single line code. Compare this to a C code to find the squares of this many numbers,certainly ,a single line code wouldn't do that for you.
+
+    Python has got a large collection of such built ins which includes functions like 'filter','reduce','hex','cmp' and many more.
+
+    Python has got many more functions that are defined in different modules:To use those functions , you just need to import those modules and invoke them. Some of the most commonly invoked ones are :
+    **Module 're**' for pattern matching. Contains power full functions like findall' , search' , 'match' etc.
+    **Module 'os'** for operating system services. Includes functions 'mkdir' , 'chdir' ,' path.join,' path.abspath'' etc.
+    **Module 'shutil'** for shell utilities like copying files.
+
+    **Module 'urllib'** for dealing with 'URLs'.
+
+    **Module 'sys**' :sys.argv[index] would return the input given on the command line at position 'index.'
+
+    Identifying the correct functions that are present in these and more modules in python  would result in much shorter code length. 
+
+ A proper knowledge about the use of sequences and variables would do no harm in our purpose of decreasing the code size.
+
+Consider the code to swap the values of two variables. In other languages you would write:
+temp=a:
+a=b:
+b=temp:
+
+Once again, in python all you need is a single line code :
+
+**a,b=b,a**
+</code></pre>
+
+<p> The logic behind whats happening is to be understood. Consider the right hand side of the expression -variables are packed into a tuple. On the left hand side, the tuple is unpacked and the values are entered into the variables. Thus the values are swapped in a single line as opposed to three lines taken in other languages.</p>
+
+<pre><code>Use of generator expressions is another way to reduce your code size.
+Consider:
+xvec=[10,20,30]
+yvec=[30,40,50]
+</code></pre>
+
+<p>The expression <strong>sum(x*y for x,y in zip(xvec,yvec)) </strong>gives you the dot product of xvec and yvec in a single step where &lsquo;sum&rsquo; is another built in function. Think of writing a C code instead of this and the number of writing you would take.</p>
+
+<pre><code>There are many more such tricks that would decrease the code size considerably . Slicing of lists , usage of the appropriate sequences are all important in producing a short and elegant code. Obviously,the fact remains that to understand the methodology behind decreasing the code size is to keep on coding ,understanding the definitions of the functions and identifying where to use them. But again, compressing your code size heavily might result in your code being hard to digest by others, specially those beginners trying to understand a python code. Therefore its important to develop a skill where you would maintain a balance between decreasing the code size and the readability of your code. This can be achieved only through rigorous coding.
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -664,98 +751,6 @@ Set up your own aliases there.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/08/12/creating-new-commands-and-passing-arguments-in-unix">UNIX - Create New Commands and Pass Arguments</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-12T01:20:44+05:30" pubdate data-updated="true">Aug 12<span>th</span>, 2010</time>
-        
-         | <a href="/2010/08/12/creating-new-commands-and-passing-arguments-in-unix#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When a particular sequence of commands is repeated time after ,it might be better if we create a shorter command of our own. These command creation mentioned may not be suitable for public use but would be helpful for private use.</p>
-
-<p>Consider suppose that we intend to count the number of users quite frequently:
-<strong>$ who|wc -l</strong></p>
-
-<p>We can make a small command of ours named &lsquo;count&rsquo; that does the same work.
-So we do
-<strong>$echo &lsquo;who|wc -l&rsquo;>count</strong> (A file named &lsquo;count&rsquo; is created).</p>
-
-<p>Now we run the shell program with its input coming from the file &lsquo;count&rsquo;.
-<strong>$ sh&lt;count</strong>
-this is same as
-<strong>$ sh count</strong></p>
-
-<p>Now to type sh all the time wouldn&rsquo;t be such a great thing. So we make the file &lsquo;count&rsquo; executable by
-<strong>$ chmod +x count</strong>
-Now the result of doing &lsquo;who|wc -l&rsquo; can be produced by doing &lsquo;count&rsquo;.
-<strong>$ count</strong>
-Install count ,place it in the /usr/bin directory. Set the path appropriately and start using the command
-created.</p>
-
-<p>Now again when we begin to create executable commands of our own, we will have to make it executable . So it would be better if we create a shorter command for <strong>chmod +x filename</strong>.
-The problem here would be that the filename that is passed to &lsquo;chmod&rsquo; may change every time.
-Therefore we do
-<strong>$ echo &lsquo;chmod +x $1&rsquo;>cx</strong> (cx would be the file created).</p>
-
-<p>Here $1-indicates that only 1 argument can be passed to the command at a time</p>
-
-<pre><code>     $2 would make it 2 and $9 would make it 9.
-</code></pre>
-
-<p>So to enable any number of arguments we do
-<strong>$ echo &lsquo;chmod +x $*&rsquo;>cx</strong></p>
-
-<p>Now we need to make cx executable.
-This can be done either by doing
-<strong>$ chmod +x cx</strong>       or else
-<strong>$ sh cx cx </strong>             because sh cx is equivalent to doing chmod +x $*.
-Now test it by creating a test command &lsquo;test&rsquo; ,install it and run the command. &lsquo;Permission denied&rsquo; will be the message. Now do
-<strong>$ cx test</strong>
-<strong>$ test</strong>
-The command &lsquo;test&rsquo; will run and the result will be produced.</p>
-
-<p>Now suppose we have a file &lsquo;class&rsquo; consisting of some information about the students of our class and consider a case where we need information about certain students  and  we need it quite frequently. This can be done with the help of the &lsquo;grep&rsquo; command.
-<strong>$ echo &lsquo;grep $* /root/new/class&rsquo;> find</strong>
-install the command.
-<strong>$ cx find</strong>              /* makes the file executable
-<strong>$ find</strong></p>
-
-<p>Now a possible would arise when the following case is given as the argument:
-$ find sunil kumar
-This is because the words sunil and kumar will be seen as two different arguments.
-Hence do
-<strong>$ echo &lsquo;grep “$*” /root/new/class&rsquo;> find</strong>
-This would solve the problem.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -771,6 +766,10 @@ This would solve the problem.</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
+      </li>
     
       <li class="post">
         <a href="/2014/02/06/rubymotion-chain-of-modal-segues">Rubymotion: Chain of Modal Segues</a>
@@ -806,10 +805,6 @@ This would solve the problem.</p>
     
       <li class="post">
         <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/19/delayed-jobs-in-rails-adding-custom-attributes">Delayed Jobs in Rails: Adding Custom Attributes</a>
       </li>
     
   </ul>
