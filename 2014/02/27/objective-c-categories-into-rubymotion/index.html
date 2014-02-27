@@ -102,7 +102,7 @@
 
 <p>Below is an example where I need to add a customized back button for the UINavigationController navigation bar. I need this to be the back button in quite a few View controllers. It would be quite a tedious task to create a button in each VC, hence I create a category file and monkey patch the UIBarButtonItem class to add a new method which returns the customized back button.</p>
 
-<p>app/categories/ui_bar_button_item.rb</p>
+<p><em>app/categories/ui_bar_button_item.rb</em></p>
 
 <pre><code>def self.backArrowButtonWithTarget(target, action)
   buttonImage = UIImage.imageNamed('arrow.jpeg')
