@@ -12,13 +12,15 @@ Once thats been done, in your Rubymotion project, add a few extra lines in the R
 
     app.name = 'Myapp'
     app.identifier = 'com.myapp.development'
+    app.provisioning_profile = '.environments/Myapp_Develpoment.mobileprovision'
     app.entitlements['keychain-access-groups'] = [
       app.seed_id + '.' + app.identifier
     ]
     app.entitlements['aps-environment'] = 'development'
     app.entitlements['get-task-allow'] = true
 
-The *app.identifier* needs to be the same as the identifier of the app id which was created in the ios development portal. That's extremely important for the push notifications to work.
+The *app.identifier* needs to be the same as the identifier of the app id which was created in the ios development portal.
+*Myapp_Develpoment.mobileprovision* is the provisioning profile generated and downloaded for the app id with identifier 'com.myapp.development'. Both of them are extremely important for the push notifications to work.
 
 In app_delegate.rb, do this.
 
