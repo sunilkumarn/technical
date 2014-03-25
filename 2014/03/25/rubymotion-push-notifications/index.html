@@ -101,6 +101,7 @@
 
 <pre><code>app.name = 'Myapp'
 app.identifier = 'com.myapp.development'
+app.provisioning_profile = '.environments/Myapp_Develpoment.mobileprovision'
 app.entitlements['keychain-access-groups'] = [
   app.seed_id + '.' + app.identifier
 ]
@@ -108,7 +109,8 @@ app.entitlements['aps-environment'] = 'development'
 app.entitlements['get-task-allow'] = true
 </code></pre>
 
-<p>The <em>app.identifier</em> needs to be the same as the identifier of the app id which was created in the ios development portal. That&rsquo;s extremely important for the push notifications to work.</p>
+<p>The <em>app.identifier</em> needs to be the same as the identifier of the app id which was created in the ios development portal.
+<em>Myapp_Develpoment.mobileprovision</em> is the provisioning profile generated and downloaded for the app id with identifier &lsquo;com.myapp.development&rsquo;. Both of them are extremely important for the push notifications to work.</p>
 
 <p>In app_delegate.rb, do this.</p>
 
