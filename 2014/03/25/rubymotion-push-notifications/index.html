@@ -141,9 +141,9 @@ end
 
 <p>Install the app and the alert requesting the permission should appear now. ( Got this through some pretty ordinary googling, but it worked pretty well for me :) )</p>
 
-<p>Note down the device_token received in <em>didRegisterForRemoteNotificationsWithDeviceToken</em> method. This is almost like the address of the device to which the push notifications will be sent from APNS server.</p>
+<p>Note down the device_token received in <em>didRegisterForRemoteNotificationsWithDeviceToken</em> method. This is almost like the address of the device to which the push notifications will be sent from the APNS server.</p>
 
-<p>To send a push notification from a Ruby app, I used the grocer gem which pretty neat and fast for me. Install the gem &amp; do the following.</p>
+<p>To send a push notification from a Ruby app, I used the grocer gem which worked pretty neat and fast for me. Install the gem &amp; do the following.</p>
 
 <pre><code>require 'grocer'
 
@@ -162,7 +162,7 @@ notification = Grocer::Notification.new(
 pusher.push(notification)
 </code></pre>
 
-<p>If nothing has been done on the app side to handle the notifications, close the app and send the notifications. They should appear on screen now.</p>
+<p>If nothing has been done on the app side to handle these notifications, close the app and send the notifications. They should appear on screen now.</p>
 </div>
 
 
