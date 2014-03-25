@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="TinyPython is a minimalist implementation of Python in 64K code. It is a parser and byte-code compiler written in TinyPython itself. It is also fully &hellip;">
+  <meta name="description" content="The major task in tinypy is to analyze the working of the virtual machine. Analyzing and understanding its source code is, obviously, the major &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,124 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/24/analyzing-the-tinypy-virtual-machine">Analyzing the Tinypy Virtual Machine</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-24T02:22:00+05:30" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/24/analyzing-the-tinypy-virtual-machine#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The major task in tinypy is to analyze the working of the virtual machine. Analyzing and understanding its source code is, obviously, the major challenge that is faced. The code itself is not well arranged and the lack of proper documentation makes the challenge even bigger. Proper use of the GNU debugger, &lsquo;gdb&rsquo;, and the indexing tool, Ctags makes the process of analysis of the VM a lot simpler. Perhaps the best way to understand the working of the VM is to use the VM to execute the byte code of a simple python program and see and understand the actual flow of control. Here a sample program &lsquo;sample.py&rsquo; is used:</p>
+
+<p><code>def add(a,b):
+c = a + b
+return(c)
+print(add(1,9))</code></p>
+
+<p>Note that the use of the parentheses for built-in functions too is a part of the syntax in TinyPy. Obtaining sample.tpc is explained <a href="http://sunilkumarn.wordpress.com/2010/09/23/an-overview-of-tinypy/">here.</a></p>
+
+<p>**cc vmmain.c -1m</p>
+
+<pre><code>        ./a.out sample.tpc   **
+</code></pre>
+
+<p>gives you the output:
+<em>10</em></p>
+
+<p>Understanding the flow of control for this program would give an idea of the working of a segment of the virtual machine.
+Each time the VM is invoked, a new instance of the VM is created .
+<strong>tp_vm *tp =tp_init(argc,argv);</strong></p>
+
+<p>The key point to be understood in the analysis of VM is that each object in tinypy is stored as a union in the C API.
+Lets get into the details:<strong> tp_obj</strong> is the tinypy&rsquo;s object representation.</p>
+
+<p><code>typedef union tp_obj  {
+int type;
+tp_number_ number;
+struct{int type;int *data;}gci;
+tp_string_ string;
+tp_dict_ dict;
+tp_list_ list;
+tp_fnc_ fnc;
+tp_data_ data;
+} tp_obj;
+</code>
+The union tp_obj with its fields are shown. The field <strong>&lsquo;type&rsquo;</strong> of the union indicates the type of the object. A type value of 1 indicates that a number is being used, type = 2 indicates object is a string and type = 4 indicates a list. In our sample program, our objective is to add two numbers &lsquo;a&rsquo; and &lsquo;b&rsquo; and print their output. A function in the virtual machine <strong>&lsquo;tp_add&rsquo;</strong> does the job of adding two arguments that is passed to the function as input. The arguments could be numbers, strings or lists. Lets analyze the function &lsquo;tp_add&rsquo;.</p>
+
+<p><strong>tp_obj tp_add(TP,tp_obj a,tp_obj b)
+</strong>
+The Function definition of &lsquo;tp_add&rsquo; contains three arguments:
+• <em>TP &ndash;> the VM instance
+• tp_obj a &ndash;> the union variable representing the object &lsquo;a&rsquo; in the sample program
+• tp_obj b &ndash;> the union variable representing the object &lsquo;b&rsquo; in the sample program
+_
+Within the function<strong> tp_add</strong>, the type of the two objects are checked and the appropriate function is performed. In our example, two numbers are to be added. As we mentioned above, &lsquo;a&rsquo; and &lsquo;b&rsquo; are stored as unions and the union contains fields for types such as number, strings, lists etc. We access the field **tp_number</em><strong> in the union &lsquo;a&rsquo; as &lsquo;</strong>a.number&rsquo;<strong>. </strong>&lsquo;number&rsquo;<strong> is a variable of the structure </strong>tp_number<em><strong> which contains a variable </strong>&lsquo;val<strong>&rsquo; that stores the exact value of the number . Therefore </strong>a.number.val<strong> would give you the actual object . Analyzing the addition of strings would be interesting as well. &lsquo;</strong>a.string&rsquo;<strong> would give you the union which represents the string object. The union</strong> tp_obj<strong> contains a field </strong>tp_string</em>** which is a structure and includes the pointer that points to the address where the string &lsquo;a&rsquo; is stored. The structure of tp_string_:</p>
+
+<p><code>typedef struct tp_string_ {
+int type;
+struct tp_string_ info*;
+char const *val;
+int len;
+}  tp_string_;</code></p>
+
+<p>An idea about the manipulation of lists would do no harm to our primary objective, the study of the working of the VM. Consider two simple lists in python :
+a = [1,2,3] , b = [4,5,6]</p>
+
+<p>Again we start from tp_add which needs us to go back to our function. The VM uses a function <strong>&lsquo;tp_extend</strong>&rsquo; which returns a union that contains the new (extended) list. You would see that the value of the field &lsquo;type&rsquo; of the union that is returned would be 4 which indicates a list. Access the field &lsquo;list&rsquo; as <strong>&lsquo;a.list&rsquo;</strong>. <strong>&lsquo;list</strong>&rsquo; is a structure variable that includes a pointer <strong>*val </strong>that points to another structure &lsquo;<strong>_tp_list&rsquo;:</strong></p>
+
+<p><code>typedef struct _tp_list {
+int gci;
+tp_obj *items;
+int len;
+int alloc;
+} _tp_list;</code></p>
+
+<p>The pointer <strong>*items</strong> as you could see is of type tp_obj and de-referencing it would give you the union tp_obj. This union contains a single element of the list. Starting from the function tp_add:</p>
+
+<p><strong>*r.list.val &ndash;> items
+</strong>
+would give you the union mentioned above. Accessing the field &lsquo;<strong>val</strong>&rsquo; of the field<strong> &lsquo;number</strong>&rsquo; (variable of the structure tp_list_) of the union would give you the element of the list. Now , the obvious question is how do we obtain the next element of the list. For this you need to have some idea about the storage of unions.</p>
+
+<p><strong>r.list.val &ndash;> items</strong></p>
+
+<p>would give you the address of the union. Suppose the address be &lsquo;<strong>0x96ca048&rsquo;</strong> . Now to obtain the union which contains the next element of the list, you need to add the address of the current union with the size taken by each union (sizeof(union)).
+<em>Union containing the next element of the list = Address of the current union + size of each union</em>. For example :
+<strong>r.list.val &ndash;> items = 0x96ca048 + 10</strong>
+would give you the union that stores the next element of the list . The size of the union is 10, in hexadecimal = 16 bytes.
+<a href="http://sunilkumarn.files.wordpress.com/2010/09/image-1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-1.png?w=300" alt="" /></a></p>
+
+<p>The path of <strong>tp_add</strong> can be traced using the &lsquo;bt&rsquo; option in gdb. The path of the function tp_add is as follows:
+<a href="http://sunilkumarn.files.wordpress.com/2010/09/image-2.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-2.png?w=245" alt="" /></a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -691,56 +809,6 @@ In DVCS ,you could push data into the repository with the same ease with which y
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/09/03/shebang-lines">Shebang Lines&#8230;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-03T23:10:28+05:30" pubdate data-updated="true">Sep 3<span>rd</span>, 2010</time>
-        
-         | <a href="/2010/09/03/shebang-lines#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>Shebang</strong>(also known as &lsquo;hashbang&rsquo;) refers to the characters #! when they are the first two characters (occurring at the left most corner, i.e the beginning of the very first line) of your script. The particular line that contains the shebang is the shebang line in your script.
-Now what&rsquo;s shebang meant to do.?
-In a unix-like operating system , <a href="http://en.wikipedia.org/wiki/Loader_(computing">the program loader</a>) (part of the operating system thats responsible for loading programs) finds the presence of these two characters(#!) , identifies it as a script and tries to execute it with the interpreter that will be specified using the remaining lines of the script.
-For example consider writing a shebang line for a python script..
-First and foremost you need to find the location of the interpreter for that particular script&hellip;
-<strong>$which python
-/usr/bin/python</strong>
-Therefore&hellip;the shebang line should be set as&hellip;
-<strong>#! /usr/bin/python</strong>
-Specifying the shebang line would execute your script as follows:
-./&lsquo;script name&rsquo;.py       instead of doing     &lsquo;python &#8216;script name&rsquo;.py&#8217;
-You could try out the use of shebang lines for any of the following types of scripts
-&lsquo;werbel&rsquo;, &lsquo;tinypy&rsquo; ,&lsquo;perl&rsquo;&hellip;..and many more&hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -756,6 +824,10 @@ You could try out the use of shebang lines for any of the following types of scr
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
+      </li>
     
       <li class="post">
         <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
@@ -791,10 +863,6 @@ You could try out the use of shebang lines for any of the following types of scr
     
       <li class="post">
         <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="People familiar with developing Ios applications with Objective-C would be quite familiar with using categories I suppose. An Objective-C category &hellip;">
+  <meta name="description" content="To setup the app id and ssl certificate and download the ios provisioning profile for push notifications in development mode, this would be a great &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,111 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-25T16:24:00+05:30" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+        
+         | <a href="/2014/03/25/rubymotion-push-notifications#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To setup the app id and ssl certificate and download the ios provisioning profile for push notifications in development mode, this would be a great <a href="http://www.raywenderlich.com/32960/apple-push-notification-services-in-ios-6-tutorial-part-1">article</a> to read on. It worked like a charm for me.</p>
+
+<p>Once thats been done, in your Rubymotion project, add a few extra lines in the Rakefile.</p>
+
+<pre><code>app.name = 'Myapp'
+app.identifier = 'com.myapp.development'
+app.entitlements['keychain-access-groups'] = [
+  app.seed_id + '.' + app.identifier
+]
+app.entitlements['aps-environment'] = 'development'
+app.entitlements['get-task-allow'] = true
+</code></pre>
+
+<p>The <em>app.identifier</em> needs to be the same as the identifier of the app id which was created in the ios development portal. That&rsquo;s extremely important for the push notifications to work.</p>
+
+<p>In app_delegate.rb, do this.</p>
+
+<pre><code>def application(application, didFinishLaunchingWithOptions:launchOptions)
+  ...
+  UIApplication.sharedApplication.registerForRemoteNotificationTypes(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)
+  true
+end
+
+def application(application, didRegisterForRemoteNotificationsWithDeviceToken: device_token)
+  NSLog("My token is: %@", device_token)
+end
+
+def application(application, didFailToRegisterForRemoteNotificationsWithError: error)
+  NSLog(error.inspect)
+end
+</code></pre>
+
+<p>Next time, when the app is installed on the device it receives an alert requesting permissions to enable push notifications. Also note that the app would ask for permissions only on first time installation. To simulate a first time installation of the app do the following:</p>
+
+<ul>
+<li>uninstall the app from the device</li>
+<li>switch off &amp; on the device</li>
+<li>reset the date to 2 days ahead</li>
+<li>switch off and on again</li>
+<li>reset the date to even 2 days ahead</li>
+<li>switch it off &amp; on for a last time.</li>
+</ul>
+
+
+<p>Install the app and the alert requesting the permission should appear now. ( Got this through some pretty ordinary googling, but it worked pretty well for me :) )</p>
+
+<p>Note down the device_token received in <em>didRegisterForRemoteNotificationsWithDeviceToken</em> method. This is almost like the address of the device to which the push notifications will be sent from APNS server.</p>
+
+<p>To send a push notification from a Ruby app, I used the grocer gem which pretty neat and fast for me. Install the gem &amp; do the following.</p>
+
+<pre><code>require 'grocer'
+
+pusher = Grocer.pusher(
+  :certificate =&gt; "ck.pem",
+  :passphrase =&gt;  "passphrase",
+  :retries =&gt; 3
+)
+
+notification = Grocer::Notification.new(
+  :device_token  =&gt;   " device token ",
+  :alert =&gt;  "My first notification",
+  :badge =&gt;   0
+)
+
+pusher.push(notification)
+</code></pre>
+
+<p>If nothing has been done on the app side to handle the notifications, close the app and send the notifications. They should appear on screen now.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1279,198 +1384,6 @@ s2.stream()
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-21T00:53:48+05:30" pubdate data-updated="true">May 21<span>st</span>, 2013</time>
-        
-         | <a href="/2013/05/21/mercury-the-wysiwyg-html-editor#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own domain( all domains pointing to the same Rails application ) and the custom html page had to be loaded as per the current domain. To do this, in search of a WYSIWYG html editor which is easy to setup and simple to start off, I ended up in <a href="http://jejacks0n.github.io/mercury/">Mercury</a>. Whats really nice was that Mercury also had a <a href="https://github.com/balupton/mercury-rails">gem</a> to be used for Rails developer and as I am one, I had no more hesitation in get started with mercury.</p>
-
-<p>To get started off with mercury, add</p>
-
-<div>
-  <pre><code class='ruby'>gem 'mercury-rails'</code></pre>
-</div>
-
-
-<p>to the Gemfile and bundle it.</p>
-
-<p>Run the rails generator for the mercury files.</p>
-
-<div>
-  <pre><code class='ruby'>rails g mercury:install</code></pre>
-</div>
-
-
-<p>A couple of questions will be posted. Press &lsquo;yes&rsquo; to install the layout files.</p>
-
-<p>Now checking out the directory structure,  you could see three additional files.</p>
-
-<p><strong>mercury.js</strong> and<strong> mercury.css</strong> in the js and stylesheets assets respectively. Also, a new layout file for the mercury editor, <strong>mercury.html.erb </strong></p>
-
-<p>I did remove the mercury css file later on.</p>
-
-<p>One thing that needs to be noticed here is that the mercury.js file is heavy and it woudn&rsquo;t be a good idea to load it in all the pages. We would want to load it in only the pages that needs to be edited. Checkout the mercury layout file and you can see that the mercury.js file is included.</p>
-
-<div>
-  <pre><code class='ruby'>&lt;head&gt;
-        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, maximum-scale=1.0, initial-scale=1.0&quot;&gt;
-        &lt;%= csrf_meta_tags %&gt;
-        &lt;title&gt;Mercury Editor&lt;/title&gt;
-        &lt;%= stylesheet_link_tag 'mercury' %&gt;
-        &lt;%= javascript_include_tag 'jquery-1.7', 'mercury' %&gt;
-    &lt;/head&gt;</code></pre>
-</div>
-
-
-<p>Now to prevent mercury.js from being loaded up in the pages, we could move all the other js files in our application to a separete directory and then require the directory in our application.js</p>
-
-<p>My application.js will have,</p>
-
-<div>
-  <pre><code class='ruby'>//= require_tree ./main</code></pre>
-</div>
-
-
-<p>where main is the directory which has all the application specific javascript. (Probably could be a better name :) )</p>
-
-<p>Now peep into the routes file, you could see this extra line,</p>
-
-<div>
-  <pre><code class='ruby'>mount Mercury::Engine =&gt; '/'</code></pre>
-</div>
-
-
-<p>What this line does is that it allows the html pages in your application to be edited. An extra &lsquo;/editor&rsquo;  will have to be added at the beginning of each url path to load the mercury editor for the page.</p>
-
-<p>Consider you have the url &lsquo;<strong>localhost:3000/pages</strong>&rsquo; , all you need to load it in the mercury layout is to change it to &lsquo;<strong>&#8216;localhost:3000/editor/pages</strong>&rsquo; . You have mercury loaded up to edit your page and can now see it in the mercury editor&rsquo;s layout.</p>
-
-<p><a href="http://sunilkumarn.files.wordpress.com/2013/05/screenshot.png"><img src="http://sunilkumarn.files.wordpress.com/2013/05/screenshot.png?w=570" alt="Screenshot" /></a></p>
-
-<p>However this isn&rsquo;t just enough to start editing the page. You need to specify editable regions in the page.
-In <code>pages.html.erb </code></p>
-
-<div>
-  <pre><code class='ruby'>&lt;div class=&quot;control-group&quot;&gt;
-        &lt;h3 class=&quot;section_header page-header&quot;&gt;Pricing page&lt;/h3&gt;
-        &lt;div id=&quot;faq&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&gt;
-            &lt;%= render :file =&gt; file_path(@domain 'faq') %&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;</code></pre>
-</div>
-
-
-<p>Consider this piece of code. A div with id=&ldquo;faq&rdquo; is made editable with<strong> class=&ldquo;mercury-region&rdquo; </strong>and attributes<strong> data-type=&ldquo;editable&rdquo; </strong>and<strong> data-mercury=&ldquo;full&rdquo;</strong>.</p>
-
-<p>Now you can see the editable region.</p>
-
-<p><a href="http://sunilkumarn.files.wordpress.com/2013/05/screenshot-1.png"><img src="http://sunilkumarn.files.wordpress.com/2013/05/screenshot-1.png?w=570" alt="Screenshot-1" /></a></p>
-
-<p>This following line in above piece of code</p>
-
-<div>
-  <pre><code class='ruby'>&lt;%= render :file =&gt; file_path(@domain, 'faq') %&gt;</code></pre>
-</div>
-
-
-<p>invokes a helper method and loads the already created sample faq template which can now be edited and saved for the particular domain. As simple as that.</p>
-
-<p>Similarly you could edit more pages here. This is how the contacts page can be edited.</p>
-
-<div>
-  <pre><code class='ruby'>&lt;div class=&quot;control-group&quot;&gt;
-        &lt;h3 class=&quot;section_header page-header&quot;&gt;Contact page&lt;/h3&gt;
-        &lt;div id=&quot;contact&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&gt;
-            &lt;%= render :file =&gt; file_path(@domain, 'contact') %&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;</code></pre>
-</div>
-
-
-<p>Also, you probably might want to change the save url of the mercury editor for the particular page. That is the controller action to which the mercury edited contents will be &lsquo;POST&rsquo; or &lsquo;PUT&rsquo; (depends on the configuration set in the mercury.html.erb)</p>
-
-<p>To change the mercury save url for this particular page, I wrote the script in the erb file ( pages.html.erb )</p>
-
-<div>
-  <pre><code class='ruby'>&lt;script&gt;
-        $(window).on('mercury:ready', function () {
-            Mercury.saveUrl = &quot;&lt;%= pages_upload_admin_domain_path(@domain) %&gt;&quot;;
-        });
-    &lt;/script&gt;</code></pre>
-</div>
-
-
-<p>You might also want to change the page thats to be redirected to once we are done with editing using mercury. We could bind on mercury&rsquo;s save event to get this done.</p>
-
-<div>
-  <pre><code class='ruby'>$(window).bind('mercury:saved', function() {
-        $(window.location.replace('/admin/domain'));
-    });</code></pre>
-</div>
-
-
-<p>All this saved data would have to be dealt with in the controller action. Inspecting the params in the controller action ( the mercury Save url) ,</p>
-
-<pre><code>&lt;code&gt;{"content"=&gt;
-    {"faq"=&gt;
-        {"type"=&gt;"full",
-         "data"=&gt;{},
-         "value"=&gt; "&lt;h1&gt;This is where I have done my FAQ editing&lt;/h1&gt;"
-         "snippets" =&gt; {}
-        }     
-    },
-
-    {"contact"=&gt;
-        {"type"=&gt;"full",
-         "data"=&gt;{},
-         "value"=&gt; "&lt;h1&gt;This is where I have done my Contacts editing&lt;/h1&gt;"
-         "snippets" =&gt; {}
-        }
-    }
-}
-
-&lt;/code&gt;
-</code></pre>
-
-<p>There are two things of notice here. The contents hash contains all the mercury related stuff.  Each hash in the contents hash has a key which is equal to the id of the mercury editable html divisions ( see the view code pasted above ), here &lsquo;<strong>faq</strong>&rsquo; and &lsquo;<strong>contact</strong>&rsquo;. The actual edited html content can be found in the hash with key &lsquo;value&rsquo; ( <strong><h1>This is where I have done my Contacts editing</h1></strong>).  &#8217;The controller action could decide on how to save this html content.</p>
-
-<p><em>What have I done to solve my case mentioned at the starting?</em></p>
-
-<p><em><em>I created a pages directory in my public. Within the pages directory I created sub directories which corresponds to the domain. </em><strong>For eg, the domain localhost corresponds to the directory named localhost inside the public/pages directory and the domain remotehost corresponds to the remotehost directory</strong></em>.</p>
-
-<p>I then saved all these edited html content as html files within these domain specific directories. When a particular domain was loaded, the html pages ( for eg, faq and contact) was rendered from the corresponding domain directories in the public folder .</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1484,6 +1397,10 @@ In <code>pages.html.erb </code></p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
+      </li>
     
       <li class="post">
         <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
@@ -1519,10 +1436,6 @@ In <code>pages.html.erb </code></p>
     
       <li class="post">
         <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
       </li>
     
   </ul>

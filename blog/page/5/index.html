@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Compare python with some of the other languages that are familiar to many of you. The obvious difference that will be caught by you , is the fact &hellip;">
+  <meta name="description" content="Shebang(also known as &lsquo;hashbang&rsquo;) refers to the characters #! when they are the first two characters (occurring at the left most corner, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/03/shebang-lines">Shebang Lines&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-03T23:10:28+05:30" pubdate data-updated="true">Sep 3<span>rd</span>, 2010</time>
+        
+         | <a href="/2010/09/03/shebang-lines#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Shebang</strong>(also known as &lsquo;hashbang&rsquo;) refers to the characters #! when they are the first two characters (occurring at the left most corner, i.e the beginning of the very first line) of your script. The particular line that contains the shebang is the shebang line in your script.
+Now what&rsquo;s shebang meant to do.?
+In a unix-like operating system , <a href="http://en.wikipedia.org/wiki/Loader_(computing">the program loader</a>) (part of the operating system thats responsible for loading programs) finds the presence of these two characters(#!) , identifies it as a script and tries to execute it with the interpreter that will be specified using the remaining lines of the script.
+For example consider writing a shebang line for a python script..
+First and foremost you need to find the location of the interpreter for that particular script&hellip;
+<strong>$which python
+/usr/bin/python</strong>
+Therefore&hellip;the shebang line should be set as&hellip;
+<strong>#! /usr/bin/python</strong>
+Specifying the shebang line would execute your script as follows:
+./&lsquo;script name&rsquo;.py       instead of doing     &lsquo;python &#8216;script name&rsquo;.py&#8217;
+You could try out the use of shebang lines for any of the following types of scripts
+&lsquo;werbel&rsquo;, &lsquo;tinypy&rsquo; ,&lsquo;perl&rsquo;&hellip;..and many more&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -700,58 +750,6 @@ Thats it..the pointers have exchanged their positions..Now on printing, the stri
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/08/12/aliasing-to-avoid-making-mistakes">Aliasing to Avoid Making Mistakes</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-12T01:45:19+05:30" pubdate data-updated="true">Aug 12<span>th</span>, 2010</time>
-        
-         | <a href="/2010/08/12/aliasing-to-avoid-making-mistakes#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It might have happened to that you that you unintentionally deleted some files in your directory. The deleted files may be not recovered back. So its better that you take some precautionary measures to avoid making such mistakes. Setting up proper aliases is one such way to so so. Aliases are short names for certain commands.</p>
-
-<p>In order to set up your alias ,create a .bashrc file in your own home directory.
-$ vi .bashrc
-Set up your own aliases there.</p>
-
-<p>Aliases for not making mistakes while using the cp,mv and rm commands are follows.</p>
-
-<p> **14 alias rm=&lsquo;rm -i&rsquo;</p>
-
-<p> 15 alias cp=&lsquo;cp -i&rsquo;</p>
-
-<p> 16 alias mv=&lsquo;mv -i&rsquo;**</p>
-
-<p>These three statements ensure that whenever you the commands cp,mv or rm ,the system asks you to double check your decision just to make sure that is exactly what you wanted to do. This could help you against overwriting a file,or deleting a file unintentionally.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -767,6 +765,10 @@ Set up your own aliases there.</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
+      </li>
     
       <li class="post">
         <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
@@ -802,10 +804,6 @@ Set up your own aliases there.</p>
     
       <li class="post">
         <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
       </li>
     
   </ul>

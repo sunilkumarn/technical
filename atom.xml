@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-02-27T14:21:56+05:30</updated>
+  <updated>2014-03-25T16:26:17+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -12,6 +12,82 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rubymotion: Push Notifications]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications"/>
+    <updated>2014-03-25T16:24:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications</id>
+    <content type="html"><![CDATA[<p>To setup the app id and ssl certificate and download the ios provisioning profile for push notifications in development mode, this would be a great <a href="http://www.raywenderlich.com/32960/apple-push-notification-services-in-ios-6-tutorial-part-1">article</a> to read on. It worked like a charm for me.</p>
+
+<p>Once thats been done, in your Rubymotion project, add a few extra lines in the Rakefile.</p>
+
+<pre><code>app.name = 'Myapp'
+app.identifier = 'com.myapp.development'
+app.entitlements['keychain-access-groups'] = [
+  app.seed_id + '.' + app.identifier
+]
+app.entitlements['aps-environment'] = 'development'
+app.entitlements['get-task-allow'] = true
+</code></pre>
+
+<p>The <em>app.identifier</em> needs to be the same as the identifier of the app id which was created in the ios development portal. That&rsquo;s extremely important for the push notifications to work.</p>
+
+<p>In app_delegate.rb, do this.</p>
+
+<pre><code>def application(application, didFinishLaunchingWithOptions:launchOptions)
+  ...
+  UIApplication.sharedApplication.registerForRemoteNotificationTypes(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)
+  true
+end
+
+def application(application, didRegisterForRemoteNotificationsWithDeviceToken: device_token)
+  NSLog("My token is: %@", device_token)
+end
+
+def application(application, didFailToRegisterForRemoteNotificationsWithError: error)
+  NSLog(error.inspect)
+end
+</code></pre>
+
+<p>Next time, when the app is installed on the device it receives an alert requesting permissions to enable push notifications. Also note that the app would ask for permissions only on first time installation. To simulate a first time installation of the app do the following:</p>
+
+<ul>
+<li>uninstall the app from the device</li>
+<li>switch off &amp; on the device</li>
+<li>reset the date to 2 days ahead</li>
+<li>switch off and on again</li>
+<li>reset the date to even 2 days ahead</li>
+<li>switch it off &amp; on for a last time.</li>
+</ul>
+
+
+<p>Install the app and the alert requesting the permission should appear now. ( Got this through some pretty ordinary googling, but it worked pretty well for me :) )</p>
+
+<p>Note down the device_token received in <em>didRegisterForRemoteNotificationsWithDeviceToken</em> method. This is almost like the address of the device to which the push notifications will be sent from APNS server.</p>
+
+<p>To send a push notification from a Ruby app, I used the grocer gem which pretty neat and fast for me. Install the gem &amp; do the following.</p>
+
+<pre><code>require 'grocer'
+
+pusher = Grocer.pusher(
+  :certificate =&gt; "ck.pem",
+  :passphrase =&gt;  "passphrase",
+  :retries =&gt; 3
+)
+
+notification = Grocer::Notification.new(
+  :device_token  =&gt;   " device token ",
+  :alert =&gt;  "My first notification",
+  :badge =&gt;   0
+)
+
+pusher.push(notification)
+</code></pre>
+
+<p>If nothing has been done on the app side to handle the notifications, close the app and send the notifications. They should appear on screen now.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Objective-C Categories into Rubymotion]]></title>
@@ -1724,59 +1800,6 @@ and paste in the following code</p>
 <p><strong>$ : screen -x &lsquo;screen name&rsquo;</strong></p>
 
 <p>You could keep on creating screens within screens and keep going on as and when needed  .</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Semaphores and Synchronization Patterns]]></title>
-    <link href="http://tech.sunilnkumar.com/2010/10/26/semaphores-and-synchronization-patterns"/>
-    <updated>2010-10-26T09:20:46+05:30</updated>
-    <id>http://tech.sunilnkumar.com/2010/10/26/semaphores-and-synchronization-patterns</id>
-    <content type="html"><![CDATA[<p>Semaphores as we know is a mechanism that is used to solve the issue of synchronization . The concept and use of semaphores is a bit more than what you normally call &lsquo; tricky &rsquo; .Here we try and analyze a basic synchronization pattern and solve the issue with semaphores  .</p>
-
-<p>Have a look into the pattern given below .</p>
-
-<p>statements in THREAD A</p>
-
-<p>strcpy(a , &ldquo;Hello &rdquo;);   -  A1
-printf(&ldquo;%s\n&rdquo; ,b);      -    B2</p>
-
-<p>statements in THREAD B</p>
-
-<p>strcpy(b , &ldquo;World&rdquo;)  &ndash; B1
-printf(&ldquo;%s\n&rdquo; ,a);    -  A2</p>
-
-<p>Here we have two threads which consists of two statements each .
-<strong>Constraint :</strong>
-What we need to ensure is that the statements suffixed A1 &amp; B1 are executed before the statements suffixed A2 &amp; B2  execute. Here the two threads &lsquo;rendezvous &rsquo; at a point of execution and is not allowed to proceed until both have arrived .</p>
-
-<p>Without using a mechanism like semaphore , no way is it possible to ensure such a constraint due to the scheduling mechanism that cannot be predicted . Hence we use semaphores to solve this issue .</p>
-
-<p>To ensure that it works according to wish  , we do this  :</p>
-
-<p>THREAD A</p>
-
-<p>strcpy(a , &ldquo;Hello &rdquo;);  &ndash; A1
-up(sem1);
-down(sem2);
-printf(&ldquo;%s\n&rdquo; ,b);   &ndash; B2</p>
-
-<p>THREAD B</p>
-
-<p>strcpy(b , &ldquo;World&rdquo;);  &ndash; B1
-up(sem2);
-down(sem1);
-printf(&ldquo;%s\n&rdquo; ,a);   &ndash; A1</p>
-
-<p>Now we need to give a thought on how this works .
-Here we have two semaphores ,sem1 and sem2 as we have two critical sections</p>
-
-<p>Now , how is the synchronization issue solved  .?
-The &lsquo;<strong>down</strong> &rsquo; operation just before the two statements suffixed &lsquo;2&rsquo; ensures that the two statements are not executed until the &lsquo;<strong>up&rsquo;</strong> operation on the corresponding semaphore is not invoked . Hence whichever be the order of scheduling , both the threads rendezvous at a point  and will not proceed ( as a result of the &lsquo;down&rsquo; operation  )until the next thread arrives (and the corresponding &lsquo;up&rsquo; operation is performed ).</p>
-
-<p>This synchronization pattern as been solved using semaphores .</p>
-
-<p>You could find the solution to these and more such patterns from <a href="http://github.com/sunilkumarn/Synchroniation_patterns">here</a> .</p>
 ]]></content>
   </entry>
   

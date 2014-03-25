@@ -9,7 +9,10 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Some of the most common errors that are produced in a program are caused due to the lack of interest ensuring that the data types used are correct. &hellip;">
+  <meta name="description" content="Consider the statement
+char c=&lsquo;5&rsquo;
+printf(“%d”,c);
+The result that will be printed is 53, which is the integer value of the character &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +70,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/04/characters-integers-and-arrays">Characters , Integers and Arrays.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T12:01:03+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/04/characters-integers-and-arrays#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Consider the statement
+char c=&lsquo;5&rsquo;
+printf(“%d”,c);
+The result that will be printed is 53, which is the integer value of the character constant &lsquo;5&rsquo; ,stored in the machine.
+Now if we need to get 5 as the output,we need to use “%c” in &lsquo;printf&rsquo;.
+Character constants are integers written as one character within single  quotes.
+Now consider :
+int c=getchar();
+printf(“%d”,c);
+The result would be the integer value representation of the entered character.
+“%c” in &lsquo;printf&rsquo; would print the character in the terminal.
+Now consider the case of a character array
+char array[]={5,6,7}.
+If we print array[0],using “%d”, then &lsquo;5&rsquo; would be printed. Nothing would be printed if “%c” is used in the printf statement.
+Here 5 itself is a constant. Now if we need to enter alphabets into a character and print it we need to do the following:
+char array[]={&lsquo;a&rsquo;,&lsquo;b&rsquo;,&lsquo;c&rsquo;};
+Now print it using “%c”.The alphabets would be printed.
+If printed using “%d”, then the integer representations would be printed(97,98,99).The characters that entered into a character array are stored as integers inside the array.
+If we do
+char array[]={a,b,c}
+The result would be an error as such:
+&lsquo;a&rsquo; undeclared&hellip;.&lsquo;c&rsquo; undeclared&hellip;etc..</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -637,6 +699,10 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/02/27/objective-c-categories-into-rubymotion">Objective-C Categories Into Rubymotion</a>
       </li>
     
@@ -670,10 +736,6 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
     
       <li class="post">
         <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/21/mercury-the-wysiwyg-html-editor">Mercury: The WYSIWYG Html Editor</a>
       </li>
     
   </ul>
