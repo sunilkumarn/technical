@@ -3,7 +3,7 @@ layout: post
 title: "Rubymotion: Push Notifications"
 date: 2014-03-25 16:24
 comments: true
-categories: 
+categories: RubyMotion iOS Ruby
 ---
 
 To setup the app id and ssl certificate and download the ios provisioning profile for push notifications in development mode, this would be a great [article] to read on. It worked like a charm for me.

@@ -3,7 +3,7 @@ layout: post
 title: "Objective-C Categories into Rubymotion"
 date: 2014-02-27 14:04
 comments: true
-categories: 
+categories: RubyMotion iOS Ruby
 ---
 
 People familiar with developing Ios applications with Objective-C would be quite familiar with using **categories** I suppose.
