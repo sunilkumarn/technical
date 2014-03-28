@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-03-28T21:34:46+05:30</updated>
+  <updated>2014-03-28T21:35:22+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -18,9 +18,7 @@
     <link href="http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry"/>
     <updated>2014-03-28T21:24:00+05:30</updated>
     <id>http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry</id>
-    <content type="html"><![CDATA[<p>Tree hierarchy with Js-tree and the ancestry gem</p>
-
-<p>Recently ended up reading one of my old codes where I had implemented a tree structure using the <a href="https://github.com/tristanm/jstree-rails">Js-tree</a> jquery library. Hadn&rsquo;t tried out the <a href="https://github.com/stefankroes/ancestry">ancestry</a> gem then. Decided to create such a tree structure using ancestry. Though it ended up pretty fast and simple, it for sure doesnt look as pretty as the one made with the js-tree library. Hence, decided to try out a combo of both and using old school recursion it worked out pretty well.</p>
+    <content type="html"><![CDATA[<p>Recently ended up reading one of my old codes where I had implemented a tree structure using the <a href="https://github.com/tristanm/jstree-rails">Js-tree</a> jquery library. Hadn&rsquo;t tried out the <a href="https://github.com/stefankroes/ancestry">ancestry</a> gem then. Decided to create such a tree structure using ancestry. Though it ended up pretty fast and simple, it for sure doesnt look as pretty as the one made with the js-tree library. Hence, decided to try out a combo of both and using old school recursion it worked out pretty well.</p>
 
 <p>To get it working, assume you have a categories models with the has_ancestry method.</p>
 
