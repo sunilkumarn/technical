@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-03-28T21:35:22+05:30</updated>
+  <updated>2014-03-28T21:38:40+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -32,9 +32,9 @@
     ]
 </code></pre>
 
-<p>Now since we use the js-tree library to display the hierarchy, we need to do a minor hack here. Js-tree requires the &ldquo;data&rdquo; key in the json data to display the content of the node in the view. With a handy recursive method, we acheieve this.</p>
+<p>Now since we use the js-tree library to display the hierarchy, we need to do a minor hack here. Js-tree requires the &ldquo;data&rdquo; key and some meta info in the json data to display the content of the node in the view. With a handy recursive method, we acheieve this.</p>
 
-<p>In the models/categories.rb, we do this</p>
+<p>In the <em>models/categories.rb</em>, we do this</p>
 
 <pre><code>class &lt;&lt; self
   def build_display_ancestry(category_hierarchy, tailored_hierarchy_data = [])
@@ -57,7 +57,7 @@
 end
 </code></pre>
 
-<p>The categories_controller would have a &lsquo;view_ancestry&rsquo; action for the js-tree method to fetch the data to be displayed,</p>
+<p>The <em>categories_controller</em> would have a &lsquo;view_ancestry&rsquo; action for the js-tree method to fetch the data to be displayed,</p>
 
 <pre><code>def view_ancestry
   render json: { data: 'Categories', state: 'open', metadata: { href: categories_path }, children: Category.viewed_ancestry }
