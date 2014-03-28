@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-03-25T17:13:34+05:30</updated>
+  <updated>2014-03-28T21:26:42+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -12,6 +12,95 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Tree hierarchy with Js-tree and ancestry]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry"/>
+    <updated>2014-03-28T21:24:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry</id>
+    <content type="html"><![CDATA[<p>Tree hierarchy with Js-tree and the ancestry gem</p>
+
+<p>Recently ended up reading one of my old codes where I had implemented a tree structure using the <a href="https://github.com/tristanm/jstree-rails">Js-tree</a> jquery library. Hadn&rsquo;t tried out the <a href="https://github.com/stefankroes/ancestry">ancestry</a> gem then. Decided to create such a tree structure using ancestry. Though it ended up pretty fast and simple, it for sure doesnt look as pretty as the one made with the js-tree library. Hence, decided to try out a combo of both and using old school recursion it worked out pretty well.</p>
+
+<p>To get it working, assume you have a categories models with the has_ancestry method.</p>
+
+<pre><code>Category.arrange_serializable.to_json
+=&gt; [
+        {
+            "ancestry" =&gt; nil, "id" =&gt; 1, name: "OS",  "children" =&gt; [
+                { "ancestry" =&gt; "1", "id" =&gt; 2, name: "Linux" "children" =&gt; [] }
+            ]
+        }
+    ]
+</code></pre>
+
+<p>Now since we use the js-tree library to display the hierarchy, we need to do a minor hack here. Js-tree requires the &ldquo;data&rdquo; key in the json data to display the content of the node in the view. With a handy recursive method, we acheieve this.</p>
+
+<p>In the models/categories.rb, we do this</p>
+
+<pre><code>class &lt;&lt; self
+  def build_display_ancestry(category_hierarchy, tailored_hierarchy_data = [])
+    category_hierarchy.each do |category_data|
+      state = category_data['children'].empty? ? 'leaf' : 'open'
+      custom_display_data = {
+        :data =&gt; category_data['name'],
+        :state =&gt; state,
+        :metadata =&gt; { href: Rails.application.routes.url_helpers.category_path(category_data['id']) },
+        :children =&gt;  build_display_ancestry(category_data['children'], [])
+      }
+      tailored_hierarchy_data &lt;&lt; custom_display_data
+    end
+    tailored_hierarchy_data
+  end
+
+  def viewed_ancestry
+    build_display_ancestry(Category.arrange_serializable, [])
+  end
+end
+</code></pre>
+
+<p>The categories_controller would have a &lsquo;view_ancestry&rsquo; action for the js-tree method to fetch the data to be displayed,</p>
+
+<pre><code>def view_ancestry
+  render json: { data: 'Categories', state: 'open', metadata: { href: categories_path }, children: Category.viewed_ancestry }
+end
+</code></pre>
+
+<p>Now, some javascript for fetching the info from the server and displaying the data on view,</p>
+
+<pre><code>$(document).ready(function(){
+$("#category-hierarchy").jstree({
+    "json_data": {
+        "ajax" : {
+            "url" : $("#category-hierarchy").attr('data-path'),
+            "data" : function (n) {
+                return { id : n.attr ? n.attr("id") : 0 };
+            }
+        }
+    },
+    plugins : ["themes", "json_data", "ui"],
+    themes : {"theme": "default", "icons":false, "dots": true, "open":true},
+    core: {"animation": 100}
+}).bind("select_node.jstree", function(e, data) {
+        if (jQuery.data(data.rslt.obj[0], "href")) {
+            window.location = jQuery.data(data.rslt.obj[0], "href");
+        }
+    })
+});
+</code></pre>
+
+<p>Yes, you would need a &ldquo;#category-hierarchy&rdquo; div to display the data.</p>
+
+<p>Once all done and set, you would get a pretty neat tree structure without much effort. Something that looks like this,</p>
+
+<div>
+ <img src = "http://tech.sunilnkumar.com/images/tree-hierarchy.png" alt = "Hierarchy">
+</div>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubymotion: Push Notifications]]></title>
@@ -1773,35 +1862,6 @@ and paste in the following code</p>
 <p>Having another plugin &lsquo;<strong>firebug&rsquo;</strong> may help you in the process of writing the script . This allows you to view the html code of the webpage that is infront of you . Infact the plugin is almost a necessity to help you write efficient code with greasemonkey .</p>
 
 <p>Now you may start writing your own greasemonkey scripts and customize any of the webpages as and according to your like . It&rsquo;s also to be understood that greasemonkey is a plugin of firefox . If you use Google chrome as your browser , you wouldn&rsquo;t need to install any plugin . The facility to customize the webpage is provided by default . You may use the same code that you have written to work with greasemonkey . The metadata and the process of installing is the same and obviously the results are the same as well .</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Using Screens]]></title>
-    <link href="http://tech.sunilnkumar.com/2010/11/24/using-screens"/>
-    <updated>2010-11-24T20:43:00+05:30</updated>
-    <id>http://tech.sunilnkumar.com/2010/11/24/using-screens</id>
-    <content type="html"><![CDATA[<p>You might have often had the experience where you would have had to open quite a few terminals on your screen simultaneously . This might often be the case when you are doing stuffs like data processing on particular files and you intend not to sit idle during that particular time . What you do is to keep unnecessary number of terminals open on your screen .</p>
-
-<p>You could get rid of this by using the &lsquo;screens&rsquo; option in Linux . This allows you to enter a new screen where you could perform time consuming processes like a data processing operation using the  &lsquo;awk&#8217;  command . Start the process in the screen , exit the screen and now do your own stuff in the main console , go back to your screen after a while and view the results of  whatever operations you had performed . You could do all this stuff without the necessity of opening terminals again and again .</p>
-
-<p>Create a new Screen :</p>
-
-<p><strong>$ : screen -S &lsquo;Screen name&rsquo; </strong></p>
-
-<p>To detach from the current screen :</p>
-
-<p>Use<strong> CTRL + a + d</strong></p>
-
-<p>To terminate a screen :</p>
-
-<p>Use <strong>CTRL + d</strong></p>
-
-<p>To attach an already created screen :</p>
-
-<p><strong>$ : screen -x &lsquo;screen name&rsquo;</strong></p>
-
-<p>You could keep on creating screens within screens and keep going on as and when needed  .</p>
 ]]></content>
   </entry>
   

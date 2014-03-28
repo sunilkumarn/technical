@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Semaphores as we know is a mechanism that is used to solve the issue of synchronization . The concept and use of semaphores is a bit more than what &hellip;">
+  <meta name="description" content="You might have often had the experience where you would have had to open quite a few terminals on your screen simultaneously . This might often be &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/11/24/using-screens">Using Screens</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-24T20:43:00+05:30" pubdate data-updated="true">Nov 24<span>th</span>, 2010</time>
+        
+         | <a href="/2010/11/24/using-screens#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>You might have often had the experience where you would have had to open quite a few terminals on your screen simultaneously . This might often be the case when you are doing stuffs like data processing on particular files and you intend not to sit idle during that particular time . What you do is to keep unnecessary number of terminals open on your screen .</p>
+
+<p>You could get rid of this by using the &lsquo;screens&rsquo; option in Linux . This allows you to enter a new screen where you could perform time consuming processes like a data processing operation using the  &lsquo;awk&#8217;  command . Start the process in the screen , exit the screen and now do your own stuff in the main console , go back to your screen after a while and view the results of  whatever operations you had performed . You could do all this stuff without the necessity of opening terminals again and again .</p>
+
+<p>Create a new Screen :</p>
+
+<p><strong>$ : screen -S &lsquo;Screen name&rsquo; </strong></p>
+
+<p>To detach from the current screen :</p>
+
+<p>Use<strong> CTRL + a + d</strong></p>
+
+<p>To terminate a screen :</p>
+
+<p>Use <strong>CTRL + d</strong></p>
+
+<p>To attach an already created screen :</p>
+
+<p><strong>$ : screen -x &lsquo;screen name&rsquo;</strong></p>
+
+<p>You could keep on creating screens within screens and keep going on as and when needed  .</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1311,71 +1369,6 @@ You would see a module named &lsquo; ops&rsquo; being imported. This module cons
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/09/25/concept-and-creation-of-environment">Concept and Creation of Environment</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-25T19:07:05+05:30" pubdate data-updated="true">Sep 25<span>th</span>, 2010</time>
-        
-         | <a href="/2010/09/25/concept-and-creation-of-environment#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One of the most important thing you need to grasp while doing a project on interpreters and evaluator is the idea of an environment. Within the program the environment is a collection of the names(whether variables or functions) and its corresponding values. While using such names you will need an environment where you can store the value of those names so that you could fetch it for further use. While implementing the evaluator for scheme in python , the concept of environment was implemented using <strong>associative arrays</strong> in python. 3 dictionaries were used to implement the concept of environment. Lets go through a bit of details on the creation and use of environments.</p>
-
-<p>Consider writing the scheme statements:</p>
-
-<p>scheme>>>( define n 7 )
-scheme>>>( define s 6 )
-scheme>>>( if ( > n s ) n s )</p>
-
-<p>In our &lsquo;if&rsquo; statement we have not specified the exact value , but instead we have used variables. The question comes then that from where do we retrieve the values of those variables.
-The answer is simple: &lsquo;Here the variables are global variables and are accessible from anywhere within the program&rsquo;. Hence we need create a dictionary which consists of &lsquo;n&rsquo; and &rsquo;s&#8217; as its keys and their values as the values of the dictionary. This dictionary is created when the statement &lsquo;define ( not followed by a  parenthesis) is inputted.</p>
-
-<p>1)<strong>dict</strong>={&rsquo;s&#8217;:&lsquo;7&rsquo;,&lsquo;n&rsquo;:&lsquo;6&rsquo;}</p>
-
-<p>Obviously we cannot use this dictionary for all our purpose. We also need a dictionary where we could store variables and values that are local to a function. We have created another dictionary for this very purpose .</p>
-
-<p>Consider the following:
-scheme>>>( define ( sq ( lambda ( x ) ( * x x ) ) )       &mdash;&mdash;&ndash;>      statement 1
-scheme>>>( sq 4 )                       &mdash;&mdash;&ndash;>     statement 2</p>
-
-<p>When the second statement is executed ,a dictionary &lsquo;local_dict&rsquo; is created where this value 4 is associated with the variable &lsquo;x&rsquo;.</p>
-
-<p>2)<strong>local_dict</strong>={&lsquo;x&rsquo;:&lsquo;4&rsquo;}</p>
-
-<p>We use the 3rd dictionary for associating a function with its body. When the &lsquo;statement 1&rsquo; above is inputted , a dictionary &lsquo;func_dict&rsquo; is created which contains the &lsquo;function name&rsquo; as its key and the &lsquo;body&rsquo; as its value.</p>
-
-<p>3)<strong>func_dict</strong>={&lsquo;sq&rsquo;,&lsquo;(  lambda ( x ) ( * x x ) )&rsquo; }</p>
-
-<p>We have functions &lsquo;<strong>create_env ()&rsquo;</strong> and <strong>&lsquo;create_localenv()</strong>&rsquo; for creating the first and third dictionaries that we have mentioned above. The second dictionary is created within the function <strong>&lsquo;exec_call()</strong>&rsquo; where the processing of each function is started. Hence its appropriate to create the dictionary needed only for the local use of that function within exec_call().</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1391,6 +1384,10 @@ scheme>>>( sq 4 )                       &mdash;&mdash;&ndash;>     statement 2</
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
+      </li>
     
       <li class="post">
         <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
@@ -1426,10 +1423,6 @@ scheme>>>( sq 4 )                       &mdash;&mdash;&ndash;>     statement 2</
     
       <li class="post">
         <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
       </li>
     
   </ul>

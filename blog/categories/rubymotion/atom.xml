@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RubyMotion | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-03-25T17:13:34+05:30</updated>
+  <updated>2014-03-28T21:26:42+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -12,6 +12,122 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rubymotion: Push Notifications]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications"/>
+    <updated>2014-03-25T16:24:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications</id>
+    <content type="html"><![CDATA[<p>To setup the app id and ssl certificate and download the ios provisioning profile for push notifications in development mode, this would be a great <a href="http://www.raywenderlich.com/32960/apple-push-notification-services-in-ios-6-tutorial-part-1">article</a> to read on. It worked like a charm for me.</p>
+
+<p>Once thats been done, in your Rubymotion project, add a few extra lines in the Rakefile.</p>
+
+<pre><code>app.name = 'Myapp'
+app.identifier = 'com.myapp.development'
+app.provisioning_profile = '.environments/Myapp_Develpoment.mobileprovision'
+app.entitlements['keychain-access-groups'] = [
+  app.seed_id + '.' + app.identifier
+]
+app.entitlements['aps-environment'] = 'development'
+app.entitlements['get-task-allow'] = true
+</code></pre>
+
+<p>The <em>app.identifier</em> needs to be the same as the identifier of the app id which was created in the ios development portal.
+<em>Myapp_Develpoment.mobileprovision</em> is the provisioning profile generated and downloaded for the app id with identifier &lsquo;com.myapp.development&rsquo;. Both of them are extremely important for the push notifications to work.</p>
+
+<p>In app_delegate.rb, do this.</p>
+
+<pre><code>def application(application, didFinishLaunchingWithOptions:launchOptions)
+  ...
+  UIApplication.sharedApplication.registerForRemoteNotificationTypes(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)
+  true
+end
+
+def application(application, didRegisterForRemoteNotificationsWithDeviceToken: device_token)
+  NSLog("My token is: %@", device_token)
+end
+
+def application(application, didFailToRegisterForRemoteNotificationsWithError: error)
+  NSLog(error.inspect)
+end
+</code></pre>
+
+<p>Next time, when the app is installed on the device it receives an alert requesting permissions to enable push notifications. Also note that the app would ask for permissions only on first time installation. To simulate a first time installation of the app do the following:</p>
+
+<ul>
+<li>uninstall the app from the device</li>
+<li>switch off &amp; on the device</li>
+<li>reset the date to 2 days ahead</li>
+<li>switch off and on again</li>
+<li>reset the date to even 2 days ahead</li>
+<li>switch it off &amp; on for a last time.</li>
+</ul>
+
+
+<p>Install the app and the alert requesting the permission should appear now. ( Got this through some pretty ordinary googling, but it worked pretty well for me :) )</p>
+
+<p>Note down the device_token received in <em>didRegisterForRemoteNotificationsWithDeviceToken</em> method. This is almost like the address of the device to which the push notifications will be sent from the APNS server.</p>
+
+<p>To send a push notification from a Ruby app, I used the grocer gem which worked pretty neat and fast for me. Install the gem &amp; do the following.</p>
+
+<pre><code>require 'grocer'
+
+pusher = Grocer.pusher(
+  :certificate =&gt; "ck.pem",
+  :passphrase =&gt;  "passphrase",
+  :retries =&gt; 3
+)
+
+notification = Grocer::Notification.new(
+  :device_token  =&gt;   " device token ",
+  :alert =&gt;  "My first notification",
+  :badge =&gt;   0
+)
+
+pusher.push(notification)
+</code></pre>
+
+<p>If nothing has been done on the app side to handle these notifications, close the app and send the notifications. They should appear on screen now.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Objective-C Categories into Rubymotion]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion"/>
+    <updated>2014-02-27T14:04:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion</id>
+    <content type="html"><![CDATA[<p>People familiar with developing Ios applications with Objective-C would be quite familiar with using <strong>categories</strong> I suppose.</p>
+
+<p>An Objective-C category allows you to add methods to an existing class — effectively subclassing it without having to deal with the possible complexities of subclassing.</p>
+
+<p>Moving into Rubymotion and using the power of categories is quite well possible for people who have been working with Ruby. <strong>Monkey Patching</strong> ( open an existing class and add your custom code within it ) it quite a familiar task with Rubyists.</p>
+
+<p>Below is an example where I need to add a customized back button for the UINavigationController navigation bar. I need this to be the back button in quite a few View controllers. It would be quite a tedious task to create a button in each VC, hence I create a category file and monkey patch the UIBarButtonItem class to add a new method which returns the customized back button.</p>
+
+<p><em>app/categories/ui_bar_button_item.rb</em></p>
+
+<pre><code>def self.customBackButton(target, action)
+  buttonImage = UIImage.imageNamed('arrow.jpeg')
+  button = UIButton.buttonWithType(UIButtonTypeCustom)
+  button.setImage(buttonImage, forState:UIControlStateNormal)
+  button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height)
+  button.addTarget(target, action:action, forControlEvents:UIControlEventTouchUpInside)
+  customBarItem = UIBarButtonItem.alloc.initWithCustomView(button)
+  customBarItem
+end
+</code></pre>
+
+<p>The view controller which needs to have this customized back button will have this</p>
+
+<pre><code>def viewDidAppear(animated)
+  super
+  self.navigationItem.leftBarButtonItem = UIBarButtonItem.customBackButton(self.navigationController, 'popViewControllerAnimated:')
+end
+</code></pre>
+
+<p>This would use Ruby&rsquo;s monkey patching power to create elements in Rubymotion which could be used in the entire application as &amp; when needed.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubymotion: Chain of Modal segues]]></title>

@@ -9,10 +9,8 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Consider the statement
-char c=&lsquo;5&rsquo;
-printf(“%d”,c);
-The result that will be printed is 53, which is the integer value of the character &hellip;">
+  <meta name="description" content="A file is a sequence of characters. A few commands and knowledge that may help in dealing with files and directories in UNIX are the following.
+The & &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +68,86 @@ The result that will be printed is 53, which is the integer value of the charact
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/04/files-in-the-unix-file-system-and-their-permissions">Files in the Unix File System and Their Permissions&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T12:05:42+05:30" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/04/files-in-the-unix-file-system-and-their-permissions#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A file is a sequence of characters. A few commands and knowledge that may help in dealing with files and directories in UNIX are the following.
+The &lsquo;ls&rsquo; commands and its variations :
+The &lsquo;du&rsquo; command and its variations
+The command used to change the permissions – &lsquo;chmod&rsquo;.
+A look into these commands
+ls command gives a listing of all the files that are present in the current directory.
+The &lsquo;ls -l&rsquo; is used to provide a detailed listing of the files that are present.
+For eg. If you type the command &lsquo;ls -l&rsquo; the results be will produced as
+-rw-r&mdash;r&mdash; 1 root root 856 2010-08-03 20:15 delete.c</p>
+
+<p>-rw-r&mdash;r&mdash; 1 root root 868 2010-08-03 08:19 line.c</p>
+
+<p>where line.c and delete.c are the two files present in the directory.
+The other variations of the command include ls-u,ls-t etc
+The &lsquo;du&rsquo; (disk usage)provides information about the usage of the disk.
+The command &lsquo;du -a&rsquo; is used to provide disk informations about even the files of subdirectories.
+ The &lsquo;du-a|grep line.c&rsquo;
+provides the details about the file &lsquo;line.c&rsquo;.
+&lsquo;chmod&rsquo; is the command that is used to change permissions. The permissions can be changed by the superuser.
+Consider the following permissions:
+-rwxrwxrwx     &ndash;    indicates that the owner,the group and the other users of the system can all read&reg;,write(w)and execute(x) the file of which the permission has be shown.
+Inorder to change the permission , the &lsquo;chmod&rsquo; command is used.
+For eg. &lsquo;chmod 666  file&rsquo;
+indicates that the file can be read and written by all the three categories of users mentioned above.
+The octal values have their meanings as
+4-indicates that the file can be read
+2-file can be written
+1-file can be executed
+therefore &lsquo;chmod 444 file&rsquo; would set the permissions of the file to read only for all the  categories of users.
+6 6 6 indicates(4+2 4+2 4+2) for the three users.)
+Now do &lsquo;ls -l&rsquo; and you will see the permissions as
+-r&mdash;r&mdash;r&mdash;.
+&lsquo;+&rsquo; is used to turn a permission on   and &lsquo;&ndash;&rsquo; to turn it off.
+The command &lsquo;chmod +w file&rsquo; enables write permissions for the file
+and &lsquo;chmod -x file&rsquo; turns off the execute permissions for the file.
+The permissions of the file can be viewed using the &lsquo;ls -l&rsquo; command stated before. The permissions of the directory cab also be set and viewed using the &lsquo;ls -ld&rsquo; command.
+The &lsquo;ln&rsquo;,&lsquo;cp&rsquo;,&lsquo;mv&rsquo; commands are used in UNIX for slightly different uses.
+The &lsquo;ln command creates a link to the file. Therefore the same file can be accessed using the two file names. The syntax is as follows:
+&#8216;ln filename filename1&rsquo;
+You would obtain another link to the file named &lsquo;filename&rsquo; by the name of &lsquo;filename1&rsquo;:
+The change made to original file would reflect in the other as well. You could see that with help of the &lsquo;ls -i&rsquo; (command that indicates the &lsquo;i-number&rsquo; of the file)that the two files that are linked are having the same i-number.
+&lsquo;cp&rsquo; command is used to make the copy and the &lsquo;mv&rsquo; command is used to move or rename files.
+The command &lsquo;mv filename1 filenname2&hellip;&hellip; destination directory&rsquo; is used to move several files together to the destination directory.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -699,6 +777,10 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
       </li>
     
@@ -732,10 +814,6 @@ All these changes could be saved into the file named &lsquo;.profile&rsquo;</p>
     
       <li class="post">
         <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
       </li>
     
   </ul>

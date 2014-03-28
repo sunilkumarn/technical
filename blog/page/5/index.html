@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Shebang(also known as &lsquo;hashbang&rsquo;) refers to the characters #! when they are the first two characters (occurring at the left most corner, &hellip;">
+  <meta name="description" content="Version control is a system that records changes to your files and allows to view specific versions of a file or set of files.VCS is used so that you &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/05/version-control-systems">Version Control Systems&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-05T20:23:32+05:30" pubdate data-updated="true">Sep 5<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/05/version-control-systems#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Version control is a system that records changes to your files and allows to view specific versions of a file or set of files.VCS is used so that you don&rsquo;t screw up your files or your entire project as a result of the silly , careless mistakes that you have made.
+Many people do their own version control by copying their files to another directory.This is a quite simple and easy approach if you are careful enough so that you won&rsquo;t agonize by doing something disastrous so that you may lose all your stuff later.Therefore keeping in mind that such things can happen ,after all we are all humans, we use version control systems.</p>
+
+<p><em>Centralized VCS and Distributed VCS.</em>
+<strong>Centralized VCS </strong>
+CVCS includes a single server that contains different versions of the files and the clients could check into that.The major advantage of this system is that administrators have fine grained control over whats happening ,but it has serious drawbacks as well. They are:
+Single point of storage if crash would be fatal.
+The clients could pull anything from the repository but they need a <strong>commit access </strong>to push something into it.This might lead to a client getting frustrated if he/she has not been granted a &lsquo;commit access&rsquo;  even after working for a longer period of time. Also there might something political issues related to administration.</p>
+
+<p><strong>Distributed VCS.</strong>
+In DVCS ,you could push data into the repository with the same ease with which you could pull from it. All the repositories are at the same level and therefore we could collaborate with any of the repositories.Examples of DVCS are Git , mercurial , bazaar..etc&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -686,70 +734,6 @@ This will be have to be looped if the entire string is to printed.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/08/14/use-of-pointer-arrays">Use of Pointer Arrays.</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-14T16:52:16+05:30" pubdate data-updated="true">Aug 14<span>th</span>, 2010</time>
-        
-         | <a href="/2010/08/14/use-of-pointer-arrays#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>What will we do if we need to store more than one string in an array.?
-Double dimensional would be an option. For eg.
-<strong>char array[][10]={&ldquo;hello&rdquo;,&ldquo;hai&rdquo;,&ldquo;how&rdquo;};</strong> But here the the length of each string is be limited up to 10..Specifying the &lsquo;column&rsquo; is a must in case of 2dimensional arrays. Even during the definition of a function.</p>
-
-<p>Another option and perhaps a better one would be the use of pointers arrays .for e.g
-<strong>char *p[]={&ldquo;hello&rdquo;,&ldquo;how&rdquo;,&ldquo;hai&rdquo;};</strong>
-This is an example of pointer arrays. Each element of the array is used to keep pointers that point to some characters.  This method would be better in sense that the strings can be of variable lengths and obviously working with it can be a lot easier.
-It will be interesting to find out the working of pointer arrays.</p>
-
-<p>Consider a pointer &lsquo;p1&rsquo; such that :
-char <em>p1=”hello”
-Now this particular pointer can be entered into the pointer array like the following:
-p[0]=p1;    The pointer to string “hello” is entered into the 0th position of the pointer array.
-Similarly the pointer array can be filled with pointers to characters.
-Now in order to print a particular string whose pointer is stored in the 0th location of the pointer array we need to do.
-**&lsquo;printf(“%s”,p[0]); or printf(“”%s”,</em>(p+0));<strong>.    Both of them would give the result as hello&rsquo;.
-</strong>printf(“%d”,p[0])**; would give the pointer that is stored in the 0-th location of the array.</p>
-
-<p><strong>for(i=0;i&lt;3;i++)
-printf(“%d\n”,p+i);</strong>     would show you the addresses of the array locations.</p>
-
-<p>Pointer arrays would be very useful when playing with strings. Suppose if you want to sort different words according to their length. All you need to do if you have stored the pointers to those words in a pointer array is to exchange the positions of the pointers.
-That is , if the string whose pointer at position &lsquo;0&rsquo; is greater than that of the string at position &lsquo;1&rsquo;, then
-<strong>temp=a[0];
-a[0]=a[1];
-a[1]=temp;</strong>
-Thats it..the pointers have exchanged their positions..Now on printing, the string whose pointer is stored at location &lsquo;0&rsquo; of the array &lsquo;a[]&rsquo; will be printed first.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -765,6 +749,10 @@ Thats it..the pointers have exchanged their positions..Now on printing, the stri
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
+      </li>
     
       <li class="post">
         <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
@@ -800,10 +788,6 @@ Thats it..the pointers have exchanged their positions..Now on printing, the stri
     
       <li class="post">
         <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
       </li>
     
   </ul>

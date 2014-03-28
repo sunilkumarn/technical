@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="To setup the app id and ssl certificate and download the ios provisioning profile for push notifications in development mode, this would be a great &hellip;">
+  <meta name="description" content="Tree hierarchy with Js-tree and the ancestry gem Recently ended up reading one of my old codes where I had implemented a tree structure using the Js- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,124 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-28T21:24:00+05:30" pubdate data-updated="true">Mar 28<span>th</span>, 2014</time>
+        
+         | <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Tree hierarchy with Js-tree and the ancestry gem</p>
+
+<p>Recently ended up reading one of my old codes where I had implemented a tree structure using the <a href="https://github.com/tristanm/jstree-rails">Js-tree</a> jquery library. Hadn&rsquo;t tried out the <a href="https://github.com/stefankroes/ancestry">ancestry</a> gem then. Decided to create such a tree structure using ancestry. Though it ended up pretty fast and simple, it for sure doesnt look as pretty as the one made with the js-tree library. Hence, decided to try out a combo of both and using old school recursion it worked out pretty well.</p>
+
+<p>To get it working, assume you have a categories models with the has_ancestry method.</p>
+
+<pre><code>Category.arrange_serializable.to_json
+=&gt; [
+        {
+            "ancestry" =&gt; nil, "id" =&gt; 1, name: "OS",  "children" =&gt; [
+                { "ancestry" =&gt; "1", "id" =&gt; 2, name: "Linux" "children" =&gt; [] }
+            ]
+        }
+    ]
+</code></pre>
+
+<p>Now since we use the js-tree library to display the hierarchy, we need to do a minor hack here. Js-tree requires the &ldquo;data&rdquo; key in the json data to display the content of the node in the view. With a handy recursive method, we acheieve this.</p>
+
+<p>In the models/categories.rb, we do this</p>
+
+<pre><code>class &lt;&lt; self
+  def build_display_ancestry(category_hierarchy, tailored_hierarchy_data = [])
+    category_hierarchy.each do |category_data|
+      state = category_data['children'].empty? ? 'leaf' : 'open'
+      custom_display_data = {
+        :data =&gt; category_data['name'],
+        :state =&gt; state,
+        :metadata =&gt; { href: Rails.application.routes.url_helpers.category_path(category_data['id']) },
+        :children =&gt;  build_display_ancestry(category_data['children'], [])
+      }
+      tailored_hierarchy_data &lt;&lt; custom_display_data
+    end
+    tailored_hierarchy_data
+  end
+
+  def viewed_ancestry
+    build_display_ancestry(Category.arrange_serializable, [])
+  end
+end
+</code></pre>
+
+<p>The categories_controller would have a &lsquo;view_ancestry&rsquo; action for the js-tree method to fetch the data to be displayed,</p>
+
+<pre><code>def view_ancestry
+  render json: { data: 'Categories', state: 'open', metadata: { href: categories_path }, children: Category.viewed_ancestry }
+end
+</code></pre>
+
+<p>Now, some javascript for fetching the info from the server and displaying the data on view,</p>
+
+<pre><code>$(document).ready(function(){
+$("#category-hierarchy").jstree({
+    "json_data": {
+        "ajax" : {
+            "url" : $("#category-hierarchy").attr('data-path'),
+            "data" : function (n) {
+                return { id : n.attr ? n.attr("id") : 0 };
+            }
+        }
+    },
+    plugins : ["themes", "json_data", "ui"],
+    themes : {"theme": "default", "icons":false, "dots": true, "open":true},
+    core: {"animation": 100}
+}).bind("select_node.jstree", function(e, data) {
+        if (jQuery.data(data.rslt.obj[0], "href")) {
+            window.location = jQuery.data(data.rslt.obj[0], "href");
+        }
+    })
+});
+</code></pre>
+
+<p>Yes, you would need a &ldquo;#category-hierarchy&rdquo; div to display the data.</p>
+
+<p>Once all done and set, you would get a pretty neat tree structure without much effort. Something that looks like this,</p>
+
+<div>
+ <img src = "/images/tree-hierarchy.png" alt = "Hierarchy">
+</div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1208,184 +1326,6 @@ s2.stream()
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-23T00:27:26+05:30" pubdate data-updated="true">Jun 23<span>rd</span>, 2013</time>
-        
-         | <a href="/2013/06/23/node-js-streams-and-pipes#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
-
-<p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
-
-<div>
-  <pre><code class='javascript'>var http = require('http'),
-  sys = require('sys'),
-  fs = require('fs');
-
-  var server = http.createServer();
-  console.log(&quot;Starting up the server&quot;);
-  server.listen(8000);
-
-  server.on('request', function(request, response) {
-    var file = fs.createWriteStream('copy.csv');
-    var fileSize = request.headers['content-length'];
-    var uploadedSize = 0;
-
-    request.on('data', function (chunk) {
-      uploadedSize += chunk.length;
-      uploadProgress = (uploadedSize/fileSize) * 100;
-      response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
-      var bufferStore = file.write(chunk);
-      if(bufferStore == false)
-        request.pause();
-    });
-
-    file.on('drain', function() {
-      request.resume();
-    })
-
-    request.on('end', function() {
-      response.write('Upload done!');
-      response.end();
-    })
-
-  });</code></pre>
-</div>
-
-
-<p>The basics: We create a node server that listens on port 8000. Upon receival of a request, we create a write stream ( the destination file path ). Each chunk of data received is written on to the destination path, the upload progress is calculated and responded back.</p>
-
-<p>Lets break up the above snippet into pieces and make an analysis of whats happening.</p>
-
-<p>A writeStream is created and &lsquo;copy.csv&rsquo; is the destination path to which the received data will be written.</p>
-
-<div>
-  <pre><code class='javascript'>var file = fs.createWriteStream('copy.csv');</code></pre>
-</div>
-
-
-<p>The following piece forms the core of the upload process.</p>
-
-<div>
-  <pre><code class='javascript'>request.on('data', function (chunk) {
-    var bufferStore = file.write(chunk);
-    if(bufferStore == false)
-      request.pause();
-    uploadedSize += chunk.length;
-    uploadProgress = (uploadedSize/fileSize) * 100;
-    response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
-  });
-
-  file.on('drain', function() {
-    request.resume();
-  })</code></pre>
-</div>
-
-
-<p>Looking at the code &ndash; on receiving each chunk of data ( via the read stream ), its written to the write stream as
-<code>file.write(chunk);</code></p>
-
-<p>Right now, we need to pause a bit to check whether there might be a cause of worry in this whole read-write streaming process. The answer is yes, and is very obvious. <strong>There exists a real possibility that the rate at which the data is written to the writeStream is less than the rate at which its read from the readStream</strong>. This is a genuine cause of concern and hence cannot be ignored. How we handle this forms our next two lines of code.</p>
-
-<p><code>file.write(chunk)</code> stores the data onto a buffer. It returns true if the write was performed and returns false if the write failed due to the buffer being full. So, we need to handle this by pausing the readStream if the buffer storage is full.</p>
-
-<div>
-  <pre><code class='javascript'>var bufferStore = file.write(chunk);
-  if(bufferStore == false)
-    request.pause();</code></pre>
-</div>
-
-
-<p>Also, we need to re-start streaming data from the read stream once the buffer is drained out. The following lines of code does just that.</p>
-
-<div>
-  <pre><code class='javascript'>file.on('drain', function() {
-    request.resume();
-  })</code></pre>
-</div>
-
-
-<p><strong>Pipes in node</strong>: Here, we have handled the logic of keeping the read &ndash; write rate to be in sync. Node.js provides us with pipes which has this logic already encapsulated in it.</p>
-
-<p>The following line,</p>
-
-<div>
-  <pre><code class='javascript'>request.pipe(file) // The notion is quite similar to UNIX pipes. Pipes the input into an output stream.</code></pre>
-</div>
-
-
-<p>would be equivalent to</p>
-
-<div>
-  <pre><code class='javascript'>request.on('data', function(chunk) {
-    var bufferStore = file.write(chunk);
-    if(bufferStore == false)
-      request.pause();
-  })
-
-  file.on('drain', function() {
-    request.resume();
-  })</code></pre>
-</div>
-
-
-<p>Pipe by itself maintains the read write rate to be in sync by pausing and resuming when necessary.</p>
-
-<p>Now since we have handled our cause of concern, all that is left is to calculate the upload percentage upon receiving each chunk of data and respond back with the calculated percentage.</p>
-
-<div>
-  <pre><code class='javascript'>uploadedSize += chunk.length;
-  uploadProgress = (uploadedSize/fileSize) * 100;
-  response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );</code></pre>
-</div>
-
-
-<p>Do note that the actual size of the upload file is calculated from the request headers.</p>
-
-<div>
-  <pre><code class='javascript'>var fileSize = request.headers['content-length'];</code></pre>
-</div>
-
-
-<p>Now, when the request ends ( i.e the &lsquo;end&rsquo; event is emitted by the request ), the final chunk of response is given back to the client indicating that our file upload has been done successfully.</p>
-
-<p>To test this, run the node server and try making a request, something like this:</p>
-
-<p><code>curl -v --upload-file "upload_file.csv" "http://localhost:8000"</code></p>
-
-<p>and the upload progress could be tracked.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1399,6 +1339,10 @@ s2.stream()
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
+      </li>
     
       <li class="post">
         <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
@@ -1434,10 +1378,6 @@ s2.stream()
     
       <li class="post">
         <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
       </li>
     
   </ul>

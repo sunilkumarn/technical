@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="I had this application where different users would want to edit custom html pages to be shown up in there web sites. Each user will have his own &hellip;">
+  <meta name="description" content="Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,184 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-23T00:27:26+05:30" pubdate data-updated="true">Jun 23<span>rd</span>, 2013</time>
+        
+         | <a href="/2013/06/23/node-js-streams-and-pipes#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Node.js is used for building a lot of network applications and there&rsquo;s a lot of data being passed around. This could well be huge in size. In node, all this data is processed the moment its received, piece by piece. This is done with the help of streams. Here we discuss the usage of streams by writing a small node script that handles file upload.</p>
+
+<p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
+
+<div>
+  <pre><code class='javascript'>var http = require('http'),
+  sys = require('sys'),
+  fs = require('fs');
+
+  var server = http.createServer();
+  console.log(&quot;Starting up the server&quot;);
+  server.listen(8000);
+
+  server.on('request', function(request, response) {
+    var file = fs.createWriteStream('copy.csv');
+    var fileSize = request.headers['content-length'];
+    var uploadedSize = 0;
+
+    request.on('data', function (chunk) {
+      uploadedSize += chunk.length;
+      uploadProgress = (uploadedSize/fileSize) * 100;
+      response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
+      var bufferStore = file.write(chunk);
+      if(bufferStore == false)
+        request.pause();
+    });
+
+    file.on('drain', function() {
+      request.resume();
+    })
+
+    request.on('end', function() {
+      response.write('Upload done!');
+      response.end();
+    })
+
+  });</code></pre>
+</div>
+
+
+<p>The basics: We create a node server that listens on port 8000. Upon receival of a request, we create a write stream ( the destination file path ). Each chunk of data received is written on to the destination path, the upload progress is calculated and responded back.</p>
+
+<p>Lets break up the above snippet into pieces and make an analysis of whats happening.</p>
+
+<p>A writeStream is created and &lsquo;copy.csv&rsquo; is the destination path to which the received data will be written.</p>
+
+<div>
+  <pre><code class='javascript'>var file = fs.createWriteStream('copy.csv');</code></pre>
+</div>
+
+
+<p>The following piece forms the core of the upload process.</p>
+
+<div>
+  <pre><code class='javascript'>request.on('data', function (chunk) {
+    var bufferStore = file.write(chunk);
+    if(bufferStore == false)
+      request.pause();
+    uploadedSize += chunk.length;
+    uploadProgress = (uploadedSize/fileSize) * 100;
+    response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
+  });
+
+  file.on('drain', function() {
+    request.resume();
+  })</code></pre>
+</div>
+
+
+<p>Looking at the code &ndash; on receiving each chunk of data ( via the read stream ), its written to the write stream as
+<code>file.write(chunk);</code></p>
+
+<p>Right now, we need to pause a bit to check whether there might be a cause of worry in this whole read-write streaming process. The answer is yes, and is very obvious. <strong>There exists a real possibility that the rate at which the data is written to the writeStream is less than the rate at which its read from the readStream</strong>. This is a genuine cause of concern and hence cannot be ignored. How we handle this forms our next two lines of code.</p>
+
+<p><code>file.write(chunk)</code> stores the data onto a buffer. It returns true if the write was performed and returns false if the write failed due to the buffer being full. So, we need to handle this by pausing the readStream if the buffer storage is full.</p>
+
+<div>
+  <pre><code class='javascript'>var bufferStore = file.write(chunk);
+  if(bufferStore == false)
+    request.pause();</code></pre>
+</div>
+
+
+<p>Also, we need to re-start streaming data from the read stream once the buffer is drained out. The following lines of code does just that.</p>
+
+<div>
+  <pre><code class='javascript'>file.on('drain', function() {
+    request.resume();
+  })</code></pre>
+</div>
+
+
+<p><strong>Pipes in node</strong>: Here, we have handled the logic of keeping the read &ndash; write rate to be in sync. Node.js provides us with pipes which has this logic already encapsulated in it.</p>
+
+<p>The following line,</p>
+
+<div>
+  <pre><code class='javascript'>request.pipe(file) // The notion is quite similar to UNIX pipes. Pipes the input into an output stream.</code></pre>
+</div>
+
+
+<p>would be equivalent to</p>
+
+<div>
+  <pre><code class='javascript'>request.on('data', function(chunk) {
+    var bufferStore = file.write(chunk);
+    if(bufferStore == false)
+      request.pause();
+  })
+
+  file.on('drain', function() {
+    request.resume();
+  })</code></pre>
+</div>
+
+
+<p>Pipe by itself maintains the read write rate to be in sync by pausing and resuming when necessary.</p>
+
+<p>Now since we have handled our cause of concern, all that is left is to calculate the upload percentage upon receiving each chunk of data and respond back with the calculated percentage.</p>
+
+<div>
+  <pre><code class='javascript'>uploadedSize += chunk.length;
+  uploadProgress = (uploadedSize/fileSize) * 100;
+  response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );</code></pre>
+</div>
+
+
+<p>Do note that the actual size of the upload file is calculated from the request headers.</p>
+
+<div>
+  <pre><code class='javascript'>var fileSize = request.headers['content-length'];</code></pre>
+</div>
+
+
+<p>Now, when the request ends ( i.e the &lsquo;end&rsquo; event is emitted by the request ), the final chunk of response is given back to the client indicating that our file upload has been done successfully.</p>
+
+<p>To test this, run the node server and try making a request, something like this:</p>
+
+<p><code>curl -v --upload-file "upload_file.csv" "http://localhost:8000"</code></p>
+
+<p>and the upload progress could be tracked.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1064,64 +1242,6 @@ and paste in the following code</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/11/24/using-screens">Using Screens</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-11-24T20:43:00+05:30" pubdate data-updated="true">Nov 24<span>th</span>, 2010</time>
-        
-         | <a href="/2010/11/24/using-screens#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>You might have often had the experience where you would have had to open quite a few terminals on your screen simultaneously . This might often be the case when you are doing stuffs like data processing on particular files and you intend not to sit idle during that particular time . What you do is to keep unnecessary number of terminals open on your screen .</p>
-
-<p>You could get rid of this by using the &lsquo;screens&rsquo; option in Linux . This allows you to enter a new screen where you could perform time consuming processes like a data processing operation using the  &lsquo;awk&#8217;  command . Start the process in the screen , exit the screen and now do your own stuff in the main console , go back to your screen after a while and view the results of  whatever operations you had performed . You could do all this stuff without the necessity of opening terminals again and again .</p>
-
-<p>Create a new Screen :</p>
-
-<p><strong>$ : screen -S &lsquo;Screen name&rsquo; </strong></p>
-
-<p>To detach from the current screen :</p>
-
-<p>Use<strong> CTRL + a + d</strong></p>
-
-<p>To terminate a screen :</p>
-
-<p>Use <strong>CTRL + d</strong></p>
-
-<p>To attach an already created screen :</p>
-
-<p><strong>$ : screen -x &lsquo;screen name&rsquo;</strong></p>
-
-<p>You could keep on creating screens within screens and keep going on as and when needed  .</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1137,6 +1257,10 @@ and paste in the following code</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
+      </li>
     
       <li class="post">
         <a href="/2014/03/25/rubymotion-push-notifications">Rubymotion: Push Notifications</a>
@@ -1172,10 +1296,6 @@ and paste in the following code</p>
     
       <li class="post">
         <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/23/node-js-streams-and-pipes">Node.js: Streams and Pipes.</a>
       </li>
     
   </ul>

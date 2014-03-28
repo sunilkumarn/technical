@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rubymotion: Push Notifications - Scribblings</title>
+  <title>Tree hierarchy with Js-tree and ancestry - Scribblings</title>
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="To setup the app id and ssl certificate and download the ios provisioning profile for push notifications in development mode, this would be a great &hellip;">
+  <meta name="description" content="Tree hierarchy with Js-tree and the ancestry gem Recently ended up reading one of my old codes where I had implemented a tree structure using the Js- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications">
+  <link rel="canonical" href="http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -70,7 +70,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rubymotion: Push Notifications</h1>
+      <h1 class="entry-title">Tree Hierarchy With Js-tree and Ancestry</h1>
     
     
       <p class="meta">
@@ -86,7 +86,7 @@
   
 
 
-<time datetime="2014-03-25T16:24:00+05:30" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+<time datetime="2014-03-28T21:24:00+05:30" pubdate data-updated="true">Mar 28<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -95,76 +95,87 @@
   </header>
 
 
-<div class="entry-content"><p>To setup the app id and ssl certificate and download the ios provisioning profile for push notifications in development mode, this would be a great <a href="http://www.raywenderlich.com/32960/apple-push-notification-services-in-ios-6-tutorial-part-1">article</a> to read on. It worked like a charm for me.</p>
+<div class="entry-content"><p>Tree hierarchy with Js-tree and the ancestry gem</p>
 
-<p>Once thats been done, in your Rubymotion project, add a few extra lines in the Rakefile.</p>
+<p>Recently ended up reading one of my old codes where I had implemented a tree structure using the <a href="https://github.com/tristanm/jstree-rails">Js-tree</a> jquery library. Hadn&rsquo;t tried out the <a href="https://github.com/stefankroes/ancestry">ancestry</a> gem then. Decided to create such a tree structure using ancestry. Though it ended up pretty fast and simple, it for sure doesnt look as pretty as the one made with the js-tree library. Hence, decided to try out a combo of both and using old school recursion it worked out pretty well.</p>
 
-<pre><code>app.name = 'Myapp'
-app.identifier = 'com.myapp.development'
-app.provisioning_profile = '.environments/Myapp_Develpoment.mobileprovision'
-app.entitlements['keychain-access-groups'] = [
-  app.seed_id + '.' + app.identifier
-]
-app.entitlements['aps-environment'] = 'development'
-app.entitlements['get-task-allow'] = true
+<p>To get it working, assume you have a categories models with the has_ancestry method.</p>
+
+<pre><code>Category.arrange_serializable.to_json
+=&gt; [
+        {
+            "ancestry" =&gt; nil, "id" =&gt; 1, name: "OS",  "children" =&gt; [
+                { "ancestry" =&gt; "1", "id" =&gt; 2, name: "Linux" "children" =&gt; [] }
+            ]
+        }
+    ]
 </code></pre>
 
-<p>The <em>app.identifier</em> needs to be the same as the identifier of the app id which was created in the ios development portal.
-<em>Myapp_Develpoment.mobileprovision</em> is the provisioning profile generated and downloaded for the app id with identifier &lsquo;com.myapp.development&rsquo;. Both of them are extremely important for the push notifications to work.</p>
+<p>Now since we use the js-tree library to display the hierarchy, we need to do a minor hack here. Js-tree requires the &ldquo;data&rdquo; key in the json data to display the content of the node in the view. With a handy recursive method, we acheieve this.</p>
 
-<p>In app_delegate.rb, do this.</p>
+<p>In the models/categories.rb, we do this</p>
 
-<pre><code>def application(application, didFinishLaunchingWithOptions:launchOptions)
-  ...
-  UIApplication.sharedApplication.registerForRemoteNotificationTypes(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)
-  true
-end
+<pre><code>class &lt;&lt; self
+  def build_display_ancestry(category_hierarchy, tailored_hierarchy_data = [])
+    category_hierarchy.each do |category_data|
+      state = category_data['children'].empty? ? 'leaf' : 'open'
+      custom_display_data = {
+        :data =&gt; category_data['name'],
+        :state =&gt; state,
+        :metadata =&gt; { href: Rails.application.routes.url_helpers.category_path(category_data['id']) },
+        :children =&gt;  build_display_ancestry(category_data['children'], [])
+      }
+      tailored_hierarchy_data &lt;&lt; custom_display_data
+    end
+    tailored_hierarchy_data
+  end
 
-def application(application, didRegisterForRemoteNotificationsWithDeviceToken: device_token)
-  NSLog("My token is: %@", device_token)
-end
-
-def application(application, didFailToRegisterForRemoteNotificationsWithError: error)
-  NSLog(error.inspect)
+  def viewed_ancestry
+    build_display_ancestry(Category.arrange_serializable, [])
+  end
 end
 </code></pre>
 
-<p>Next time, when the app is installed on the device it receives an alert requesting permissions to enable push notifications. Also note that the app would ask for permissions only on first time installation. To simulate a first time installation of the app do the following:</p>
+<p>The categories_controller would have a &lsquo;view_ancestry&rsquo; action for the js-tree method to fetch the data to be displayed,</p>
 
-<ul>
-<li>uninstall the app from the device</li>
-<li>switch off &amp; on the device</li>
-<li>reset the date to 2 days ahead</li>
-<li>switch off and on again</li>
-<li>reset the date to even 2 days ahead</li>
-<li>switch it off &amp; on for a last time.</li>
-</ul>
-
-
-<p>Install the app and the alert requesting the permission should appear now. ( Got this through some pretty ordinary googling, but it worked pretty well for me :) )</p>
-
-<p>Note down the device_token received in <em>didRegisterForRemoteNotificationsWithDeviceToken</em> method. This is almost like the address of the device to which the push notifications will be sent from the APNS server.</p>
-
-<p>To send a push notification from a Ruby app, I used the grocer gem which worked pretty neat and fast for me. Install the gem &amp; do the following.</p>
-
-<pre><code>require 'grocer'
-
-pusher = Grocer.pusher(
-  :certificate =&gt; "ck.pem",
-  :passphrase =&gt;  "passphrase",
-  :retries =&gt; 3
-)
-
-notification = Grocer::Notification.new(
-  :device_token  =&gt;   " device token ",
-  :alert =&gt;  "My first notification",
-  :badge =&gt;   0
-)
-
-pusher.push(notification)
+<pre><code>def view_ancestry
+  render json: { data: 'Categories', state: 'open', metadata: { href: categories_path }, children: Category.viewed_ancestry }
+end
 </code></pre>
 
-<p>If nothing has been done on the app side to handle these notifications, close the app and send the notifications. They should appear on screen now.</p>
+<p>Now, some javascript for fetching the info from the server and displaying the data on view,</p>
+
+<pre><code>$(document).ready(function(){
+$("#category-hierarchy").jstree({
+    "json_data": {
+        "ajax" : {
+            "url" : $("#category-hierarchy").attr('data-path'),
+            "data" : function (n) {
+                return { id : n.attr ? n.attr("id") : 0 };
+            }
+        }
+    },
+    plugins : ["themes", "json_data", "ui"],
+    themes : {"theme": "default", "icons":false, "dots": true, "open":true},
+    core: {"animation": 100}
+}).bind("select_node.jstree", function(e, data) {
+        if (jQuery.data(data.rslt.obj[0], "href")) {
+            window.location = jQuery.data(data.rslt.obj[0], "href");
+        }
+    })
+});
+</code></pre>
+
+<p>Yes, you would need a &ldquo;#category-hierarchy&rdquo; div to display the data.</p>
+
+<p>Once all done and set, you would get a pretty neat tree structure without much effort. Something that looks like this,</p>
+
+<div>
+ <img src = "/images/tree-hierarchy.png" alt = "Hierarchy">
+</div>
+
+
+
 </div>
 
 
@@ -187,12 +198,12 @@ pusher.push(notification)
   
 
 
-<time datetime="2014-03-25T16:24:00+05:30" pubdate data-updated="true">Mar 25<span>th</span>, 2014</time>
+<time datetime="2014-03-28T21:24:00+05:30" pubdate data-updated="true">Mar 28<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>Ruby</a>, <a class='category' href='/blog/categories/rubymotion/'>RubyMotion</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
+    <a class='category' href='/blog/categories/javascript/'>Javascript</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -201,7 +212,7 @@ pusher.push(notification)
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry" >Tweet</a>
   
   
   
@@ -210,10 +221,8 @@ pusher.push(notification)
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/2014/02/27/objective-c-categories-into-rubymotion" title="Previous Post: Objective-C Categories into Rubymotion">&laquo; Objective-C Categories into Rubymotion</a>
+        <a class="basic-alignment left" href="/2014/03/25/rubymotion-push-notifications" title="Previous Post: Rubymotion: Push Notifications">&laquo; Rubymotion: Push Notifications</a>
       
-      
-        <a class="basic-alignment right" href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry" title="Next Post: Tree hierarchy with Js-tree and ancestry">Tree hierarchy with Js-tree and ancestry &raquo;</a>
       
     </p>
   </footer>
@@ -310,8 +319,8 @@ pusher.push(notification)
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications';
-        var disqus_url = 'http://tech.sunilnkumar.com/2014/03/25/rubymotion-push-notifications';
+        var disqus_identifier = 'http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry';
+        var disqus_url = 'http://tech.sunilnkumar.com/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry';
         var disqus_script = 'embed.js';
       
     (function () {
