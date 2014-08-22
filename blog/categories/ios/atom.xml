@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-08-22T14:52:04+05:30</updated>
+  <updated>2014-08-22T14:55:50+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -27,7 +27,7 @@
 <p>To implement SSL pinning, you need the certificate within the app.
 I use the BubbleWrap library to make http connections in RubyMotion, but this could well be implemented with something like AFMotion as well. BubbleWrap internally uses the NSUrlConnection to make requests. We use the delegate method of NSUrlConnection ( willSendRequestForAuthenticationChallenge ) to implement the pinning.</p>
 
-<p>I monkey patch ( familiar to Rubyists ) **BubbleWrap::<a href="HTTP::Query**">HTTP::Query**</a> to make the necessary changes. Be sure to check that the file type of the certificate is &lsquo;der&rsquo; and its placed in the appropriate directory.</p>
+<p>I monkey patch ( familiar to Rubyists ) <strong> BubbleWrap::<a href="HTTP::Query">HTTP::Query</a> </strong> to make the necessary changes. Be sure to check that the file type of the certificate is &lsquo;der&rsquo; and its placed in the appropriate directory.</p>
 
 <pre><code>class BubbleWrap::HTTP::Query
   def connection(connection, willSendRequestForAuthenticationChallenge: challenge)
@@ -138,7 +138,7 @@ pusher.push(notification)
     <link href="http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion"/>
     <updated>2014-02-27T14:04:00+05:30</updated>
     <id>http://tech.sunilnkumar.com/2014/02/27/objective-c-categories-into-rubymotion</id>
-    <content type="html"><![CDATA[<p>People familiar with developing Ios applications with Objective-C would be quite familiar with using <strong>categories</strong> I suppose.</p>
+    <content type="html"><![CDATA[<p>People familiar with developing Ios applications with Objective-C would be quite familiar with using <strong> categories </strong> I suppose.</p>
 
 <p>An Objective-C category allows you to add methods to an existing class — effectively subclassing it without having to deal with the possible complexities of subclassing.</p>
 
