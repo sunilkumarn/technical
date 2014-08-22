@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="One of the most important thing you need to grasp while doing a project on interpreters and evaluator is the idea of an environment. Within the &hellip;">
+  <meta name="description" content="Those who have ever gone through the SICP ( Structure and interpretation of computer programs) , would have come across the implementation of a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,116 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/25/evaluation-of-scheme-in-python">Evaluation of Scheme in Python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-25T19:13:22+05:30" pubdate data-updated="true">Sep 25<span>th</span>, 2010</time>
+        
+         | <a href="/2010/09/25/evaluation-of-scheme-in-python#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Those who have ever gone through the SICP ( Structure and interpretation of computer programs) , would have come across the implementation of a Metacircular evaluator ( an evaluator written in a language that it evaluates) for scheme in the 4rth Chapter.
+<a href="http://sunilkumarn.files.wordpress.com/2010/09/cover.jpg"><img src="http://sunilkumarn.files.wordpress.com/2010/09/cover.jpg?w=207" alt="" /></a></p>
+
+<p>Motivated by that , and drawing ideas from the <strong>wizard book</strong> , an evaluator for Scheme is created in Python, so that Scheme statements evaluated in Python.</p>
+
+<p>The creation of a metacircular evaluator for scheme contains prominently of two steps:</p>
+
+<pre><code>     1)  Eval:   To evaluate a combination (a compound expression other than a special form), evaluate the subexpressions and then apply the value of the operator subexpression to the values of the operand subexpressions. 
+    2)  Apply :  To apply a compound procedure to a set of arguments, evaluate the body of the procedure in a new environment. 
+</code></pre>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/image-02.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-02.png?w=300" alt="" /></a></p>
+
+<p><em><strong>Implementation of the Evaluator in Python:</strong></em></p>
+
+<p>Before getting into the creation and implementation details of the evaluator , please read <a href="http://sunilkumarn.wordpress.com/2010/09/25/concept-and-creation-of-environment/">this</a>.
+Now that you have got an idea about the concepts of environment , lets get into further details of creation of the evaluator.</p>
+
+<p>The first process is basically to parse the user Input and use it in a way so as to evaluate it. After parsing ,the user input is provided to the function gravity().This particular function performs the task of classifying the user input and route them to appropriate functions. This is similar to &lsquo;eval&rsquo; in the scheme metacircular evaluator implemented in SICP.
+According to the user input , the appropriate functions are performed.
+Different functions implemented in the evaluator.</p>
+
+<p><strong>evaluate():</strong>
+This function could be compared with the &lsquo;apply&rsquo; procedure implemented in SICP. The function checks for different operator and its corresponding operands. The operator is applied to the operands and the result returned.</p>
+
+<p><strong>opdet():</strong>
+The function is called from &lsquo;evaluate()&rsquo; , it takes in a list and returns the operator that has to be applied to the operands.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/evaluate.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/evaluate.png?w=300" alt="" /></a></p>
+
+<p>If a simple expression is provided just to perform basic arithmetic and logical operations , only these two functions are invoked after the gravity () function and we obtain the result. The situation, as is obvious would be a little different when relatively complex tasks are give ( such a processing of an &lsquo;if&rsquo; statement , a function , an assignment operation, a recursive function and so on.</p>
+
+<p>Processing of an &lsquo;if&rsquo; statement involves invoking many more functions.</p>
+
+<p><strong>if_begin_eval():</strong>
+This function involves the presence of any variables involved in the &lsquo;if&rsquo; statement and fetches the value of such variables from the environment.</p>
+
+<p><strong>if_eval() :</strong>
+This particular function is used to evaluate the &lsquo;predicate &rsquo; of the &lsquo;if&rsquo; statement and returns the result of the &lsquo;if&rsquo; statement. The function invokes the &lsquo;evaluate()&rsquo; function and would process the entire &lsquo;if&rsquo; statement according to the value returned by &lsquo;evaluate()&rsquo; .
+If a simple &lsquo;if&rsquo; statement&#8217;
+( if ( > 4 5 ) 4 5 ) is inputted:
+if_eval() would pass the predicate part ( >  4 5 ) to &lsquo;evaluate()&rsquo; and process the if statement according to the returned value. Here the value returned by &lsquo;evaluate()&rsquo; would be 0, since the condition ( 4 > 5 ) is not true. The value returned by the &lsquo;if_eval()&rsquo; would be 5.</p>
+
+<p><strong>if_cons_alt(): </strong>
+The function evaluates the consequent and alternative of the &lsquo;if&rsquo; condition&#8217;. A separate function for the process would be specially helpful when the if statement consists of larger expressions and values.
+The function would return back a 2 element list of the final values obtained after evaluation of the consequent and alternative.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/if.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/if.png?w=300" alt="" /></a></p>
+
+<p>Evaluation of procedures would take us through a different path. We need functions that can extract, evaluate and execute a function. We also need a function to test whether the inputted procedure is recursive or non-recursive.</p>
+
+<p><strong>exec_call():</strong>
+Checks whether the function is a simple function of the sort :
+( define ( lambda ( square ( x ) ( * x  x ) ) )  non-recursive
+or of the sort:
+( define ( lambda ( fact ( x ) ( if ( = x 1 ) 1 ( * x fac ( &ndash; x 1 ) ) ) ) ) )   recursive :
+executes the procedure if non-recursive.</p>
+
+<p><strong>extract_funcbody():</strong>
+extracts the body of the function. Passes the body of the function to evaluate_funcbody .</p>
+
+<p><strong>evaluate_funcbody():</strong>
+Fetches the value of the variables in the function body and returns back the function body to extract_funcbody(). This function is invoked only when the procedure is non-recursive.</p>
+
+<p><strong>exec_func_body():</strong>
+Fetch the value of the variables in the function body . This function is invoked only when the inputted procedure is recursive.</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/func1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/func1.png" alt="" /></a></p>
+
+<p><strong><em>Use of the module ops().</em></strong>
+You would see a module named &lsquo; ops&rsquo; being imported. This module consists of certain functions that can be performed on lists. The module is imported so as to get a feel of the way programming is done in scheme , any operation on lists can be performed on lists using 5 basic functions. The attempt has been made to stick to the combination of these basic operations rather than using the full functionality of Python.</p>
+
+<p>The source code of the project can be obtained <a href="http://github.com/sunilkumarn/MetacircularEvaluator">here</a>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -734,98 +844,6 @@ The way variables are used in function in also important .  A good knowledge of 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/09/05/local-and-global-variables-in-python">Local and Global Variables in Python..</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-05T22:15:20+05:30" pubdate data-updated="true">Sep 5<span>th</span>, 2010</time>
-        
-         | <a href="/2010/09/05/local-and-global-variables-in-python#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Lets see the working of global and local variables in python with the help of a few small examples: What you need to understand is that variables that are declared inside functions are local to that functions (cannot be accessed from outside the function), whereas variables that are declared outside the function are global to that function , they can be accessed within the function.</p>
-
-<p>_>>>a=1</p>
-
-<blockquote><blockquote><blockquote><p>def func():
-&hellip;    print a
-&hellip;    a=10
-&hellip;
-func()_
-would produce an error as:
-<strong>UnboundLocalError: local variable &lsquo;a&rsquo; referenced before assignment.</strong>
-This is because the local variable &lsquo;a&rsquo; is used in the &lsquo;print&rsquo; statement before it is being assigned a value.
-However ,</p></blockquote></blockquote></blockquote>
-
-<p>_>>>a=1</p>
-
-<blockquote><blockquote><blockquote><p>def func():
-&hellip;    global a
-&hellip;    print a
-&hellip;    a=10
-&hellip;  <br/>
-func()_
-wouldn&rsquo;t print an error of that sort.
-Note the use of the keyword <strong>&lsquo; global&rsquo; </strong>. This keyword indicates that the variable &lsquo;a&rsquo; that is being printed is a global variable. The python interpreter understands that there is a variable &lsquo;a&rsquo; that has been assigned to &lsquo;1&rsquo; outside the function and hence prints the value &lsquo;1&rsquo;.</p></blockquote></blockquote></blockquote>
-
-<p>Now do the following:</p>
-
-<p>_>>>a=1</p>
-
-<blockquote><blockquote><blockquote><p>def func():
-&hellip;    global a
-&hellip;    print a
-&hellip;    a=10
-&hellip;    print a
-func()_
-The result would be:
-1
-10
-Now try and print the value of &lsquo;a&rsquo;.
-The value printed would be:
-&lsquo;10&rsquo;
-This is because the value of the variable &lsquo;a&rsquo; has been changed to 10 by the function
-&lsquo;func&rsquo; because &lsquo;a&rsquo; has been declared as a global variable in the function &lsquo;func&rsquo;.</p></blockquote></blockquote></blockquote>
-
-<p>Now do :
-_>>>def func():
-&hellip;    print b
-&hellip;    b=10
-&hellip;</p>
-
-<blockquote><blockquote><blockquote><p>print b _
-would result in an error :
-<strong>NameError: name &lsquo;b&rsquo; is not defined</strong></p></blockquote></blockquote></blockquote>
-
-<p>because no variable &lsquo;b&rsquo; has been assigned a value outside the function. The variable &lsquo;b&rsquo; used in the function &lsquo;func&rsquo; is local to that function and cannot be accessed from that outside the function, that is , the variable &lsquo;b&rsquo; is <strong>local</strong> to the function.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -841,6 +859,10 @@ would result in an error :
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/08/22/ssl-pinning-with-rubymotion">SSL Pinning With Rubymotion</a>
+      </li>
     
       <li class="post">
         <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
@@ -876,10 +898,6 @@ would result in an error :
     
       <li class="post">
         <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
   </ul>

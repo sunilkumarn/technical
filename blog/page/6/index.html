@@ -9,9 +9,10 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="What will we do if we need to store more than one string in an array.?
-Double dimensional would be an option. For eg.
-char array[][10]={&ldquo;hello& &hellip;">
+  <meta name="description" content="Pointers as we know are used to store addresses. There is a strong relation between pointers and arrays in C.
+Consider the following:
+int p;
+int a[ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +70,68 @@ char array[][10]={&ldquo;hello& &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/08/14/pointers-and-arrays-in-c">Pointers and Arrays in C.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-14T16:54:46+05:30" pubdate data-updated="true">Aug 14<span>th</span>, 2010</time>
+        
+         | <a href="/2010/08/14/pointers-and-arrays-in-c#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Pointers as we know are used to store addresses. There is a strong relation between pointers and arrays in C.
+Consider the following:
+int <em>p;
+int a[100];
+p=NULL;
+p=a;
+Here p is initialized to the starting address of the array a[].This is equivalent to doing
+p=&amp;a[0];
+the statement p=a clearly shows the relation between pointers and arrays in C. Pointers and arrays can be used instead of each other in C although there are some differences that needs to be considered. We will find out the basics in comparing an array and a pointer.
+Below a[] is an array and p is a pointer that has been initialized to the base address of the array.
+a[i] is equivalent to doing </em>(p+i)
+&amp;a[i] is equivalent to (p+i)-address of the i-th location of the array.
+p=a as we saw just above is valid, whereas a=p is illegal.
+Pointers are considered as normal variables and can be the increment operators, p++, whereas a++ is illegal.</p>
+
+<p>Now consider the case of characters. Again let the variables have the same meaning,&lsquo;a[]&rsquo; for an array and &lsquo;p&rsquo; for a pointer.
+Consider
+char a[size]=”hello”;      This can be written using pointers as
+char <em>p=”hello”;
+Here p is initialized to the starting address of the string “hello”(to the character &lsquo;h&rsquo;).
+Now obviously the difference comes here while printing.
+printf(“%s”,a) would result in printing of the string whereas printf(“%s”,</em>p) would result in a segfault (obviously not due to uninitialized dereferencing) but because of the fact that the pointer points to the starting of the string(a character).
+Hence it should be printed using
+printf(“%c”,*p)  -would print the character .
+This will be have to be looped if the entire string is to printed.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -693,47 +756,6 @@ The other bitwise operators work on the bits as follows….</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/08/07/the-lm-command">The &#8216;Lm&#8217; Option.</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-07T23:14:16+05:30" pubdate data-updated="true">Aug 7<span>th</span>, 2010</time>
-        
-         | <a href="/2010/08/07/the-lm-command#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It may sometimes happen that when you use commands like sin,cos,pow etc&hellip;.you get a warning message like &lsquo;undefined reference&rsquo; .This may happen even when you have included the  header file  .This happens because your program has not been linked with the system library properly&hellip;
-A solution to the situation would be to use the option &lsquo;lm&rsquo; when you compile the file.This would fix the problem and the call would be referred to the function definitions in the system&rsquo;s library.
-The syntax would be as follows&hellip;.
-<strong>&lsquo;gcc -lm filename.c&rsquo;</strong></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -749,6 +771,10 @@ The syntax would be as follows&hellip;.
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/08/22/ssl-pinning-with-rubymotion">SSL Pinning With Rubymotion</a>
+      </li>
     
       <li class="post">
         <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
@@ -784,10 +810,6 @@ The syntax would be as follows&hellip;.
     
       <li class="post">
         <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
   </ul>

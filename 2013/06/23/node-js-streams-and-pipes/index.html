@@ -100,20 +100,20 @@
 <p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
 
 <div>
-  <pre><code class='javascript'>var http = require('http'),
-  sys = require('sys'),
-  fs = require('fs');
+  <pre><code class='javascript'>var http = require(&#39;http&#39;),
+  sys = require(&#39;sys&#39;),
+  fs = require(&#39;fs&#39;);
 
   var server = http.createServer();
   console.log(&quot;Starting up the server&quot;);
   server.listen(8000);
 
-  server.on('request', function(request, response) {
-    var file = fs.createWriteStream('copy.csv');
-    var fileSize = request.headers['content-length'];
+  server.on(&#39;request&#39;, function(request, response) {
+    var file = fs.createWriteStream(&#39;copy.csv&#39;);
+    var fileSize = request.headers[&#39;content-length&#39;];
     var uploadedSize = 0;
 
-    request.on('data', function (chunk) {
+    request.on(&#39;data&#39;, function (chunk) {
       uploadedSize += chunk.length;
       uploadProgress = (uploadedSize/fileSize) * 100;
       response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
@@ -122,12 +122,12 @@
         request.pause();
     });
 
-    file.on('drain', function() {
+    file.on(&#39;drain&#39;, function() {
       request.resume();
     })
 
-    request.on('end', function() {
-      response.write('Upload done!');
+    request.on(&#39;end&#39;, function() {
+      response.write(&#39;Upload done!&#39;);
       response.end();
     })
 
@@ -142,14 +142,14 @@
 <p>A writeStream is created and &lsquo;copy.csv&rsquo; is the destination path to which the received data will be written.</p>
 
 <div>
-  <pre><code class='javascript'>var file = fs.createWriteStream('copy.csv');</code></pre>
+  <pre><code class='javascript'>var file = fs.createWriteStream(&#39;copy.csv&#39;);</code></pre>
 </div>
 
 
 <p>The following piece forms the core of the upload process.</p>
 
 <div>
-  <pre><code class='javascript'>request.on('data', function (chunk) {
+  <pre><code class='javascript'>request.on(&#39;data&#39;, function (chunk) {
     var bufferStore = file.write(chunk);
     if(bufferStore == false)
       request.pause();
@@ -158,7 +158,7 @@
     response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
   });
 
-  file.on('drain', function() {
+  file.on(&#39;drain&#39;, function() {
     request.resume();
   })</code></pre>
 </div>
@@ -181,7 +181,7 @@
 <p>Also, we need to re-start streaming data from the read stream once the buffer is drained out. The following lines of code does just that.</p>
 
 <div>
-  <pre><code class='javascript'>file.on('drain', function() {
+  <pre><code class='javascript'>file.on(&#39;drain&#39;, function() {
     request.resume();
   })</code></pre>
 </div>
@@ -199,13 +199,13 @@
 <p>would be equivalent to</p>
 
 <div>
-  <pre><code class='javascript'>request.on('data', function(chunk) {
+  <pre><code class='javascript'>request.on(&#39;data&#39;, function(chunk) {
     var bufferStore = file.write(chunk);
     if(bufferStore == false)
       request.pause();
   })
 
-  file.on('drain', function() {
+  file.on(&#39;drain&#39;, function() {
     request.resume();
   })</code></pre>
 </div>
@@ -225,7 +225,7 @@
 <p>Do note that the actual size of the upload file is calculated from the request headers.</p>
 
 <div>
-  <pre><code class='javascript'>var fileSize = request.headers['content-length'];</code></pre>
+  <pre><code class='javascript'>var fileSize = request.headers[&#39;content-length&#39;];</code></pre>
 </div>
 
 
@@ -305,6 +305,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/08/22/ssl-pinning-with-rubymotion">SSL Pinning With Rubymotion</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
       </li>
     
@@ -338,10 +342,6 @@
     
       <li class="post">
         <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
   </ul>

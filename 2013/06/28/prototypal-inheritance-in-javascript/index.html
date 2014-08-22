@@ -141,7 +141,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 <p>We could specify an object or null as the first argument to the create method. If we pass null as the first argument to create, then the newly created object won&rsquo;t inherit any property.</p>
 
 <div>
-  <pre><code class='javascript'>Mammal = Object.create(null, {knownTime: { value: 'infinity' }} )</code></pre>
+  <pre><code class='javascript'>Mammal = Object.create(null, {knownTime: { value: &#39;infinity&#39; }} )</code></pre>
 </div>
 
 
@@ -156,7 +156,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 
 <div>
   <pre><code class='javascript'>Man.knownTime
-   -&gt; 'infinity'</code></pre>
+   -&gt; &#39;infinity&#39;</code></pre>
 </div>
 
 
@@ -165,7 +165,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 <div>
   <pre><code class='javascript'>John = Object.create(Man)
 John.knownTime
-   -&gt; 'infinity'</code></pre>
+   -&gt; &#39;infinity&#39;</code></pre>
 </div>
 
 
@@ -175,7 +175,7 @@ Try adding new properties to these objects.</p>
 <p>Set a max height of Mammals.</p>
 
 <div>
-  <pre><code class='javascript'>Mammal.maxHeight = '200'</code></pre>
+  <pre><code class='javascript'>Mammal.maxHeight = &#39;200&#39;</code></pre>
 </div>
 
 
@@ -183,9 +183,9 @@ Try adding new properties to these objects.</p>
 
 <div>
   <pre><code class='javascript'>Man.maxHeight
-   -&gt; '200'
+   -&gt; &#39;200&#39;
 John.maxHeight
-   -&gt; '200'</code></pre>
+   -&gt; &#39;200&#39;</code></pre>
 </div>
 
 
@@ -444,6 +444,10 @@ s2.stream()
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/08/22/ssl-pinning-with-rubymotion">SSL Pinning With Rubymotion</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
       </li>
     
@@ -477,10 +481,6 @@ s2.stream()
     
       <li class="post">
         <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
   </ul>

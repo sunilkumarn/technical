@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RubyMotion | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-03-28T21:38:40+05:30</updated>
+  <updated>2014-08-22T14:52:04+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -12,6 +12,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[SSL pinning with Rubymotion]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion"/>
+    <updated>2014-08-22T14:50:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>To get started with what exactly is SSL pinning and why is this pretty important, please read this <a href="http://blog.lumberlabs.com/2012/04/why-app-developers-should-care-about.html">blog post</a>.</p>
+
+<p>Just to summarize,</p>
+
+<p>A client when making an SSL connection to the server does not check whether the certificate is exactly the one that was uploaded to the server. In browsers, the connections are made to n number of hosts and is obviously unknown prior to making a connection whereas in case of a mobile app, thats not the case. The host to which the connection is to be made is known to the app development team ( certainly in most cases ). Hence we could utilize the power of SSL pinning in mobile apps to add the extra security layer.</p>
+
+<p>To implement SSL pinning, you need the certificate within the app.
+I use the BubbleWrap library to make http connections in RubyMotion, but this could well be implemented with something like AFMotion as well. BubbleWrap internally uses the NSUrlConnection to make requests. We use the delegate method of NSUrlConnection ( willSendRequestForAuthenticationChallenge ) to implement the pinning.</p>
+
+<p>I monkey patch ( familiar to Rubyists ) **BubbleWrap::<a href="HTTP::Query**">HTTP::Query**</a> to make the necessary changes. Be sure to check that the file type of the certificate is &lsquo;der&rsquo; and its placed in the appropriate directory.</p>
+
+<pre><code>class BubbleWrap::HTTP::Query
+  def connection(connection, willSendRequestForAuthenticationChallenge: challenge)
+    serverTrust = challenge.protectionSpace.serverTrust
+    certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+
+    localCertData = (self.localCert)
+    serverCertificateData = (SecCertificateCopyData(certificate))
+
+    if(serverCertificateData.to_s == skabberCertData.to_s)
+      credential = NSURLCredential.credentialForTrust(serverTrust)
+      challenge.sender.useCredential(credential, forAuthenticationChallenge:challenge)
+    else
+      NSLog("The server's certificate does not match the servers. Cancelling the request.")
+      challenge.sender.cancelAuthenticationChallenge(challenge)
+    end
+  end
+
+  def localCert
+    cerPath = NSBundle.mainBundle.pathForResource('something_domain_com', ofType:'der')
+    (NSData.dataWithContentsOfFile(cerPath)).to_s
+  end
+end
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubymotion: Push Notifications]]></title>

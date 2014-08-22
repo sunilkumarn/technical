@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Optimizing your Python code. - Scribblings</title>
+  <title>SSL pinning with Rubymotion - Scribblings</title>
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="Compare python with some of the other languages that are familiar to many of you. The obvious difference that will be caught by you , is the fact &hellip;">
+  <meta name="description" content="To get started with what exactly is SSL pinning and why is this pretty important, please read this blog post. Just to summarize, A client when making &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tech.sunilnkumar.com/2010/09/02/optimizing-your-python-code">
+  <link rel="canonical" href="http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Scribblings" type="application/atom+xml">
@@ -70,7 +70,7 @@
   
   <header>
     
-      <h1 class="entry-title">Optimizing Your Python Code.</h1>
+      <h1 class="entry-title">SSL Pinning With Rubymotion</h1>
     
     
       <p class="meta">
@@ -86,7 +86,7 @@
   
 
 
-<time datetime="2010-09-02T08:40:43+05:30" pubdate data-updated="true">Sep 2<span>nd</span>, 2010</time>
+<time datetime="2014-08-22T14:50:00+05:30" pubdate data-updated="true">Aug 22<span>nd</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -95,58 +95,39 @@
   </header>
 
 
-<div class="entry-content"><pre><code>    Compare python with some of the other languages that are familiar to many of you. The obvious difference that will be caught by you , is the fact that python code, for the same program ,is much shorter than codes written in some of your favorite languages like C ,Java etc.
-</code></pre>
+<div class="entry-content"><p>To get started with what exactly is SSL pinning and why is this pretty important, please read this <a href="http://blog.lumberlabs.com/2012/04/why-app-developers-should-care-about.html">blog post</a>.</p>
 
-<p>Understanding the essence of python programming would help you write shorter and interesting codes  and are easier to understand. Lets just have a look into some of the core points that need to be followed so that your python program becomes short and effective.</p>
+<p>Just to summarize,</p>
 
-<pre><code>    First and foremost, you need to understand the fact that python has got a huge library with functions for almost every activity you would need frequently. The only thing you need to do is to identify whether a function is present that would handle your case and then call the function .There are lots of built in functions that we could call. Other functions that reside in certain modules can also be invoked after the module containing the function has been imported.
-</code></pre>
+<p>A client when making an SSL connection to the server does not check whether the certificate is exactly the one that was uploaded to the server. In browsers, the connections are made to n number of hosts and is obviously unknown prior to making a connection whereas in case of a mobile app, thats not the case. The host to which the connection is to be made is known to the app development team ( certainly in most cases ). Hence we could utilize the power of SSL pinning in mobile apps to add the extra security layer.</p>
 
-<p> As an example , consider the following:</p>
+<p>To implement SSL pinning, you need the certificate within the app.
+I use the BubbleWrap library to make http connections in RubyMotion, but this could well be implemented with something like AFMotion as well. BubbleWrap internally uses the NSUrlConnection to make requests. We use the delegate method of NSUrlConnection ( willSendRequestForAuthenticationChallenge ) to implement the pinning.</p>
 
-<pre><code>        **map(sqr,range(1,100)):**
+<p>I monkey patch ( familiar to Rubyists ) **BubbleWrap::<a href="HTTP::Query**">HTTP::Query**</a> to make the necessary changes. Be sure to check that the file type of the certificate is &lsquo;der&rsquo; and its placed in the appropriate directory.</p>
 
-    'map' is a built -in higher order function that takes two or more arguments and returns you a list,'range' is another built-in which would return a list containing all the elements from the starting element up to the ending element.
+<pre><code>class BubbleWrap::HTTP::Query
+  def connection(connection, willSendRequestForAuthenticationChallenge: challenge)
+    serverTrust = challenge.protectionSpace.serverTrust
+    certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
 
-    This particular function returns a list of squares of all numbers from 1 up to 99 using a single line code. Compare this to a C code to find the squares of this many numbers,certainly ,a single line code wouldn't do that for you.
+    localCertData = (self.localCert)
+    serverCertificateData = (SecCertificateCopyData(certificate))
 
-    Python has got a large collection of such built ins which includes functions like 'filter','reduce','hex','cmp' and many more.
+    if(serverCertificateData.to_s == skabberCertData.to_s)
+      credential = NSURLCredential.credentialForTrust(serverTrust)
+      challenge.sender.useCredential(credential, forAuthenticationChallenge:challenge)
+    else
+      NSLog("The server's certificate does not match the servers. Cancelling the request.")
+      challenge.sender.cancelAuthenticationChallenge(challenge)
+    end
+  end
 
-    Python has got many more functions that are defined in different modules:To use those functions , you just need to import those modules and invoke them. Some of the most commonly invoked ones are :
-    **Module 're**' for pattern matching. Contains power full functions like findall' , search' , 'match' etc.
-    **Module 'os'** for operating system services. Includes functions 'mkdir' , 'chdir' ,' path.join,' path.abspath'' etc.
-    **Module 'shutil'** for shell utilities like copying files.
-
-    **Module 'urllib'** for dealing with 'URLs'.
-
-    **Module 'sys**' :sys.argv[index] would return the input given on the command line at position 'index.'
-
-    Identifying the correct functions that are present in these and more modules in python  would result in much shorter code length. 
-
- A proper knowledge about the use of sequences and variables would do no harm in our purpose of decreasing the code size.
-
-Consider the code to swap the values of two variables. In other languages you would write:
-temp=a:
-a=b:
-b=temp:
-
-Once again, in python all you need is a single line code :
-
-**a,b=b,a**
-</code></pre>
-
-<p> The logic behind whats happening is to be understood. Consider the right hand side of the expression -variables are packed into a tuple. On the left hand side, the tuple is unpacked and the values are entered into the variables. Thus the values are swapped in a single line as opposed to three lines taken in other languages.</p>
-
-<pre><code>Use of generator expressions is another way to reduce your code size.
-Consider:
-xvec=[10,20,30]
-yvec=[30,40,50]
-</code></pre>
-
-<p>The expression <strong>sum(x*y for x,y in zip(xvec,yvec)) </strong>gives you the dot product of xvec and yvec in a single step where &lsquo;sum&rsquo; is another built in function. Think of writing a C code instead of this and the number of writing you would take.</p>
-
-<pre><code>There are many more such tricks that would decrease the code size considerably . Slicing of lists , usage of the appropriate sequences are all important in producing a short and elegant code. Obviously,the fact remains that to understand the methodology behind decreasing the code size is to keep on coding ,understanding the definitions of the functions and identifying where to use them. But again, compressing your code size heavily might result in your code being hard to digest by others, specially those beginners trying to understand a python code. Therefore its important to develop a skill where you would maintain a balance between decreasing the code size and the readability of your code. This can be achieved only through rigorous coding.
+  def localCert
+    cerPath = NSBundle.mainBundle.pathForResource('something_domain_com', ofType:'der')
+    (NSData.dataWithContentsOfFile(cerPath)).to_s
+  end
+end
 </code></pre>
 </div>
 
@@ -156,7 +137,7 @@ yvec=[30,40,50]
       
   
 
-<span class="byline author vcard">Posted by <span class="fn">sunilkumarn</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Sunil Kumar</span></span>
 
       
 
@@ -170,12 +151,12 @@ yvec=[30,40,50]
   
 
 
-<time datetime="2010-09-02T08:40:43+05:30" pubdate data-updated="true">Sep 2<span>nd</span>, 2010</time>
+<time datetime="2014-08-22T14:50:00+05:30" pubdate data-updated="true">Aug 22<span>nd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/python/'>Python</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>, <a class='category' href='/blog/categories/rubymotion/'>RubyMotion</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
   
 </span>
 
@@ -184,7 +165,7 @@ yvec=[30,40,50]
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/2010/09/02/optimizing-your-python-code" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/2010/09/02/optimizing-your-python-code" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion" data-via="sunilkumar_g56" data-counturl="http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion" >Tweet</a>
   
   
   
@@ -193,10 +174,8 @@ yvec=[30,40,50]
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/2010/09/02/garbage-collection-in-python" title="Previous Post: Garbage collection in Python.">&laquo; Garbage collection in Python.</a>
+        <a class="basic-alignment left" href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry" title="Previous Post: Tree hierarchy with Js-tree and ancestry">&laquo; Tree hierarchy with Js-tree and ancestry</a>
       
-      
-        <a class="basic-alignment right" href="/2010/09/03/shebang-lines" title="Next Post: Shebang lines...">Shebang lines... &raquo;</a>
       
     </p>
   </footer>
@@ -293,8 +272,8 @@ yvec=[30,40,50]
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://tech.sunilnkumar.com/2010/09/02/optimizing-your-python-code';
-        var disqus_url = 'http://tech.sunilnkumar.com/2010/09/02/optimizing-your-python-code';
+        var disqus_identifier = 'http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion';
+        var disqus_url = 'http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion';
         var disqus_script = 'embed.js';
       
     (function () {

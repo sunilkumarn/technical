@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Node.js | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/node-dot-js/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-03-28T21:38:40+05:30</updated>
+  <updated>2014-08-22T14:52:04+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -96,7 +96,7 @@
 
 &lt;p&gt;var http = require(&amp;lsquo;http&amp;rsquo;),&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;sys = require('sys');
+&lt;pre&gt;&lt;code&gt;sys = require(&#39;sys&#39;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;var server = http.createServer(function(request, response) {
@@ -104,7 +104,7 @@
 
 &lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;response.write('Request Completed!');
+&lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
 response.end();
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -154,7 +154,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 &lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;response.write('Request Completed!');
+&lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
 response.end();
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -183,7 +183,7 @@ server.on(&amp;lsquo;request&amp;rsquo;, function(request, response) {
 
 &lt;p&gt;  request.on(&amp;lsquo;end&amp;rsquo;, function() {&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;response.write('Request Completed!');
+&lt;pre&gt;&lt;code&gt;response.write(&#39;Request Completed!&#39;);
 response.end();
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -221,11 +221,11 @@ response.end();
 
 &lt;p&gt;  server.on(&amp;lsquo;request&amp;rsquo;, function(request, response) {&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;var file = fs.createWriteStream('copy.csv');
-var fileSize = request.headers['content-length'];
+&lt;pre&gt;&lt;code&gt;var file = fs.createWriteStream(&#39;copy.csv&#39;);
+var fileSize = request.headers[&#39;content-length&#39;];
 var uploadedSize = 0;
 
-request.on('data', function (chunk) {
+request.on(&#39;data&#39;, function (chunk) {
   uploadedSize += chunk.length;
   uploadProgress = (uploadedSize/fileSize) * 100;
   response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
@@ -234,12 +234,12 @@ request.on('data', function (chunk) {
     request.pause();
 });
 
-file.on('drain', function() {
+file.on(&#39;drain&#39;, function() {
   request.resume();
 })
 
-request.on('end', function() {
-  response.write('Upload done!');
+request.on(&#39;end&#39;, function() {
+  response.write(&#39;Upload done!&#39;);
   response.end();
 })
 &lt;/code&gt;&lt;/pre&gt;

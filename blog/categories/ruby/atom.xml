@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-03-28T21:38:40+05:30</updated>
+  <updated>2014-08-22T14:52:04+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -12,6 +12,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[SSL pinning with Rubymotion]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion"/>
+    <updated>2014-08-22T14:50:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>To get started with what exactly is SSL pinning and why is this pretty important, please read this <a href="http://blog.lumberlabs.com/2012/04/why-app-developers-should-care-about.html">blog post</a>.</p>
+
+<p>Just to summarize,</p>
+
+<p>A client when making an SSL connection to the server does not check whether the certificate is exactly the one that was uploaded to the server. In browsers, the connections are made to n number of hosts and is obviously unknown prior to making a connection whereas in case of a mobile app, thats not the case. The host to which the connection is to be made is known to the app development team ( certainly in most cases ). Hence we could utilize the power of SSL pinning in mobile apps to add the extra security layer.</p>
+
+<p>To implement SSL pinning, you need the certificate within the app.
+I use the BubbleWrap library to make http connections in RubyMotion, but this could well be implemented with something like AFMotion as well. BubbleWrap internally uses the NSUrlConnection to make requests. We use the delegate method of NSUrlConnection ( willSendRequestForAuthenticationChallenge ) to implement the pinning.</p>
+
+<p>I monkey patch ( familiar to Rubyists ) **BubbleWrap::<a href="HTTP::Query**">HTTP::Query**</a> to make the necessary changes. Be sure to check that the file type of the certificate is &lsquo;der&rsquo; and its placed in the appropriate directory.</p>
+
+<pre><code>class BubbleWrap::HTTP::Query
+  def connection(connection, willSendRequestForAuthenticationChallenge: challenge)
+    serverTrust = challenge.protectionSpace.serverTrust
+    certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+
+    localCertData = (self.localCert)
+    serverCertificateData = (SecCertificateCopyData(certificate))
+
+    if(serverCertificateData.to_s == skabberCertData.to_s)
+      credential = NSURLCredential.credentialForTrust(serverTrust)
+      challenge.sender.useCredential(credential, forAuthenticationChallenge:challenge)
+    else
+      NSLog("The server's certificate does not match the servers. Cancelling the request.")
+      challenge.sender.cancelAuthenticationChallenge(challenge)
+    end
+  end
+
+  def localCert
+    cerPath = NSBundle.mainBundle.pathForResource('something_domain_com', ofType:'der')
+    (NSData.dataWithContentsOfFile(cerPath)).to_s
+  end
+end
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Tree hierarchy with Js-tree and ancestry]]></title>
@@ -298,62 +340,6 @@ end
 </code></pre>
 
 <p>So in the <strong>miscellaneous_view_controller</strong> controller we have a <em>submitButton</em> which is tied to an ib_action <em>submit_miscellanous_details</em>. On submitting the button, the ib_action is invoked. We do whatever necessary steps is required in the ib_action and then <strong>invoke dismissViewControllerAnimated on the rootViewController( i.e, the master_view_controller )</strong>. When this is done, the presented controllers and all other controllers in the chain of controllers until the presenting controller on whom the dismissViewControllerAnimated method is called ( here, the rootViewController) is also dismissed. The rootViewController or the master_view_controller view appears on screen and the viewDiDAppear delegate will process the rest.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rubymotion: Using ProgressHud while making Http calls]]></title>
-    <link href="http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls"/>
-    <updated>2014-01-24T20:04:00+05:30</updated>
-    <id>http://tech.sunilnkumar.com/2014/01/24/rubymotion-using-progresshud-while-making-http-calls</id>
-    <content type="html"><![CDATA[<p>With Rubymotion, there are quite a few methods to indicate activities. What I have used here is the MBProgressBarHud to indicate an ongoing activity ( an http call in progress )</p>
-
-<h4>controller/msisdn_view_controller.rb</h4>
-
-<pre><code>outlet :submitButton, UIButton
-ib_action :submit_mobile_number  #The submit button on event ‘Touch Up Inside’ invokes the action submit_mobile_number
-
-def viewDidLoad
-  @hud = MBProgressHUD.alloc.initWithWindow(UIApplication.sharedApplication.keyWindow)
-  self.view.addSubview(@hud)
-end
-
-def submit_mobile_number(sender)
-  msisdn = self.msisdnTextField.text
-  prepare_for_submission
-  User.registration msisdn, do
-    after_submission
-  end
-end
-
-def prepare_for_submission
-  @hud.labelText = "Provisioning"
-  @hud.show(true)
-  self.view.userInteractionEnabled = false
-end
-
-def after_submission
-  @hud.labelText = "Completed";
-  @hud.hide(true)
-  performSegueWithIdentifier('submission_segue', sender: self)
-end
-</code></pre>
-
-<h4>models/user.rb</h4>
-
-<pre><code>def self.registration(msisdn, &amp;callback)
-  ...
-  url = 'some_url'
-  BW::HTTP.get(url) do |response|
-    callback.call
-    ...
-  end
-end
-</code></pre>
-
-<p>As you could see from the code above, in the viewDidLoad delegate we initiate an MBProgressHUD instance and add it as a subview to the UIView. This is done in the viewDidLoad delegate.</p>
-
-<p>Before the call to <strong>registration</strong> ( the User model method which makes an http connection ) is made, the <strong>prepare_for_submission</strong> method displays the hud. The <strong>after_submission</strong> method is passed as a callback block to the <strong>registration</strong> method. On completion of the http request, this block is executed which hides the hud and performs the segue to present the next controller.</p>
 ]]></content>
   </entry>
   

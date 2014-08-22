@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="When building client side applications with Javascript, events and handling them are quite common. Consider, for example, $('#toBeClicked').on('click &hellip;">
+  <meta name="description" content="When building client side applications with Javascript, events and handling them are quite common. Consider, for example, $(&#39;#toBeClicked&#39;). &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -98,7 +98,7 @@
 <div class="entry-content"><p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
 
 <div>
-  <pre><code class='javascript'>$('#toBeClicked').on('click', function() { alert('clicked') })</code></pre>
+  <pre><code class='javascript'>$(&#39;#toBeClicked&#39;).on(&#39;click&#39;, function() { alert(&#39;clicked&#39;) })</code></pre>
 </div>
 
 
@@ -109,7 +109,7 @@
 <p>Lets straight away build a custom event emitter and see whats going on,</p>
 
 <div>
-  <pre><code class='javascript'>EventEmitter = require('events').EventEmitter       // The Event Emitter constructor in the events.js module .</code></pre>
+  <pre><code class='javascript'>EventEmitter = require(&#39;events&#39;).EventEmitter       // The Event Emitter constructor in the events.js module .</code></pre>
 </div>
 
 
@@ -123,7 +123,7 @@
 <p>We listen for the error event,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.on('error', function(msg1, msg2) { console.log('ERR: ' + msg1 + ' ' + msg2 ) })</code></pre>
+  <pre><code class='javascript'>emitter.on(&#39;error&#39;, function(msg1, msg2) { console.log(&#39;ERR: &#39; + msg1 + &#39; &#39; + msg2 ) })</code></pre>
 </div>
 
 
@@ -134,14 +134,14 @@
 <p>We could also listen as,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.addListener('error', function(msg1, msg2) { console.log('ERR: ' + msg1 + ' ' + msg2 ) } )</code></pre>
+  <pre><code class='javascript'>emitter.addListener(&#39;error&#39;, function(msg1, msg2) { console.log(&#39;ERR: &#39; + msg1 + &#39; &#39; + msg2 ) } )</code></pre>
 </div>
 
 
 <p>Now we emit the error event,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.emit('error', 'Bug detected', '@ Step 4')</code></pre>
+  <pre><code class='javascript'>emitter.emit(&#39;error&#39;, &#39;Bug detected&#39;, &#39;@ Step 4&#39;)</code></pre>
 </div>
 
 
@@ -153,14 +153,14 @@
 <p>Now that we have got to know how events are emitted and handled via listeners, lets try out a small server that listens for requests and processes them.</p>
 
 <div>
-  <pre><code class='javascript'>var http = require('http'),
-    sys = require('sys');
+  <pre><code class='javascript'>var http = require(&#39;http&#39;),
+    sys = require(&#39;sys&#39;);
 
 var server = http.createServer(function(request, response) {
-  request.on('data', function (chunk) { console.log(chunk.toString()); });
+  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
 
-  request.on('end', function() {
-    response.write('Request Completed!');
+  request.on(&#39;end&#39;, function() {
+    response.write(&#39;Request Completed!&#39;);
     response.end();
   });
 
@@ -191,7 +191,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>if (requestListener) {
-  this.addListener('request', requestListener); // event listener for the server
+  this.addListener(&#39;request&#39;, requestListener); // event listener for the server
 }</code></pre>
 </div>
 
@@ -202,10 +202,10 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>function(request, response) {
-  request.on('data', function (chunk) { console.log(chunk.toString()); });
+  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
 
-  request.on('end', function() {
-    response.write('Request Completed!');
+  request.on(&#39;end&#39;, function() {
+    response.write(&#39;Request Completed!&#39;);
     response.end();
   });
 }</code></pre>
@@ -217,7 +217,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 <p>Now, further inspecting the <strong>_http_server.js </strong>module<strong>, </strong>we could also see how the request event is emitted,</p>
 
 <div>
-  <pre><code class='javascript'>self.emit('request', req, res); // event emitter for the server</code></pre>
+  <pre><code class='javascript'>self.emit(&#39;request&#39;, req, res); // event emitter for the server</code></pre>
 </div>
 
 
@@ -227,11 +227,11 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>var server = http.createServer()
-server.on('request', function(request, response) {
-  request.on('data', function (chunk) { console.log(chunk.toString()); });
+server.on(&#39;request&#39;, function(request, response) {
+  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
 
-  request.on('end', function() {
-    response.write('Request Completed!');
+  request.on(&#39;end&#39;, function() {
+    response.write(&#39;Request Completed!&#39;);
     response.end();
   })
 });</code></pre>
@@ -241,7 +241,7 @@ server.on('request', function(request, response) {
 <p>Here when we create the server instance, we do not pass the requestListener( <em>Do notice that requestListener was only optional in http.createServer([requestListener]) </em>). Instead we attach a listener of our own on the server which listens to the &lsquo;request&rsquo; event and performs the callback function when the request event is emitted, i.e,</p>
 
 <div>
-  <pre><code class='javascript'>server.on('request', function(request, response) { ... });</code></pre>
+  <pre><code class='javascript'>server.on(&#39;request&#39;, function(request, response) { ... });</code></pre>
 </div>
 
 
@@ -315,6 +315,10 @@ server.on('request', function(request, response) {
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/08/22/ssl-pinning-with-rubymotion">SSL Pinning With Rubymotion</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
       </li>
     
@@ -348,10 +352,6 @@ server.on('request', function(request, response) {
     
       <li class="post">
         <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sunil Kumar">
 
   
-  <meta name="description" content="You might have often had the experience where you would have had to open quite a few terminals on your screen simultaneously . This might often be &hellip;">
+  <meta name="description" content="There would have been times when you would have felt if the web page in front of you behaved a bit more according to your like . This might specially &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/11/24/greasemonkey-customizing-your-webpages">GreaseMonkey : Customizing Your Webpages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-24T22:04:29+05:30" pubdate data-updated="true">Nov 24<span>th</span>, 2010</time>
+        
+         | <a href="/2010/11/24/greasemonkey-customizing-your-webpages#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There would have been times when you would have felt if the web page in front of you behaved a bit more according to your like . This might specially happen if the page consists of forms that you fill with data directed to live servers .  In such cases you wouldn&rsquo;t mind customizing the page to suit your needs so that you don&rsquo;t do some nonsense that would result in chaos .</p>
+
+<p>Firefox , i see many using it as their default browser , offers a plugin called &lsquo;<strong>Grease monkey</strong>&#8216;  that allows you to do just that . All you need to is to install the plugin , write your own javascripts , install them ( thats pretty easy to do ) and start using them  .</p>
+
+<p>Write your javascripts to customize your webpage . What you need to do in addition is to add some <strong>metadata</strong> providing extra information to greasemonkey .</p>
+
+<p>The meta data might look as follows :</p>
+
+<p><a href="http://sunilkumarn.files.wordpress.com/2010/11/untitled-1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/11/untitled-1.png?w=300" alt="" /></a></p>
+
+<p>The first and the last lines are necessary to indicate to the greasemonkey that the script it to be processed by it .</p>
+
+<p>The <strong>name and the description are optional</strong> . It might prove helpful to you if you have scripted and installed a number of greasemonkey scripts .</p>
+
+<p>The 4th an the 5th line of the metadata are extremely important and needs to be well understood . <strong>These lines tell the greasemonkey the URLs on which the script is to be applied and not to be applied </strong>.</p>
+
+<p><strong>@include</strong> &ndash;> specifies the URLs on which the script is to be installed . Here &lsquo;*&rsquo; is specified which is just a wildcard and indicates that the script is to applied on all the sites  .</p>
+
+<p><strong>@exclude</strong> &ndash;> specifies the URLs that are to be left out . It is to be noted that @exclude is processed before @include .</p>
+
+<p>This gives you an idea of the metadata part of the script . Now you may write your own javascript , add your metadata at the beginning and save the file with the extension &lsquo; <strong>.user.js </strong>&#8216;  .</p>
+
+<p>To install the script , open the file in firefox and you would see an option &lsquo;install&rsquo; . Just give a click and you are ready to use your greasemonkey script .You could manage your script , disable it , uninstall it as well . Just click</p>
+
+<p><em>Tools &mdash;&mdash;> Greasemonkey &mdash;&mdash;> Manage user scripts &hellip;.</em></p>
+
+<p>Having another plugin &lsquo;<strong>firebug&rsquo;</strong> may help you in the process of writing the script . This allows you to view the html code of the webpage that is infront of you . Infact the plugin is almost a necessity to help you write efficient code with greasemonkey .</p>
+
+<p>Now you may start writing your own greasemonkey scripts and customize any of the webpages as and according to your like . It&rsquo;s also to be understood that greasemonkey is a plugin of firefox . If you use Google chrome as your browser , you wouldn&rsquo;t need to install any plugin . The facility to customize the webpage is provided by default . You may use the same code that you have written to work with greasemonkey . The metadata and the process of installing is the same and obviously the results are the same as well .</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1259,116 +1325,6 @@ avl.traverse(1)</p></blockquote></blockquote></blockquote>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/09/25/evaluation-of-scheme-in-python">Evaluation of Scheme in Python</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-25T19:13:22+05:30" pubdate data-updated="true">Sep 25<span>th</span>, 2010</time>
-        
-         | <a href="/2010/09/25/evaluation-of-scheme-in-python#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Those who have ever gone through the SICP ( Structure and interpretation of computer programs) , would have come across the implementation of a Metacircular evaluator ( an evaluator written in a language that it evaluates) for scheme in the 4rth Chapter.
-<a href="http://sunilkumarn.files.wordpress.com/2010/09/cover.jpg"><img src="http://sunilkumarn.files.wordpress.com/2010/09/cover.jpg?w=207" alt="" /></a></p>
-
-<p>Motivated by that , and drawing ideas from the <strong>wizard book</strong> , an evaluator for Scheme is created in Python, so that Scheme statements evaluated in Python.</p>
-
-<p>The creation of a metacircular evaluator for scheme contains prominently of two steps:</p>
-
-<pre><code>     1)  Eval:   To evaluate a combination (a compound expression other than a special form), evaluate the subexpressions and then apply the value of the operator subexpression to the values of the operand subexpressions. 
-    2)  Apply :  To apply a compound procedure to a set of arguments, evaluate the body of the procedure in a new environment. 
-</code></pre>
-
-<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/image-02.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/image-02.png?w=300" alt="" /></a></p>
-
-<p><em><strong>Implementation of the Evaluator in Python:</strong></em></p>
-
-<p>Before getting into the creation and implementation details of the evaluator , please read <a href="http://sunilkumarn.wordpress.com/2010/09/25/concept-and-creation-of-environment/">this</a>.
-Now that you have got an idea about the concepts of environment , lets get into further details of creation of the evaluator.</p>
-
-<p>The first process is basically to parse the user Input and use it in a way so as to evaluate it. After parsing ,the user input is provided to the function gravity().This particular function performs the task of classifying the user input and route them to appropriate functions. This is similar to &lsquo;eval&rsquo; in the scheme metacircular evaluator implemented in SICP.
-According to the user input , the appropriate functions are performed.
-Different functions implemented in the evaluator.</p>
-
-<p><strong>evaluate():</strong>
-This function could be compared with the &lsquo;apply&rsquo; procedure implemented in SICP. The function checks for different operator and its corresponding operands. The operator is applied to the operands and the result returned.</p>
-
-<p><strong>opdet():</strong>
-The function is called from &lsquo;evaluate()&rsquo; , it takes in a list and returns the operator that has to be applied to the operands.</p>
-
-<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/evaluate.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/evaluate.png?w=300" alt="" /></a></p>
-
-<p>If a simple expression is provided just to perform basic arithmetic and logical operations , only these two functions are invoked after the gravity () function and we obtain the result. The situation, as is obvious would be a little different when relatively complex tasks are give ( such a processing of an &lsquo;if&rsquo; statement , a function , an assignment operation, a recursive function and so on.</p>
-
-<p>Processing of an &lsquo;if&rsquo; statement involves invoking many more functions.</p>
-
-<p><strong>if_begin_eval():</strong>
-This function involves the presence of any variables involved in the &lsquo;if&rsquo; statement and fetches the value of such variables from the environment.</p>
-
-<p><strong>if_eval() :</strong>
-This particular function is used to evaluate the &lsquo;predicate &rsquo; of the &lsquo;if&rsquo; statement and returns the result of the &lsquo;if&rsquo; statement. The function invokes the &lsquo;evaluate()&rsquo; function and would process the entire &lsquo;if&rsquo; statement according to the value returned by &lsquo;evaluate()&rsquo; .
-If a simple &lsquo;if&rsquo; statement&#8217;
-( if ( > 4 5 ) 4 5 ) is inputted:
-if_eval() would pass the predicate part ( >  4 5 ) to &lsquo;evaluate()&rsquo; and process the if statement according to the returned value. Here the value returned by &lsquo;evaluate()&rsquo; would be 0, since the condition ( 4 > 5 ) is not true. The value returned by the &lsquo;if_eval()&rsquo; would be 5.</p>
-
-<p><strong>if_cons_alt(): </strong>
-The function evaluates the consequent and alternative of the &lsquo;if&rsquo; condition&#8217;. A separate function for the process would be specially helpful when the if statement consists of larger expressions and values.
-The function would return back a 2 element list of the final values obtained after evaluation of the consequent and alternative.</p>
-
-<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/if.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/if.png?w=300" alt="" /></a></p>
-
-<p>Evaluation of procedures would take us through a different path. We need functions that can extract, evaluate and execute a function. We also need a function to test whether the inputted procedure is recursive or non-recursive.</p>
-
-<p><strong>exec_call():</strong>
-Checks whether the function is a simple function of the sort :
-( define ( lambda ( square ( x ) ( * x  x ) ) )  non-recursive
-or of the sort:
-( define ( lambda ( fact ( x ) ( if ( = x 1 ) 1 ( * x fac ( &ndash; x 1 ) ) ) ) ) )   recursive :
-executes the procedure if non-recursive.</p>
-
-<p><strong>extract_funcbody():</strong>
-extracts the body of the function. Passes the body of the function to evaluate_funcbody .</p>
-
-<p><strong>evaluate_funcbody():</strong>
-Fetches the value of the variables in the function body and returns back the function body to extract_funcbody(). This function is invoked only when the procedure is non-recursive.</p>
-
-<p><strong>exec_func_body():</strong>
-Fetch the value of the variables in the function body . This function is invoked only when the inputted procedure is recursive.</p>
-
-<p><a href="http://sunilkumarn.files.wordpress.com/2010/09/func1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/09/func1.png" alt="" /></a></p>
-
-<p><strong><em>Use of the module ops().</em></strong>
-You would see a module named &lsquo; ops&rsquo; being imported. This module consists of certain functions that can be performed on lists. The module is imported so as to get a feel of the way programming is done in scheme , any operation on lists can be performed on lists using 5 basic functions. The attempt has been made to stick to the combination of these basic operations rather than using the full functionality of Python.</p>
-
-<p>The source code of the project can be obtained <a href="http://github.com/sunilkumarn/MetacircularEvaluator">here</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1384,6 +1340,10 @@ You would see a module named &lsquo; ops&rsquo; being imported. This module cons
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/08/22/ssl-pinning-with-rubymotion">SSL Pinning With Rubymotion</a>
+      </li>
     
       <li class="post">
         <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
@@ -1419,10 +1379,6 @@ You would see a module named &lsquo; ops&rsquo; being imported. This module cons
     
       <li class="post">
         <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
   </ul>

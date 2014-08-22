@@ -100,7 +100,7 @@
 <p>To get started off with mercury, add</p>
 
 <div>
-  <pre><code class='ruby'>gem 'mercury-rails'</code></pre>
+  <pre><code class='ruby'>gem &#39;mercury-rails&#39;</code></pre>
 </div>
 
 
@@ -128,8 +128,8 @@
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, maximum-scale=1.0, initial-scale=1.0&quot;&gt;
         &lt;%= csrf_meta_tags %&gt;
         &lt;title&gt;Mercury Editor&lt;/title&gt;
-        &lt;%= stylesheet_link_tag 'mercury' %&gt;
-        &lt;%= javascript_include_tag 'jquery-1.7', 'mercury' %&gt;
+        &lt;%= stylesheet_link_tag &#39;mercury&#39; %&gt;
+        &lt;%= javascript_include_tag &#39;jquery-1.7&#39;, &#39;mercury&#39; %&gt;
     &lt;/head&gt;</code></pre>
 </div>
 
@@ -148,7 +148,7 @@
 <p>Now peep into the routes file, you could see this extra line,</p>
 
 <div>
-  <pre><code class='ruby'>mount Mercury::Engine =&gt; '/'</code></pre>
+  <pre><code class='ruby'>mount Mercury::Engine =&gt; &#39;/&#39;</code></pre>
 </div>
 
 
@@ -165,7 +165,7 @@ In <code>pages.html.erb </code></p>
   <pre><code class='ruby'>&lt;div class=&quot;control-group&quot;&gt;
         &lt;h3 class=&quot;section_header page-header&quot;&gt;Pricing page&lt;/h3&gt;
         &lt;div id=&quot;faq&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&gt;
-            &lt;%= render :file =&gt; file_path(@domain 'faq') %&gt;
+            &lt;%= render :file =&gt; file_path(@domain &#39;faq&#39;) %&gt;
         &lt;/div&gt;
     &lt;/div&gt;</code></pre>
 </div>
@@ -180,7 +180,7 @@ In <code>pages.html.erb </code></p>
 <p>This following line in above piece of code</p>
 
 <div>
-  <pre><code class='ruby'>&lt;%= render :file =&gt; file_path(@domain, 'faq') %&gt;</code></pre>
+  <pre><code class='ruby'>&lt;%= render :file =&gt; file_path(@domain, &#39;faq&#39;) %&gt;</code></pre>
 </div>
 
 
@@ -192,7 +192,7 @@ In <code>pages.html.erb </code></p>
   <pre><code class='ruby'>&lt;div class=&quot;control-group&quot;&gt;
         &lt;h3 class=&quot;section_header page-header&quot;&gt;Contact page&lt;/h3&gt;
         &lt;div id=&quot;contact&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&gt;
-            &lt;%= render :file =&gt; file_path(@domain, 'contact') %&gt;
+            &lt;%= render :file =&gt; file_path(@domain, &#39;contact&#39;) %&gt;
         &lt;/div&gt;
     &lt;/div&gt;</code></pre>
 </div>
@@ -204,7 +204,7 @@ In <code>pages.html.erb </code></p>
 
 <div>
   <pre><code class='ruby'>&lt;script&gt;
-        $(window).on('mercury:ready', function () {
+        $(window).on(&#39;mercury:ready&#39;, function () {
             Mercury.saveUrl = &quot;&lt;%= pages_upload_admin_domain_path(@domain) %&gt;&quot;;
         });
     &lt;/script&gt;</code></pre>
@@ -214,8 +214,8 @@ In <code>pages.html.erb </code></p>
 <p>You might also want to change the page thats to be redirected to once we are done with editing using mercury. We could bind on mercury&rsquo;s save event to get this done.</p>
 
 <div>
-  <pre><code class='ruby'>$(window).bind('mercury:saved', function() {
-        $(window.location.replace('/admin/domain'));
+  <pre><code class='ruby'>$(window).bind(&#39;mercury:saved&#39;, function() {
+        $(window.location.replace(&#39;/admin/domain&#39;));
     });</code></pre>
 </div>
 
@@ -319,6 +319,10 @@ In <code>pages.html.erb </code></p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/08/22/ssl-pinning-with-rubymotion">SSL Pinning With Rubymotion</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/03/28/tree-hierarchy-with-js-tree-and-ancestry">Tree Hierarchy With Js-tree and Ancestry</a>
       </li>
     
@@ -352,10 +356,6 @@ In <code>pages.html.erb </code></p>
     
       <li class="post">
         <a href="/2013/07/06/rails-admin-with-authlogic">Rails Admin With Authlogic</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/06/28/prototypal-inheritance-in-javascript">Prototypal Inheritance in Javascript</a>
       </li>
     
   </ul>

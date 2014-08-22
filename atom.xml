@@ -4,7 +4,7 @@
   <title><![CDATA[Scribblings]]></title>
   <link href="http://tech.sunilnkumar.com/atom.xml" rel="self"/>
   <link href="http://tech.sunilnkumar.com/"/>
-  <updated>2014-03-28T21:38:40+05:30</updated>
+  <updated>2014-08-22T14:52:04+05:30</updated>
   <id>http://tech.sunilnkumar.com/</id>
   <author>
     <name><![CDATA[Sunil Kumar]]></name>
@@ -12,6 +12,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[SSL pinning with Rubymotion]]></title>
+    <link href="http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion"/>
+    <updated>2014-08-22T14:50:00+05:30</updated>
+    <id>http://tech.sunilnkumar.com/2014/08/22/ssl-pinning-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>To get started with what exactly is SSL pinning and why is this pretty important, please read this <a href="http://blog.lumberlabs.com/2012/04/why-app-developers-should-care-about.html">blog post</a>.</p>
+
+<p>Just to summarize,</p>
+
+<p>A client when making an SSL connection to the server does not check whether the certificate is exactly the one that was uploaded to the server. In browsers, the connections are made to n number of hosts and is obviously unknown prior to making a connection whereas in case of a mobile app, thats not the case. The host to which the connection is to be made is known to the app development team ( certainly in most cases ). Hence we could utilize the power of SSL pinning in mobile apps to add the extra security layer.</p>
+
+<p>To implement SSL pinning, you need the certificate within the app.
+I use the BubbleWrap library to make http connections in RubyMotion, but this could well be implemented with something like AFMotion as well. BubbleWrap internally uses the NSUrlConnection to make requests. We use the delegate method of NSUrlConnection ( willSendRequestForAuthenticationChallenge ) to implement the pinning.</p>
+
+<p>I monkey patch ( familiar to Rubyists ) **BubbleWrap::<a href="HTTP::Query**">HTTP::Query**</a> to make the necessary changes. Be sure to check that the file type of the certificate is &lsquo;der&rsquo; and its placed in the appropriate directory.</p>
+
+<pre><code>class BubbleWrap::HTTP::Query
+  def connection(connection, willSendRequestForAuthenticationChallenge: challenge)
+    serverTrust = challenge.protectionSpace.serverTrust
+    certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+
+    localCertData = (self.localCert)
+    serverCertificateData = (SecCertificateCopyData(certificate))
+
+    if(serverCertificateData.to_s == skabberCertData.to_s)
+      credential = NSURLCredential.credentialForTrust(serverTrust)
+      challenge.sender.useCredential(credential, forAuthenticationChallenge:challenge)
+    else
+      NSLog("The server's certificate does not match the servers. Cancelling the request.")
+      challenge.sender.cancelAuthenticationChallenge(challenge)
+    end
+  end
+
+  def localCert
+    cerPath = NSBundle.mainBundle.pathForResource('something_domain_com', ofType:'der')
+    (NSData.dataWithContentsOfFile(cerPath)).to_s
+  end
+end
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Tree hierarchy with Js-tree and ancestry]]></title>
@@ -501,7 +543,7 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
     <content type="html"><![CDATA[<p>When building client side applications with Javascript, events and handling them are quite common. Consider, for example,</p>
 
 <div>
-  <pre><code class='javascript'>$('#toBeClicked').on('click', function() { alert('clicked') })</code></pre>
+  <pre><code class='javascript'>$(&#39;#toBeClicked&#39;).on(&#39;click&#39;, function() { alert(&#39;clicked&#39;) })</code></pre>
 </div>
 
 
@@ -512,7 +554,7 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>Lets straight away build a custom event emitter and see whats going on,</p>
 
 <div>
-  <pre><code class='javascript'>EventEmitter = require('events').EventEmitter       // The Event Emitter constructor in the events.js module .</code></pre>
+  <pre><code class='javascript'>EventEmitter = require(&#39;events&#39;).EventEmitter       // The Event Emitter constructor in the events.js module .</code></pre>
 </div>
 
 
@@ -526,7 +568,7 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>We listen for the error event,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.on('error', function(msg1, msg2) { console.log('ERR: ' + msg1 + ' ' + msg2 ) })</code></pre>
+  <pre><code class='javascript'>emitter.on(&#39;error&#39;, function(msg1, msg2) { console.log(&#39;ERR: &#39; + msg1 + &#39; &#39; + msg2 ) })</code></pre>
 </div>
 
 
@@ -537,14 +579,14 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>We could also listen as,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.addListener('error', function(msg1, msg2) { console.log('ERR: ' + msg1 + ' ' + msg2 ) } )</code></pre>
+  <pre><code class='javascript'>emitter.addListener(&#39;error&#39;, function(msg1, msg2) { console.log(&#39;ERR: &#39; + msg1 + &#39; &#39; + msg2 ) } )</code></pre>
 </div>
 
 
 <p>Now we emit the error event,</p>
 
 <div>
-  <pre><code class='javascript'>emitter.emit('error', 'Bug detected', '@ Step 4')</code></pre>
+  <pre><code class='javascript'>emitter.emit(&#39;error&#39;, &#39;Bug detected&#39;, &#39;@ Step 4&#39;)</code></pre>
 </div>
 
 
@@ -556,14 +598,14 @@ Now all you need is to copy all the posts from the <code>&lsquo;build/jekyll/use
 <p>Now that we have got to know how events are emitted and handled via listeners, lets try out a small server that listens for requests and processes them.</p>
 
 <div>
-  <pre><code class='javascript'>var http = require('http'),
-    sys = require('sys');
+  <pre><code class='javascript'>var http = require(&#39;http&#39;),
+    sys = require(&#39;sys&#39;);
 
 var server = http.createServer(function(request, response) {
-  request.on('data', function (chunk) { console.log(chunk.toString()); });
+  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
 
-  request.on('end', function() {
-    response.write('Request Completed!');
+  request.on(&#39;end&#39;, function() {
+    response.write(&#39;Request Completed!&#39;);
     response.end();
   });
 
@@ -594,7 +636,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>if (requestListener) {
-  this.addListener('request', requestListener); // event listener for the server
+  this.addListener(&#39;request&#39;, requestListener); // event listener for the server
 }</code></pre>
 </div>
 
@@ -605,10 +647,10 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>function(request, response) {
-  request.on('data', function (chunk) { console.log(chunk.toString()); });
+  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
 
-  request.on('end', function() {
-    response.write('Request Completed!');
+  request.on(&#39;end&#39;, function() {
+    response.write(&#39;Request Completed!&#39;);
     response.end();
   });
 }</code></pre>
@@ -620,7 +662,7 @@ As can be seen from code, the createServer method is within the http.js module. 
 <p>Now, further inspecting the <strong>_http_server.js </strong>module<strong>, </strong>we could also see how the request event is emitted,</p>
 
 <div>
-  <pre><code class='javascript'>self.emit('request', req, res); // event emitter for the server</code></pre>
+  <pre><code class='javascript'>self.emit(&#39;request&#39;, req, res); // event emitter for the server</code></pre>
 </div>
 
 
@@ -630,11 +672,11 @@ As can be seen from code, the createServer method is within the http.js module. 
 
 <div>
   <pre><code class='javascript'>var server = http.createServer()
-server.on('request', function(request, response) {
-  request.on('data', function (chunk) { console.log(chunk.toString()); });
+server.on(&#39;request&#39;, function(request, response) {
+  request.on(&#39;data&#39;, function (chunk) { console.log(chunk.toString()); });
 
-  request.on('end', function() {
-    response.write('Request Completed!');
+  request.on(&#39;end&#39;, function() {
+    response.write(&#39;Request Completed!&#39;);
     response.end();
   })
 });</code></pre>
@@ -644,7 +686,7 @@ server.on('request', function(request, response) {
 <p>Here when we create the server instance, we do not pass the requestListener( <em>Do notice that requestListener was only optional in http.createServer([requestListener]) </em>). Instead we attach a listener of our own on the server which listens to the &lsquo;request&rsquo; event and performs the callback function when the request event is emitted, i.e,</p>
 
 <div>
-  <pre><code class='javascript'>server.on('request', function(request, response) { ... });</code></pre>
+  <pre><code class='javascript'>server.on(&#39;request&#39;, function(request, response) { ... });</code></pre>
 </div>
 
 
@@ -683,7 +725,7 @@ server.on('request', function(request, response) {
 <p>Also add the rails admin route in the <strong>config/routes.rb</strong> file.</p>
 
 <div>
-  <pre><code class='ruby'>mount RailsAdmin::Engine =&gt; '/admin', :as =&gt; 'rails_admin'</code></pre>
+  <pre><code class='ruby'>mount RailsAdmin::Engine =&gt; &#39;/admin&#39;, :as =&gt; &#39;rails_admin&#39;</code></pre>
 </div>
 
 
@@ -742,7 +784,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 <p>We could specify an object or null as the first argument to the create method. If we pass null as the first argument to create, then the newly created object won&rsquo;t inherit any property.</p>
 
 <div>
-  <pre><code class='javascript'>Mammal = Object.create(null, {knownTime: { value: 'infinity' }} )</code></pre>
+  <pre><code class='javascript'>Mammal = Object.create(null, {knownTime: { value: &#39;infinity&#39; }} )</code></pre>
 </div>
 
 
@@ -757,7 +799,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 
 <div>
   <pre><code class='javascript'>Man.knownTime
-   -&gt; 'infinity'</code></pre>
+   -&gt; &#39;infinity&#39;</code></pre>
 </div>
 
 
@@ -766,7 +808,7 @@ As explained in &lsquo;Javascript: The Definitive Guide&rsquo; &ndash; An object
 <div>
   <pre><code class='javascript'>John = Object.create(Man)
 John.knownTime
-   -&gt; 'infinity'</code></pre>
+   -&gt; &#39;infinity&#39;</code></pre>
 </div>
 
 
@@ -776,7 +818,7 @@ Try adding new properties to these objects.</p>
 <p>Set a max height of Mammals.</p>
 
 <div>
-  <pre><code class='javascript'>Mammal.maxHeight = '200'</code></pre>
+  <pre><code class='javascript'>Mammal.maxHeight = &#39;200&#39;</code></pre>
 </div>
 
 
@@ -784,9 +826,9 @@ Try adding new properties to these objects.</p>
 
 <div>
   <pre><code class='javascript'>Man.maxHeight
-   -&gt; '200'
+   -&gt; &#39;200&#39;
 John.maxHeight
-   -&gt; '200'</code></pre>
+   -&gt; &#39;200&#39;</code></pre>
 </div>
 
 
@@ -989,20 +1031,20 @@ s2.stream()
 <p>Here&rsquo;s the actual piece of code that handles a file upload and responds back to the client with the progress of the upload.</p>
 
 <div>
-  <pre><code class='javascript'>var http = require('http'),
-  sys = require('sys'),
-  fs = require('fs');
+  <pre><code class='javascript'>var http = require(&#39;http&#39;),
+  sys = require(&#39;sys&#39;),
+  fs = require(&#39;fs&#39;);
 
   var server = http.createServer();
   console.log(&quot;Starting up the server&quot;);
   server.listen(8000);
 
-  server.on('request', function(request, response) {
-    var file = fs.createWriteStream('copy.csv');
-    var fileSize = request.headers['content-length'];
+  server.on(&#39;request&#39;, function(request, response) {
+    var file = fs.createWriteStream(&#39;copy.csv&#39;);
+    var fileSize = request.headers[&#39;content-length&#39;];
     var uploadedSize = 0;
 
-    request.on('data', function (chunk) {
+    request.on(&#39;data&#39;, function (chunk) {
       uploadedSize += chunk.length;
       uploadProgress = (uploadedSize/fileSize) * 100;
       response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
@@ -1011,12 +1053,12 @@ s2.stream()
         request.pause();
     });
 
-    file.on('drain', function() {
+    file.on(&#39;drain&#39;, function() {
       request.resume();
     })
 
-    request.on('end', function() {
-      response.write('Upload done!');
+    request.on(&#39;end&#39;, function() {
+      response.write(&#39;Upload done!&#39;);
       response.end();
     })
 
@@ -1031,14 +1073,14 @@ s2.stream()
 <p>A writeStream is created and &lsquo;copy.csv&rsquo; is the destination path to which the received data will be written.</p>
 
 <div>
-  <pre><code class='javascript'>var file = fs.createWriteStream('copy.csv');</code></pre>
+  <pre><code class='javascript'>var file = fs.createWriteStream(&#39;copy.csv&#39;);</code></pre>
 </div>
 
 
 <p>The following piece forms the core of the upload process.</p>
 
 <div>
-  <pre><code class='javascript'>request.on('data', function (chunk) {
+  <pre><code class='javascript'>request.on(&#39;data&#39;, function (chunk) {
     var bufferStore = file.write(chunk);
     if(bufferStore == false)
       request.pause();
@@ -1047,7 +1089,7 @@ s2.stream()
     response.write(Math.round(uploadProgress) + &quot;%&quot; + &quot; uploaded\n&quot; );
   });
 
-  file.on('drain', function() {
+  file.on(&#39;drain&#39;, function() {
     request.resume();
   })</code></pre>
 </div>
@@ -1070,7 +1112,7 @@ s2.stream()
 <p>Also, we need to re-start streaming data from the read stream once the buffer is drained out. The following lines of code does just that.</p>
 
 <div>
-  <pre><code class='javascript'>file.on('drain', function() {
+  <pre><code class='javascript'>file.on(&#39;drain&#39;, function() {
     request.resume();
   })</code></pre>
 </div>
@@ -1088,13 +1130,13 @@ s2.stream()
 <p>would be equivalent to</p>
 
 <div>
-  <pre><code class='javascript'>request.on('data', function(chunk) {
+  <pre><code class='javascript'>request.on(&#39;data&#39;, function(chunk) {
     var bufferStore = file.write(chunk);
     if(bufferStore == false)
       request.pause();
   })
 
-  file.on('drain', function() {
+  file.on(&#39;drain&#39;, function() {
     request.resume();
   })</code></pre>
 </div>
@@ -1114,7 +1156,7 @@ s2.stream()
 <p>Do note that the actual size of the upload file is calculated from the request headers.</p>
 
 <div>
-  <pre><code class='javascript'>var fileSize = request.headers['content-length'];</code></pre>
+  <pre><code class='javascript'>var fileSize = request.headers[&#39;content-length&#39;];</code></pre>
 </div>
 
 
@@ -1138,7 +1180,7 @@ s2.stream()
 <p>To get started off with mercury, add</p>
 
 <div>
-  <pre><code class='ruby'>gem 'mercury-rails'</code></pre>
+  <pre><code class='ruby'>gem &#39;mercury-rails&#39;</code></pre>
 </div>
 
 
@@ -1166,8 +1208,8 @@ s2.stream()
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, maximum-scale=1.0, initial-scale=1.0&quot;&gt;
         &lt;%= csrf_meta_tags %&gt;
         &lt;title&gt;Mercury Editor&lt;/title&gt;
-        &lt;%= stylesheet_link_tag 'mercury' %&gt;
-        &lt;%= javascript_include_tag 'jquery-1.7', 'mercury' %&gt;
+        &lt;%= stylesheet_link_tag &#39;mercury&#39; %&gt;
+        &lt;%= javascript_include_tag &#39;jquery-1.7&#39;, &#39;mercury&#39; %&gt;
     &lt;/head&gt;</code></pre>
 </div>
 
@@ -1186,7 +1228,7 @@ s2.stream()
 <p>Now peep into the routes file, you could see this extra line,</p>
 
 <div>
-  <pre><code class='ruby'>mount Mercury::Engine =&gt; '/'</code></pre>
+  <pre><code class='ruby'>mount Mercury::Engine =&gt; &#39;/&#39;</code></pre>
 </div>
 
 
@@ -1203,7 +1245,7 @@ In <code>pages.html.erb </code></p>
   <pre><code class='ruby'>&lt;div class=&quot;control-group&quot;&gt;
         &lt;h3 class=&quot;section_header page-header&quot;&gt;Pricing page&lt;/h3&gt;
         &lt;div id=&quot;faq&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&gt;
-            &lt;%= render :file =&gt; file_path(@domain 'faq') %&gt;
+            &lt;%= render :file =&gt; file_path(@domain &#39;faq&#39;) %&gt;
         &lt;/div&gt;
     &lt;/div&gt;</code></pre>
 </div>
@@ -1218,7 +1260,7 @@ In <code>pages.html.erb </code></p>
 <p>This following line in above piece of code</p>
 
 <div>
-  <pre><code class='ruby'>&lt;%= render :file =&gt; file_path(@domain, 'faq') %&gt;</code></pre>
+  <pre><code class='ruby'>&lt;%= render :file =&gt; file_path(@domain, &#39;faq&#39;) %&gt;</code></pre>
 </div>
 
 
@@ -1230,7 +1272,7 @@ In <code>pages.html.erb </code></p>
   <pre><code class='ruby'>&lt;div class=&quot;control-group&quot;&gt;
         &lt;h3 class=&quot;section_header page-header&quot;&gt;Contact page&lt;/h3&gt;
         &lt;div id=&quot;contact&quot; class=&quot;mercury-region&quot; data-type=&quot;editable&quot; data-mercury=&quot;full&quot;&gt;
-            &lt;%= render :file =&gt; file_path(@domain, 'contact') %&gt;
+            &lt;%= render :file =&gt; file_path(@domain, &#39;contact&#39;) %&gt;
         &lt;/div&gt;
     &lt;/div&gt;</code></pre>
 </div>
@@ -1242,7 +1284,7 @@ In <code>pages.html.erb </code></p>
 
 <div>
   <pre><code class='ruby'>&lt;script&gt;
-        $(window).on('mercury:ready', function () {
+        $(window).on(&#39;mercury:ready&#39;, function () {
             Mercury.saveUrl = &quot;&lt;%= pages_upload_admin_domain_path(@domain) %&gt;&quot;;
         });
     &lt;/script&gt;</code></pre>
@@ -1252,8 +1294,8 @@ In <code>pages.html.erb </code></p>
 <p>You might also want to change the page thats to be redirected to once we are done with editing using mercury. We could bind on mercury&rsquo;s save event to get this done.</p>
 
 <div>
-  <pre><code class='ruby'>$(window).bind('mercury:saved', function() {
-        $(window.location.replace('/admin/domain'));
+  <pre><code class='ruby'>$(window).bind(&#39;mercury:saved&#39;, function() {
+        $(window.location.replace(&#39;/admin/domain&#39;));
     });</code></pre>
 </div>
 
@@ -1349,7 +1391,7 @@ In <code>pages.html.erb </code></p>
 
 <div>
   <pre><code class='ruby'>ActiveModel::MassAssignmentSecurity::Error:
-        Can't mass-assign protected attributes: job_owner_id, job_owner_type</code></pre>
+        Can&#39;t mass-assign protected attributes: job_owner_id, job_owner_type</code></pre>
 </div>
 
 
@@ -1358,7 +1400,7 @@ and paste in the following code</p>
 
 <div>
   <pre><code class='ruby'>class Delayed::Job &lt; ActiveRecord::Base
-      self.attr_protected if self.to_s == 'Delayed::Backend::ActiveRecord::Job'   #loads protected attributes for                                                                                        # ActiveRecord instance
+      self.attr_protected if self.to_s == &#39;Delayed::Backend::ActiveRecord::Job&#39;   #loads protected attributes for                                                                                        # ActiveRecord instance
     end</code></pre>
 </div>
 
@@ -1823,43 +1865,6 @@ and paste in the following code</p>
 <p><strong>localhost/&lsquo;scriptname&rsquo;</strong></p>
 
 <p>and you see the result right there in front of you . Thats just how you enter the world of web programming .</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[GreaseMonkey : Customizing your webpages ]]></title>
-    <link href="http://tech.sunilnkumar.com/2010/11/24/greasemonkey-customizing-your-webpages"/>
-    <updated>2010-11-24T22:04:29+05:30</updated>
-    <id>http://tech.sunilnkumar.com/2010/11/24/greasemonkey-customizing-your-webpages</id>
-    <content type="html"><![CDATA[<p>There would have been times when you would have felt if the web page in front of you behaved a bit more according to your like . This might specially happen if the page consists of forms that you fill with data directed to live servers .  In such cases you wouldn&rsquo;t mind customizing the page to suit your needs so that you don&rsquo;t do some nonsense that would result in chaos .</p>
-
-<p>Firefox , i see many using it as their default browser , offers a plugin called &lsquo;<strong>Grease monkey</strong>&#8216;  that allows you to do just that . All you need to is to install the plugin , write your own javascripts , install them ( thats pretty easy to do ) and start using them  .</p>
-
-<p>Write your javascripts to customize your webpage . What you need to do in addition is to add some <strong>metadata</strong> providing extra information to greasemonkey .</p>
-
-<p>The meta data might look as follows :</p>
-
-<p><a href="http://sunilkumarn.files.wordpress.com/2010/11/untitled-1.png"><img src="http://sunilkumarn.files.wordpress.com/2010/11/untitled-1.png?w=300" alt="" /></a></p>
-
-<p>The first and the last lines are necessary to indicate to the greasemonkey that the script it to be processed by it .</p>
-
-<p>The <strong>name and the description are optional</strong> . It might prove helpful to you if you have scripted and installed a number of greasemonkey scripts .</p>
-
-<p>The 4th an the 5th line of the metadata are extremely important and needs to be well understood . <strong>These lines tell the greasemonkey the URLs on which the script is to be applied and not to be applied </strong>.</p>
-
-<p><strong>@include</strong> &ndash;> specifies the URLs on which the script is to be installed . Here &lsquo;*&rsquo; is specified which is just a wildcard and indicates that the script is to applied on all the sites  .</p>
-
-<p><strong>@exclude</strong> &ndash;> specifies the URLs that are to be left out . It is to be noted that @exclude is processed before @include .</p>
-
-<p>This gives you an idea of the metadata part of the script . Now you may write your own javascript , add your metadata at the beginning and save the file with the extension &lsquo; <strong>.user.js </strong>&#8216;  .</p>
-
-<p>To install the script , open the file in firefox and you would see an option &lsquo;install&rsquo; . Just give a click and you are ready to use your greasemonkey script .You could manage your script , disable it , uninstall it as well . Just click</p>
-
-<p><em>Tools &mdash;&mdash;> Greasemonkey &mdash;&mdash;> Manage user scripts &hellip;.</em></p>
-
-<p>Having another plugin &lsquo;<strong>firebug&rsquo;</strong> may help you in the process of writing the script . This allows you to view the html code of the webpage that is infront of you . Infact the plugin is almost a necessity to help you write efficient code with greasemonkey .</p>
-
-<p>Now you may start writing your own greasemonkey scripts and customize any of the webpages as and according to your like . It&rsquo;s also to be understood that greasemonkey is a plugin of firefox . If you use Google chrome as your browser , you wouldn&rsquo;t need to install any plugin . The facility to customize the webpage is provided by default . You may use the same code that you have written to work with greasemonkey . The metadata and the process of installing is the same and obviously the results are the same as well .</p>
 ]]></content>
   </entry>
   
