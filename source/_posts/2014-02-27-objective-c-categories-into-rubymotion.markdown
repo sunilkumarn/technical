@@ -6,7 +6,7 @@ comments: true
 categories: RubyMotion iOS Ruby
 ---
 
-People familiar with developing Ios applications with Objective-C would be quite familiar with using **categories** I suppose.
+People familiar with developing Ios applications with Objective-C would be quite familiar with using ** categories ** I suppose.
 
 An Objective-C category allows you to add methods to an existing class — effectively subclassing it without having to deal with the possible complexities of subclassing.
 

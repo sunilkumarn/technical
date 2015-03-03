@@ -15,7 +15,7 @@ A client when making an SSL connection to the server does not check whether the 
 To implement SSL pinning, you need the certificate within the app.
 I use the BubbleWrap library to make http connections in RubyMotion, but this could well be implemented with something like AFMotion as well. BubbleWrap internally uses the NSUrlConnection to make requests. We use the delegate method of NSUrlConnection ( willSendRequestForAuthenticationChallenge ) to implement the pinning.
 
-I monkey patch ( familiar to Rubyists ) **BubbleWrap::HTTP::Query** to make the necessary changes. Be sure to check that the file type of the certificate is 'der' and its placed in the appropriate directory.
+I monkey patch ( familiar to Rubyists ) ** BubbleWrap::HTTP::Query ** to make the necessary changes. Be sure to check that the file type of the certificate is 'der' and its placed in the appropriate directory.
 
     class BubbleWrap::HTTP::Query
       def connection(connection, willSendRequestForAuthenticationChallenge: challenge)
@@ -42,4 +42,4 @@ I monkey patch ( familiar to Rubyists ) **BubbleWrap::HTTP::Query** to make the 
 
 
 
-[blog post]:http://blog.lumberlabs.com/2012/04/why-app-developers-should-care-about.html  
+[blog post]:http://blog.lumberlabs.com/2012/04/why-app-developers-should-care-about.html
